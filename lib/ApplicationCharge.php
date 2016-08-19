@@ -9,7 +9,6 @@
 namespace PHPShopify;
 
 
-
 class ApplicationCharge extends ShopifyAPI
 {
     protected $resourceKey = 'application_charge';

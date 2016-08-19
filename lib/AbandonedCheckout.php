@@ -9,7 +9,6 @@
 namespace PHPShopify;
 
 
-
 class AbandonedCheckout extends ShopifyAPI
 {
     protected $resourceKey = 'checkout';

@@ -2,7 +2,12 @@
 PHPShopify is a simple SDK implementation of Shopify API. It helps accessing the API in an object oriented way. 
 
 ## Installation
-PHPShopify is composer supported but still not sumitted to packagist. For the time being you can download and put this into `vendor/phpclassic` folder and add the following code into your `composer.json` file:
+Install with Composer
+```shell
+composer require phpclassic/php-shopify
+```
+
+>You may not be able to download until a stable version is available. For the time being you can download and put this into `vendor/phpclassic` folder and add the following code into your root `composer.json` file:
 
 ```
     "autoload": {

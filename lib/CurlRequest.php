@@ -135,8 +135,16 @@ class CurlRequest
         // $output contains the output string
         $output = curl_exec($ch);
 
-        if(curl_errno($ch)) {
+        if (curl_errno($ch)) {
             throw new Exception\CurlException(curl_errno($ch) . ' : ' . curl_error($ch));
+        }
+
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $httpOK = 200;
+        $httpCreated = 201;
+
+        if ($httpCode != $httpOK && $httpCode != $httpCreated) {
+            throw new Exception\CurlException("Request failed with HTTP Code $httpCode.");
         }
 
         // close curl resource to free up system resources

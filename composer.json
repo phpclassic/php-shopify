@@ -9,7 +9,6 @@
         "ext-curl": "*"
     },
     "license": "Apache License 2.0",
-    "version": "1.0.0-alpha",
     "authors": [
         {
             "name": "Tareq Mahmood",
@@ -20,6 +19,5 @@
         "psr-4": {
             "PHPShopify\\": "lib/"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }

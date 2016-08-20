@@ -1,9 +1,10 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: tareq
- * Date: 8/19/16
- * Time: 5:51 PM
+ * @author Tareq Mahmood <tareqtms@yahoo.com>
+ * Created at 8/19/16 5:51 PM UTC+06:00
+ *
+ * @see https://help.shopify.com/api/reference/metafield Shopify API Reference for Metafield
  */
 
 namespace PHPShopify;
@@ -11,5 +12,10 @@ namespace PHPShopify;
 
 class Metafield extends ShopifyAPI
 {
+    /**
+     * Key of the API Resource which is used to fetch data from request responses
+     *
+     * @var string
+     */
     protected $resourceKey = 'metafield';
 }

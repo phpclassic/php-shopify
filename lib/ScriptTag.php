@@ -1,9 +1,10 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: tareq
- * Date: 8/17/16
- * Time: 4:46 PM
+ * @author Tareq Mahmood <tareqtms@yahoo.com>
+ * Created at 8/17/16 4:46 PM UTC+06:00
+ *
+ * @see https://help.shopify.com/api/reference/scripttag Shopify API Reference for ScriptTag
  */
 
 namespace PHPShopify;
@@ -11,5 +12,10 @@ namespace PHPShopify;
 
 class ScriptTag extends ShopifyAPI
 {
+    /**
+     * Key of the API Resource which is used to fetch data from request responses
+     *
+     * @var string
+     */
     protected $resourceKey = 'script_tag';
 }

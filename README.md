@@ -27,7 +27,7 @@ If you are using your own private API, provide the ApiKey and Password. For Thir
 $config = array(
     'ShopUrl' => 'yourshop.myshopify.com',
     'ApiKey' => '***YOUR-PRIVATE-API-KEY***',
-    'Password' => '***YOUR-PRIVATE-API-PASSWORD',
+    'Password' => '***YOUR-PRIVATE-API-PASSWORD***',
 );
 ```
 
@@ -37,7 +37,7 @@ Or
 <?php
 $config = array(
     'ShopUrl' => 'yourshop.myshopify.com',
-    'AccessToken' => '***ACCESS-TOKEN-FOR-THIRD-PARTY-APPS***',
+    'AccessToken' => '***ACCESS-TOKEN-FOR-THIRD-PARTY-APP***',
 );
 ```
 

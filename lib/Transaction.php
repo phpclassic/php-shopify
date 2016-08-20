@@ -1,9 +1,10 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: tareq
- * Date: 8/19/16
- * Time: 7:27 PM
+ * @author Tareq Mahmood <tareqtms@yahoo.com>
+ * Created at 8/19/16 7:27 PM UTC+06:00
+ *
+ * @see https://help.shopify.com/api/reference/transaction Shopify API Reference for Transaction
  */
 
 namespace PHPShopify;
@@ -11,5 +12,10 @@ namespace PHPShopify;
 
 class Transaction extends ShopifyAPI
 {
+    /**
+     * Key of the API Resource which is used to fetch data from request responses
+     *
+     * @var string
+     */
     protected $resourceKey = 'transaction';
 }

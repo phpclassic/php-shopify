@@ -53,7 +53,7 @@ class CustomerAddress extends ShopifyAPI
     //TODO Fix Issue (Api Error) : Internal server error
     public function set($params)
     {
-        $url = $this->apiUrl . '/' . $this->id . '/set.json?' . http_build_query($params);
+        $url = $this->resourceUrl . '/set.json?' . http_build_query($params);
         return $this->put(array(), $url);
     }
 }

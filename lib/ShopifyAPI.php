@@ -49,8 +49,7 @@ abstract class ShopifyAPI
      *
      * @var string
      */
-    //TODO Change $apiUrl to $resourceUrl
-    protected $apiUrl;
+    protected $resourceUrl;
 
     /**
      * Key of the API Resource which is used to fetch data from request responses
@@ -117,22 +116,10 @@ abstract class ShopifyAPI
         $this->id = $id;
 
         $this->config = $config;
-        //TODO Move the url manipulation part to ShopifyClient class
-        //Remove https:// and trailing slash (if provided)
-        $shopUrl = preg_replace('#^https?://|/$#', '',$config['ShopUrl']);
-
-        $this->shopUrl = $shopUrl;
 
         $parentResource = isset($config['ParentResource']) ? $config['ParentResource'] : '';
 
-        if(isset($config['ApiKey'])) {
-            $apiKey = $config['ApiKey'];
-            $password = $config['Password'];
-
-            $this->apiUrl = "https://$apiKey:$password@" . $shopUrl . '/admin/' . $parentResource . $this->getResourcePath();
-        } else {
-            $this->apiUrl = 'https://' . $shopUrl . '/admin/' . $parentResource . $this->getResourcePath();
-        }
+        $this->resourceUrl = $config['ApiUrl'] . $parentResource . $this->getResourcePath() . ($this->id ? '/' . $this->id : '');
     }
 
     /**
@@ -166,30 +153,33 @@ abstract class ShopifyAPI
      */
     public function __call($name, $arguments)
     {
-        //If the $name starts with an uppercase letter, it's considered as a child class and a custom action otherwise
+        //If the $name starts with an uppercase letter, it's considered as a child class
+        //Otherwise it's a custom action
         if(ctype_upper($name[0])) {
-            $childClass = array_search($name, $this->childResource);
+            //Get the array key of the childResource in the childResource array
+            $childKey = array_search($name, $this->childResource);
 
-            if ($childClass === false) {
+            if ($childKey === false) {
                 throw new \SdkException("Child Resource $name is not available for " . $this->getResourceName());
-            } elseif (is_numeric($childClass)) {
-                //If any associative key is given to the childname, then it will be considered as the class name, otherwise the childname will be the class name
-                $childClass = $name;
             }
 
-            $apiClassName = __NAMESPACE__ . "\\" . $childClass;
+            //If any associative key is given to the childname, then it will be considered as the class name,
+            //otherwise the childname will be the class name
+            $childClassName = !is_numeric($childKey) ? $childKey : $name;
+
+            $childClass = __NAMESPACE__ . "\\" . $childClassName;
+
             $config = $this->config;
 
             //Set the parent resource path for the child class
             $config['ParentResource'] = (isset($config['ParentResource']) ? $config['ParentResource'] : '') . $this->getResourcePath() . '/' . $this->id . '/';
 
-            $api = new $apiClassName($config);
 
-            if (!empty($arguments)) {
-                //if the first argument is provided with the call, consider it as a resource ID
-                $resourceID = $arguments[0];
-                $api->id = $resourceID;
-            }
+            //If first argument is provided, it will be considered as the ID of the resource.
+            $resourceID = !empty($arguments) ? $arguments[0] : null;
+
+
+            $api = new $childClass($config, $resourceID);
 
             return $api;
         } else {
@@ -200,6 +190,7 @@ abstract class ShopifyAPI
                 'delete'=>  'customDeleteActions',
             );
 
+            //Get the array key for the action in the actions array
             foreach ($actionMaps as $httpMethod => $actionArrayKey) {
                 $actionKey = array_search($name, $this->$actionArrayKey);
                 if($actionKey !== false) break;
@@ -207,19 +198,17 @@ abstract class ShopifyAPI
 
             if($actionKey === false) {
                 throw new SdkException("No action named $name is defined for " . $this->getResourceName());
-            } elseif (is_numeric($actionKey)) {
-                //If any associative key is given to the action name, then it will be considered as the method name, otherwise the action name will be the method name
-                $actionKey = $name;
             }
 
-            $params = array();
+            //If any associative key is given to the action, then it will be considered as the method name,
+            //otherwise the action name will be the method name
+            $customAction = !is_numeric($actionKey) ? $actionKey : $name;
+
 
             //Get the first argument if provided with the method call
-            if (!empty($arguments)) {
-                $params = $arguments[0];
-            }
+            $params = !empty($arguments) ? $arguments[0] : array();
 
-            $url = $this->apiUrl . ($this->id ? '/' . $this->id : '') . "/$actionKey.json";
+            $url = $this->generateUrl($params, $customAction);
 
             return $this->$httpMethod($params, $url);
         }
@@ -256,12 +245,26 @@ abstract class ShopifyAPI
 
     /**
      * Get the resource path to be used to generate the api url
-     * Normally its the same as the pluralized version of the resource key, when it's different, the specific resource class will override this function
+     * Normally its the same as the pluralized version of the resource key,
+     * when it's different, the specific resource class will override this function
      *
      * @return string
      */
     protected function getResourcePath() {
         return $this->pluralizeKey();
+    }
+
+    /**
+     * Generate the custom url for api request based on the params and custom action (if any)
+     *
+     * @param array $params
+     * @param string $customAction
+     *
+     * @return string
+     */
+    public function generateUrl($params = array(), $customAction = null)
+    {
+        return $this->resourceUrl . ($customAction ? "/$customAction" : '') . '.json' . (!empty($params) ? '?' . http_build_query($params) : '');
     }
 
     /**
@@ -277,7 +280,7 @@ abstract class ShopifyAPI
     public function get($params = array(), $url = null)
     {
 
-        if (! $url) $url = $this->apiUrl . ($this->id ? "/{$this->id}" : '') . '.json' . (!empty($params) ? '?' . http_build_query($params) : '');
+        if (! $url) $url  = $this->generateUrl($params);
 
         $this->prepareRequest();
 
@@ -302,7 +305,7 @@ abstract class ShopifyAPI
     public function getCount($params = array(), $url = null)
     {
 
-        if (! $url) $url = $this->apiUrl . '/count.json' . (!empty($params) ? '?' . http_build_query($params) : '');
+        if (! $url) $url = $this->generateUrl($params, 'count');
 
         $this->prepareRequest();
 
@@ -329,7 +332,7 @@ abstract class ShopifyAPI
 
         if (! is_array($query)) $query = array('query' => $query);
 
-        $url = $this->apiUrl . '/search.json?' . http_build_query($query);
+        $url = $this->generateUrl($query, 'search');
 
         return $this->get(array(), $url);
     }
@@ -346,7 +349,7 @@ abstract class ShopifyAPI
      */
     public function post($data, $url = null)
     {
-        if (! $url) $url = $this->apiUrl . '.json';
+        if (! $url) $url = $this->generateUrl();
 
         $data = array($this->getResourcePostKey() => $data);
         
@@ -370,7 +373,7 @@ abstract class ShopifyAPI
     public function put($data, $url = null)
     {
 
-        if (! $url) $url = $this->apiUrl . ($this->id ? "/{$this->id}" : '') .'.json';
+        if (! $url) $url = $this->generateUrl();
 
         $data = array($this->getResourcePostKey() => $data);
 
@@ -393,7 +396,7 @@ abstract class ShopifyAPI
      */
     public function delete($params = array(), $url = null)
     {
-        if (! $url) $url = $this->apiUrl . ($this->id ? "/{$this->id}" : '') .'.json' . (!empty($params) ? '?' . http_build_query($params) : '');
+        if (! $url) $url = $this->generateUrl($params);
 
         $this->prepareRequest();
 

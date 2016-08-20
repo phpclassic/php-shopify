@@ -61,6 +61,8 @@ namespace PHPShopify;
 |$products = $shopify->Product($productID)->Variant->get();
 |
 */
+use PHPShopify\Exception\SdkException;
+
 class ShopifyClient
 {
     /**
@@ -75,10 +77,26 @@ class ShopifyClient
      *
      * @param array $config
      *
+     * @throws SdkException if both AccessToken and ApiKey+Password Combination are missing
+     *
      * @return void
      */
     public function __construct($config)
     {
+        //Remove https:// and trailing slash (if provided)
+        $config['ShopUrl'] = preg_replace('#^https?://|/$#', '',$config['ShopUrl']);
+
+        if(isset($config['ApiKey']) && isset($config['Password'])) {
+            $apiKey = $config['ApiKey'];
+            $password = $config['Password'];
+
+            $config['ApiUrl'] = "https://$apiKey:$password@" . $config['ShopUrl'] . '/admin/';
+        } elseif(!isset($config['AccessToken'])) {
+            throw new SdkException("Either AccessToken or ApiKey+Password Combination must be provided!");
+        } else {
+            $config['ApiUrl'] = 'https://' . $config['ShopUrl'] . '/admin/';
+        }
+
         $this->config = $config;
     }
 
@@ -111,12 +129,13 @@ class ShopifyClient
     public function __call($resourceName, $arguments)
     {
         $resourceClassName = __NAMESPACE__ . "\\$resourceName";
-        $resource = new $resourceClassName($this->config);
 
-        if(!empty($arguments)) {
-            $resourceID = $arguments[0];
-            $resource->id = $resourceID;
-        }
+        //If first argument is provided, it will be considered as the ID of the resource.
+        $resourceID = !empty($arguments) ? $arguments[0] : null;
+
+        //Initiate the resource object
+        $resource = new $resourceClassName($this->config, $resourceID);
+
         return $resource;
     }
 }

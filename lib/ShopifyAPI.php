@@ -155,7 +155,7 @@ abstract class ShopifyAPI
     {
         //If the $name starts with an uppercase letter, it's considered as a child class
         //Otherwise it's a custom action
-        if(ctype_upper($name[0])) {
+        if (ctype_upper($name[0])) {
             //Get the array key of the childResource in the childResource array
             $childKey = array_search($name, $this->childResource);
 
@@ -350,8 +350,6 @@ abstract class ShopifyAPI
     public function post($data, $url = null)
     {
         if (! $url) $url = $this->generateUrl();
-
-        $data = array($this->getResourcePostKey() => $data);
         
         $this->prepareRequest($data);
 
@@ -374,8 +372,6 @@ abstract class ShopifyAPI
     {
 
         if (! $url) $url = $this->generateUrl();
-
-        $data = array($this->getResourcePostKey() => $data);
 
         $this->prepareRequest($data);
 
@@ -414,20 +410,35 @@ abstract class ShopifyAPI
      */
     public function prepareRequest($data = array())
     {
+        if (!empty($data)) $data = $this->wrapData($data);
 
         $this->postDataJSON = json_encode($data);
 
         $this->httpHeaders = array();
 
-        if(isset($this->config['AccessToken'])) {
+        if (isset($this->config['AccessToken'])) {
             $this->httpHeaders['X-Shopify-Access-Token'] = $this->config['AccessToken'];
         }
 
-        if(!empty($data)) {
+        if (!empty($data)) {
             $this->httpHeaders['Content-type'] = 'application/json';
             $this->httpHeaders['Content-Length'] = strlen($this->postDataJSON);
         }
 
+    }
+
+    /**
+     * Wrap data array with resource key
+     *
+     * @param array $data
+     * @param string $dataKey
+     *
+     * @return array
+     */
+    protected function wrapData($data, $dataKey = null) {
+        if (!$dataKey) $dataKey = $this->getResourcePostKey();
+
+        return array($dataKey => $data);
     }
 
     /**
@@ -437,9 +448,9 @@ abstract class ShopifyAPI
      *
      * @return string
      */
-    public function castString($array)
+    protected function castString($array)
     {
-        if(is_string($array)) return $array;
+        if (is_string($array)) return $array;
 
         $string = '';
 

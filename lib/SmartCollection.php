@@ -14,7 +14,7 @@ namespace PHPShopify;
  * --------------------------------------------------------------------------
  * SmartCollection -> Custom actions
  * --------------------------------------------------------------------------
- * @method array order($params)     Set the ordering type and/or the manual order of products in a smart collection
+ * @method array sortOrder($params)     Set the ordering type and/or the manual order of products in a smart collection
  *
  */
 class SmartCollection extends ShopifyAPI
@@ -26,8 +26,16 @@ class SmartCollection extends ShopifyAPI
      */
     protected $resourceKey = 'smart_collection';
 
-    //TODO PUT action
-    public function order($params) {
+    /**
+     * Set the ordering type and/or the manual order of products in a smart collection
+     *
+     * @param array $params
+     *
+     * @return array
+     */
+    public function sortOrder($params) {
+        $url = $this->generateUrl($params, 'order');
 
+        return $this->put(array(), $url);
     }
 }

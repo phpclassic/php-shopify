@@ -50,10 +50,18 @@ class CustomerAddress extends ShopifyAPI
     }
 
 
-    //TODO Fix Issue (Api Error) : Internal server error
+    /**
+     * Perform bulk operations against a number of addresses
+     *
+     * @param array $params
+     *
+     * @return array
+     */
+    //TODO Issue (Api Error) : Internal server error
     public function set($params)
     {
-        $url = $this->resourceUrl . '/set.json?' . http_build_query($params);
+        $url = $this->generateUrl($params, 'set');
+
         return $this->put(array(), $url);
     }
 }

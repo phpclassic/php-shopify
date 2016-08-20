@@ -22,7 +22,7 @@ namespace PHPShopify;
  * RecurringApplicationCharge -> Custom actions
  * --------------------------------------------------------------------------
  * @method array activate()             Activate a recurring application charge
- * @method array customize($params)     Customize a recurring application charge
+ * @method array customize($data)     Customize a recurring application charge
  *
  */
 class RecurringApplicationCharge extends ShopifyAPI
@@ -57,8 +57,19 @@ class RecurringApplicationCharge extends ShopifyAPI
         'activate',
     );
 
-    //TODO PUT action
-    public function customize($params) {
+    /*
+     * Customize a recurring application charge
+     *
+     * @param array $data
+     *
+     * @return array
+     *
+     */
+    public function customize($data) {
+        $data = $this->wrapData($data);
 
+        $url = $this->generateUrl($data, 'customize');
+
+        return $this->put(array(), $url);
     }
 }

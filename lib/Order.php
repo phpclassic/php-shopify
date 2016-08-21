@@ -19,11 +19,13 @@ namespace PHPShopify;
  * @property-read ShopifyAPI $Risk
  * @property-read ShopifyAPI $Refund
  * @property-read ShopifyAPI $Transaction
+ * @property-read ShopifyAPI $Event
  *
  * @method ShopifyAPI Fulfillment(integer $id = null)
  * @method ShopifyAPI Risk(integer $id = null)
  * @method ShopifyAPI Refund(integer $id = null)
  * @method ShopifyAPI Transaction(integer $id = null)
+ * @method ShopifyAPI Event(integer $id = null)
  *
  */
 class Order extends ShopifyAPI
@@ -47,5 +49,6 @@ class Order extends ShopifyAPI
         'OrderRisk' => 'Risk',
         'Refund',
         'Transaction',
+        'Event',
     );
 }

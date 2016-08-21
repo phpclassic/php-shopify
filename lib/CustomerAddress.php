@@ -57,7 +57,7 @@ class CustomerAddress extends ShopifyAPI
      *
      * @return array
      */
-    //TODO Issue (Api Error) : Internal server error
+    //TODO Issue (Getting Error from API) : Internal server error
     public function set($params)
     {
         $url = $this->generateUrl($params, 'set');

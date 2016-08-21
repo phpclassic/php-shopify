@@ -14,8 +14,10 @@ namespace PHPShopify;
  * Blog -> Child Resources
  * --------------------------------------------------------------------------
  * @property-read ShopifyAPI $Article
+ * @property-read ShopifyAPI $Event
  *
  * @method ShopifyAPI Article(integer $id = null)
+ * @method ShopifyAPI Event(integer $id = null)
  *
  */
 class Blog extends ShopifyAPI
@@ -36,5 +38,6 @@ class Blog extends ShopifyAPI
      */
     protected $childResource = array(
         'Article',
+        'Event',
     );
 }

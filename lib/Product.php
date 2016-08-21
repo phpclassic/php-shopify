@@ -17,10 +17,12 @@ namespace PHPShopify;
  * @property-read ShopifyAPI $Image
  * @property-read ShopifyAPI $Variant
  * @property-read ShopifyAPI $Metafield
+ * @property-read ShopifyAPI $Event
  *
  * @method ShopifyAPI Image(integer $id = null)
  * @method ShopifyAPI Variant(integer $id = null)
  * @method ShopifyAPI Metafield(integer $id = null)
+ * @method ShopifyAPI Event(integer $id = null)
  *
  */
 class Product extends ShopifyAPI
@@ -43,5 +45,6 @@ class Product extends ShopifyAPI
         'ProductImage' => 'Image',
         'ProductVariant' => 'Variant',
         'Metafield',
+        'Event'
     );
 }

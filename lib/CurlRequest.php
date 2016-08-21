@@ -48,7 +48,7 @@ class CurlRequest
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
         $headers = array();
-        foreach($httpHeaders as $key => $value) {
+        foreach ($httpHeaders as $key => $value) {
             $headers[] = "$key: $value";
         }
         //Set HTTP Headers

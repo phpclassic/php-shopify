@@ -194,10 +194,10 @@ abstract class ShopifyAPI
             //Get the array key for the action in the actions array
             foreach ($actionMaps as $httpMethod => $actionArrayKey) {
                 $actionKey = array_search($name, $this->$actionArrayKey);
-                if($actionKey !== false) break;
+                if ($actionKey !== false) break;
             }
 
-            if($actionKey === false) {
+            if ($actionKey === false) {
                 throw new SdkException("No action named $name is defined for " . $this->getResourceName());
             }
 
@@ -233,7 +233,8 @@ abstract class ShopifyAPI
      *
      * @return string
      */
-    public function getResourceName() {
+    public function getResourceName()
+    {
         return substr(get_called_class(), strrpos(get_called_class(), '\\') + 1);
     }
 
@@ -243,7 +244,8 @@ abstract class ShopifyAPI
      *
      * @return string
      */
-    public function getResourcePostKey() {
+    public function getResourcePostKey()
+    {
         return $this->resourceKey;
     }
 
@@ -253,7 +255,8 @@ abstract class ShopifyAPI
      *
      * @return string
      */
-    protected function pluralizeKey() {
+    protected function pluralizeKey()
+    {
         return $this->resourceKey . 's';
     }
 
@@ -264,7 +267,8 @@ abstract class ShopifyAPI
      *
      * @return string
      */
-    protected function getResourcePath() {
+    protected function getResourcePath()
+    {
         return $this->pluralizeKey();
     }
 
@@ -294,7 +298,7 @@ abstract class ShopifyAPI
     public function get($urlParams = array(), $url = null)
     {
 
-        if (! $url) $url  = $this->generateUrl($urlParams);
+        if (!$url) $url  = $this->generateUrl($urlParams);
 
         $this->prepareRequest();
 
@@ -319,7 +323,7 @@ abstract class ShopifyAPI
     public function getCount($urlParams = array(), $url = null)
     {
 
-        if (! $url) $url = $this->generateUrl($urlParams, 'count');
+        if (!$url) $url = $this->generateUrl($urlParams, 'count');
 
         $this->prepareRequest();
 
@@ -339,11 +343,11 @@ abstract class ShopifyAPI
      */
     public function search($query)
     {
-        if(!$this->searchEnabled) {
+        if (!$this->searchEnabled) {
             throw new SdkException("Search is not available for " . $this->getResourceName());
         }
 
-        if (! is_array($query)) $query = array('query' => $query);
+        if (!is_array($query)) $query = array('query' => $query);
 
         $url = $this->generateUrl($query, 'search');
 
@@ -362,7 +366,7 @@ abstract class ShopifyAPI
      */
     public function post($dataArray, $url = null)
     {
-        if (! $url) $url = $this->generateUrl();
+        if (!$url) $url = $this->generateUrl();
         
         $this->prepareRequest($dataArray);
 
@@ -384,7 +388,7 @@ abstract class ShopifyAPI
     public function put($dataArray, $url = null)
     {
 
-        if (! $url) $url = $this->generateUrl();
+        if (!$url) $url = $this->generateUrl();
 
         $this->prepareRequest($dataArray);
 
@@ -405,7 +409,7 @@ abstract class ShopifyAPI
      */
     public function delete($urlParams = array(), $url = null)
     {
-        if (! $url) $url = $this->generateUrl($urlParams);
+        if (!$url) $url = $this->generateUrl($urlParams);
 
         $this->prepareRequest();
 
@@ -448,8 +452,9 @@ abstract class ShopifyAPI
      *
      * @return array
      */
-    protected function wrapData($dataArray, $dataKey = null) {
-        if (! $dataKey) $dataKey = $this->getResourcePostKey();
+    protected function wrapData($dataArray, $dataKey = null)
+    {
+        if (!$dataKey) $dataKey = $this->getResourcePostKey();
 
         return array($dataKey => $dataArray);
     }
@@ -507,7 +512,7 @@ abstract class ShopifyAPI
             }
         }
 
-        if (isset ($responseArray['errors'])) {
+        if (isset($responseArray['errors'])) {
             $message = $this->castString($responseArray['errors']);
 
             throw new ApiException($message);

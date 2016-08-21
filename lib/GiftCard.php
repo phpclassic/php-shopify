@@ -39,7 +39,8 @@ class GiftCard extends ShopifyAPI
      *
      * @return array
      */
-    public function disable() {
+    public function disable()
+    {
         $url = $this->generateUrl(array(), 'disable');
 
         $dataArray = array(

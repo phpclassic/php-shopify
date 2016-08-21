@@ -65,7 +65,8 @@ class RecurringApplicationCharge extends ShopifyAPI
      * @return array
      *
      */
-    public function customize($dataArray) {
+    public function customize($dataArray)
+    {
         $dataArray = $this->wrapData($dataArray);
 
         $url = $this->generateUrl($dataArray, 'customize');

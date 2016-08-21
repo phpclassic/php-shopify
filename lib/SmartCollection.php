@@ -51,7 +51,8 @@ class SmartCollection extends ShopifyAPI
      *
      * @return array
      */
-    public function sortOrder($params) {
+    public function sortOrder($params)
+    {
         $url = $this->generateUrl($params, 'order');
 
         return $this->put(array(), $url);

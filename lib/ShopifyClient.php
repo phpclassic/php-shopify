@@ -86,12 +86,12 @@ class ShopifyClient
         //Remove https:// and trailing slash (if provided)
         $config['ShopUrl'] = preg_replace('#^https?://|/$#', '',$config['ShopUrl']);
 
-        if(isset($config['ApiKey']) && isset($config['Password'])) {
+        if (isset($config['ApiKey']) && isset($config['Password'])) {
             $apiKey = $config['ApiKey'];
             $password = $config['Password'];
 
             $config['ApiUrl'] = "https://$apiKey:$password@" . $config['ShopUrl'] . '/admin/';
-        } elseif(!isset($config['AccessToken'])) {
+        } elseif (!isset($config['AccessToken'])) {
             throw new SdkException("Either AccessToken or ApiKey+Password Combination must be provided!");
         } else {
             $config['ApiUrl'] = 'https://' . $config['ShopUrl'] . '/admin/';

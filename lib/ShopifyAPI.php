@@ -453,9 +453,13 @@ abstract class ShopifyAPI
         if (is_string($array)) return $array;
 
         $string = '';
-
+        $i = 0;
         foreach ($array as $key => $val) {
-            $string .= "$key - " . $this->castString($val) . ', ';
+            //Add values separated by comma
+            //prepend the key string, if it's an associative key
+            //Check if the value itself is another array to be converted to string
+            $string .= ($i === $key ? '' : "$key - ") . $this->castString($val) . ', ';
+            $i++;
         }
 
         //Remove trailing comma and space
@@ -477,6 +481,17 @@ abstract class ShopifyAPI
     public function processResponse($response, $dataKey = false)
     {
         $responseArray = json_decode($response, true);
+
+        if($responseArray === null) {
+            //Something went wrong, Checking HTTP Codes
+            $httpOK = 200; //Request Successful, OK.
+            $httpCreated = 201; //Create Successful.
+            $httpCode = CurlRequest::$lastHttpCode;
+
+            if ($httpCode != $httpOK && $httpCode != $httpCreated) {
+                throw new Exception\CurlException("Request failed with HTTP Code $httpCode.");
+            }
+        }
 
         if (isset ($responseArray['errors'])) {
             $message = $this->castString($responseArray['errors']);

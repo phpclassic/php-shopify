@@ -21,6 +21,14 @@ use PHPShopify\Exception\CurlException;
 class CurlRequest
 {
     /**
+     * HTTP Code of the last executed request
+     *
+     * @var integer
+     */
+    public static $lastHttpCode;
+
+
+    /**
      * Initialize the curl resource
      *
      * @param string $url
@@ -28,7 +36,7 @@ class CurlRequest
      *
      * @return resource
      */
-    public static function init($url, $httpHeaders = array())
+    protected static function init($url, $httpHeaders = array())
     {
         // Create Curl resource
         $ch = curl_init();
@@ -130,7 +138,7 @@ class CurlRequest
      *
      * @return string
      */
-    public static function processRequest($ch)
+    protected static function processRequest($ch)
     {
         // $output contains the output string
         $output = curl_exec($ch);
@@ -139,13 +147,7 @@ class CurlRequest
             throw new Exception\CurlException(curl_errno($ch) . ' : ' . curl_error($ch));
         }
 
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $httpOK = 200;
-        $httpCreated = 201;
-
-        if ($httpCode != $httpOK && $httpCode != $httpCreated) {
-            throw new Exception\CurlException("Request failed with HTTP Code $httpCode.");
-        }
+        self::$lastHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         // close curl resource to free up system resources
         curl_close($ch);

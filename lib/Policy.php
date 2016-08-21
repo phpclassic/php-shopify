@@ -13,23 +13,17 @@ namespace PHPShopify;
 class Policy extends ShopifyAPI
 {
     /**
-     * Key of the API Resource which is used to fetch data from request responses
-     *
-     * @var string
+     * @inheritDoc
      */
     protected $resourceKey = 'policy';
 
     /**
-     * If the resource is read only. (No POST / PUT / DELETE actions)
-     *
-     * @var boolean
+     * @inheritDoc
      */
     public $readOnly = true;
 
     /**
-     * Get the pluralized version of the resource key
-     *
-     * @return string
+     * @inheritDoc
      */
     public function pluralizeKey()
     {

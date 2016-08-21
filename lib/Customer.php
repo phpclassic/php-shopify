@@ -22,25 +22,17 @@ namespace PHPShopify;
 class Customer extends ShopifyAPI
 {
     /**
-     * Key of the API Resource which is used to fetch data from request responses
-     *
-     * @var string
+     * @inheritDoc
      */
     protected $resourceKey ='customer';
 
     /**
-     * If search is enabled for the resource
-     *
-     * @var boolean
+     * @inheritDoc
      */
     protected $searchEnabled = true;
 
     /**
-     * List of child Resource names / classes
-     * If any array item has an associative key => value pair, value will be considered as the resource name
-     * (by which it will be called) and key will be the associated class name.
-     *
-     * @var array
+     * @inheritDoc
      */
     protected $childResource = array(
         'CustomerAddress' => 'Address'

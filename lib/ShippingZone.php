@@ -13,16 +13,12 @@ namespace PHPShopify;
 class ShippingZone extends ShopifyAPI
 {
     /**
-     * Key of the API Resource which is used to fetch data from request responses
-     *
-     * @var string
+     * @inheritDoc
      */
     protected $resourceKey = 'shipping_zone';
 
     /**
-     * If the resource is read only. (No POST / PUT / DELETE actions)
-     *
-     * @var boolean
+     * @inheritDoc
      */
     public $readOnly = true;
 }

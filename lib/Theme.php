@@ -22,18 +22,12 @@ namespace PHPShopify;
 class Theme extends ShopifyAPI
 {
     /**
-     * Key of the API Resource which is used to fetch data from request responses
-     *
-     * @var string
+     * @inheritDoc
      */
     public $resourceKey = 'theme';
 
     /**
-     * List of child Resource names / classes
-     * If any array item has an associative key => value pair, value will be considered as the resource name
-     * (by which it will be called) and key will be the associated class name.
-     *
-     * @var array
+     * @inheritDoc
      */
     protected $childResource = array(
         'Asset'

@@ -28,30 +28,19 @@ namespace PHPShopify;
 class RecurringApplicationCharge extends ShopifyAPI
 {
     /**
-     * Key of the API Resource which is used to fetch data from request responses
-     *
-     * @var string
+     * @inheritDoc
      */
     protected $resourceKey = 'recurring_application_charge';
 
     /**
-     * List of child Resource names / classes
-     * If any array item has an associative key => value pair, value will be considered as the resource name
-     * (by which it will be called) and key will be the associated class name.
-     *
-     * @var array
+     * @inheritDoc
      */
     protected $childResource = array(
         'UsageCharge',
     );
 
     /**
-     * List of custom POST actions
-     * @example: ['enable', 'disable', 'remove','default' => 'makeDefault']
-     * Methods can be called like enable(), disable(), remove(), makeDefault() etc.
-     * If any array item has an associative key => value pair, value will be considered as the method name and key will be the associated path to be used with the action.
-     *
-     * @var array
+     * @inheritDoc
      */
     protected $customPostActions = array(
         'activate',

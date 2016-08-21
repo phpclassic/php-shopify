@@ -20,16 +20,12 @@ namespace PHPShopify;
 class GiftCard extends ShopifyAPI
 {
     /**
-     * Key of the API Resource which is used to fetch data from request responses
-     *
-     * @var string
+     * @inheritDoc
      */
     protected $resourceKey = 'gift_card';
 
     /**
-     * If search is enabled for the resource
-     *
-     * @var boolean
+     * @inheritDoc
      */
     protected $searchEnabled = true;
 

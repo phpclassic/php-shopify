@@ -11,6 +11,7 @@ namespace PHPShopify;
 
 use PHPShopify\Exception\ApiException;
 use PHPShopify\Exception\SdkException;
+use PHPShopify\Exception\CurlException;
 
 /*
 |--------------------------------------------------------------------------
@@ -206,11 +207,24 @@ abstract class ShopifyAPI
 
 
             //Get the first argument if provided with the method call
-            $params = !empty($arguments) ? $arguments[0] : array();
+            $methodArgument = !empty($arguments) ? $arguments[0] : array();
 
-            $url = $this->generateUrl($params, $customAction);
+            //Url parameters
+            $urlParams = array();
+            //Data body
+            $dataArray = array();
 
-            return $this->$httpMethod($params, $url);
+            //Consider the argument as url parameters for get and delete request
+            //and data array for post and put request
+            if ($httpMethod == 'post' || $httpMethod == 'put') {
+                $dataArray = $methodArgument;
+            } else {
+                $urlParams =  $methodArgument;
+            }
+
+            $url = $this->generateUrl($urlParams, $customAction);
+
+            return $this->$httpMethod($dataArray, $url);
         }
     }
 
@@ -257,30 +271,30 @@ abstract class ShopifyAPI
     /**
      * Generate the custom url for api request based on the params and custom action (if any)
      *
-     * @param array $params
+     * @param array $urlParams
      * @param string $customAction
      *
      * @return string
      */
-    public function generateUrl($params = array(), $customAction = null)
+    public function generateUrl($urlParams = array(), $customAction = null)
     {
-        return $this->resourceUrl . ($customAction ? "/$customAction" : '') . '.json' . (!empty($params) ? '?' . http_build_query($params) : '');
+        return $this->resourceUrl . ($customAction ? "/$customAction" : '') . '.json' . (!empty($urlParams) ? '?' . http_build_query($urlParams) : '');
     }
 
     /**
      * Generate a HTTP GET request and return results as an array
      *
-     * @param array $params Check Shopify API reference of the specific resource for the list of URL parameters
+     * @param array $urlParams Check Shopify API reference of the specific resource for the list of URL parameters
      * @param string $url
      *
      * @uses CurlRequest::get() to send the HTTP request
      *
      * @return array
      */
-    public function get($params = array(), $url = null)
+    public function get($urlParams = array(), $url = null)
     {
 
-        if (! $url) $url  = $this->generateUrl($params);
+        if (! $url) $url  = $this->generateUrl($urlParams);
 
         $this->prepareRequest();
 
@@ -295,17 +309,17 @@ abstract class ShopifyAPI
     /**
      * Get count for the number of resources available
      *
-     * @param array $params Check Shopify API reference of the specific resource for the list of URL parameters
+     * @param array $urlParams Check Shopify API reference of the specific resource for the list of URL parameters
      * @param string $url
      *
      * @uses CurlRequest::get() to send the HTTP request
      *
      * @return integer
      */
-    public function getCount($params = array(), $url = null)
+    public function getCount($urlParams = array(), $url = null)
     {
 
-        if (! $url) $url = $this->generateUrl($params, 'count');
+        if (! $url) $url = $this->generateUrl($urlParams, 'count');
 
         $this->prepareRequest();
 
@@ -317,8 +331,7 @@ abstract class ShopifyAPI
     /**
      * Search within the resouce
      *
-     * @param array $params
-     * @param string $url
+     * @param mixed $query
      *
      * @throws SdkException if search is not enabled for the resouce
      *
@@ -340,18 +353,18 @@ abstract class ShopifyAPI
     /**
      * Call POST method to create a new resource
      *
-     * @param array $data Check Shopify API reference of the specific resource for the list of required and optional data elements to be provided
+     * @param array $dataArray Check Shopify API reference of the specific resource for the list of required and optional data elements to be provided
      * @param string $url
      *
      * @uses CurlRequest::post() to send the HTTP request
      *
      * @return array
      */
-    public function post($data, $url = null)
+    public function post($dataArray, $url = null)
     {
         if (! $url) $url = $this->generateUrl();
         
-        $this->prepareRequest($data);
+        $this->prepareRequest($dataArray);
 
         $response = CurlRequest::post($url, $this->postDataJSON, $this->httpHeaders);
 
@@ -361,19 +374,19 @@ abstract class ShopifyAPI
     /**
      * Call PUT method to update an existing resource
      *
-     * @param array $data Check Shopify API reference of the specific resource for the list of required and optional data elements to be provided
+     * @param array $dataArray Check Shopify API reference of the specific resource for the list of required and optional data elements to be provided
      * @param string $url
      *
      * @uses CurlRequest::put() to send the HTTP request
      *
      * @return array
      */
-    public function put($data, $url = null)
+    public function put($dataArray, $url = null)
     {
 
         if (! $url) $url = $this->generateUrl();
 
-        $this->prepareRequest($data);
+        $this->prepareRequest($dataArray);
 
         $response = CurlRequest::put($url, $this->postDataJSON, $this->httpHeaders);
 
@@ -383,16 +396,16 @@ abstract class ShopifyAPI
     /**
      * Call DELETE method to delete an existing resource
      *
-     * @param array $params Check Shopify API reference of the specific resource for the list of URL parameters
+     * @param array $urlParams Check Shopify API reference of the specific resource for the list of URL parameters
      * @param string $url
      *
      * @uses CurlRequest::delete() to send the HTTP request
      *
      * @return array an empty array will be returned if the request is successfully completed
      */
-    public function delete($params = array(), $url = null)
+    public function delete($urlParams = array(), $url = null)
     {
-        if (! $url) $url = $this->generateUrl($params);
+        if (! $url) $url = $this->generateUrl($urlParams);
 
         $this->prepareRequest();
 
@@ -404,15 +417,15 @@ abstract class ShopifyAPI
     /**
      * Prepare the data and request headers before making the call
      *
-     * @param array $data
+     * @param array $dataArray
      *
      * @return void
      */
-    public function prepareRequest($data = array())
+    public function prepareRequest($dataArray = array())
     {
-        if (!empty($data)) $data = $this->wrapData($data);
+        if (!empty($dataArray)) $dataArray = $this->wrapData($dataArray);
 
-        $this->postDataJSON = json_encode($data);
+        $this->postDataJSON = json_encode($dataArray);
 
         $this->httpHeaders = array();
 
@@ -420,7 +433,7 @@ abstract class ShopifyAPI
             $this->httpHeaders['X-Shopify-Access-Token'] = $this->config['AccessToken'];
         }
 
-        if (!empty($data)) {
+        if (!empty($dataArray)) {
             $this->httpHeaders['Content-type'] = 'application/json';
             $this->httpHeaders['Content-Length'] = strlen($this->postDataJSON);
         }
@@ -430,15 +443,15 @@ abstract class ShopifyAPI
     /**
      * Wrap data array with resource key
      *
-     * @param array $data
+     * @param array $dataArray
      * @param string $dataKey
      *
      * @return array
      */
-    protected function wrapData($data, $dataKey = null) {
-        if (!$dataKey) $dataKey = $this->getResourcePostKey();
+    protected function wrapData($dataArray, $dataKey = null) {
+        if (! $dataKey) $dataKey = $this->getResourcePostKey();
 
-        return array($dataKey => $data);
+        return array($dataKey => $dataArray);
     }
 
     /**
@@ -475,6 +488,7 @@ abstract class ShopifyAPI
      * @param string $dataKey key to be looked for in the data
      *
      * @throws ApiException if the response has an error specified
+     * @throws CurlException if response received with unexpected HTTP code.
      *
      * @return array
      */
@@ -482,7 +496,7 @@ abstract class ShopifyAPI
     {
         $responseArray = json_decode($response, true);
 
-        if($responseArray === null) {
+        if ($responseArray === null) {
             //Something went wrong, Checking HTTP Codes
             $httpOK = 200; //Request Successful, OK.
             $httpCreated = 201; //Create Successful.
@@ -499,7 +513,7 @@ abstract class ShopifyAPI
             throw new ApiException($message);
         }
 
-        if($dataKey && isset($responseArray[$dataKey])) {
+        if ($dataKey && isset($responseArray[$dataKey])) {
             return $responseArray[$dataKey];
         } else {
             return $responseArray;

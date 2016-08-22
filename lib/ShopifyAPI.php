@@ -333,7 +333,7 @@ abstract class ShopifyAPI
      *
      * @return integer
      */
-    public function getCount($urlParams = array(), $url = null)
+    public function count($urlParams = array(), $url = null)
     {
 
         if (!$url) $url = $this->generateUrl($urlParams, 'count');

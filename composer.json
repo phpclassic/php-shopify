@@ -19,5 +19,7 @@
         "psr-4": {
             "PHPShopify\\": "lib/"
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

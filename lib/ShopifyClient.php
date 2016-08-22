@@ -15,50 +15,50 @@ namespace PHPShopify;
 | Shopify API SDK Client Class
 |--------------------------------------------------------------------------
 |
-|This class initializes the resource objects
+| This class initializes the resource objects
 |
-|Usage:
-|//For private app
-|$config = array(
-|   'ShopUrl' => 'yourshop.myshopify.com',
-|   'ApiKey' => '***YOUR-PRIVATE-API-KEY***',
-|   'Password' => '***YOUR-PRIVATE-API-PASSWORD***',
-|);
-|//For third party app
-|$config = array(
-|   'ShopUrl' => 'yourshop.myshopify.com',
-|   'AccessToken' => '***ACCESS-TOKEN-FOR-THIRD-PARTY-APP***',
-|);
-|//Create the shopify client object
-|$shopify = new ShopifyClient($config);
+| Usage:
+| //For private app
+| $config = array(
+|    'ShopUrl' => 'yourshop.myshopify.com',
+|    'ApiKey' => '***YOUR-PRIVATE-API-KEY***',
+|    'Password' => '***YOUR-PRIVATE-API-PASSWORD***',
+| );
+| //For third party app
+| $config = array(
+|    'ShopUrl' => 'yourshop.myshopify.com',
+|    'AccessToken' => '***ACCESS-TOKEN-FOR-THIRD-PARTY-APP***',
+| );
+| //Create the shopify client object
+| $shopify = new ShopifyClient($config);
 |
-|//Get shop details
-|$products = $shopify->Shop->get();
+| //Get shop details
+| $products = $shopify->Shop->get();
 |
-|//Get list of all products
-|$products = $shopify->Product->get();
+| //Get list of all products
+| $products = $shopify->Product->get();
 |
-|//Get a specific product by product ID
-|$products = $shopify->Product($productID)->get();
+| //Get a specific product by product ID
+| $products = $shopify->Product($productID)->get();
 |
-|//Update a product
-|$updateInfo = array('title' => 'New Product Title');
-|$products = $shopify->Product($productID)->put($updateInfo);
+| //Update a product
+| $updateInfo = array('title' => 'New Product Title');
+| $products = $shopify->Product($productID)->put($updateInfo);
 |
-|//Delete a product
-|$products = $shopify->Product($productID)->delete();
+| //Delete a product
+| $products = $shopify->Product($productID)->delete();
 |
-|//Create a new product
-|$productInfo = array(
-|   "title" => "Burton Custom Freestlye 151",
-|   "body_html" => "<strong>Good snowboard!<\/strong>",
-|   "vendor" => "Burton",
-|   "product_type" => "Snowboard",
-|);
-|$products = $shopify->Product->post($productInfo);
+| //Create a new product
+| $productInfo = array(
+|    "title" => "Burton Custom Freestlye 151",
+|    "body_html" => "<strong>Good snowboard!<\/strong>",
+|    "vendor" => "Burton",
+|    "product_type" => "Snowboard",
+| );
+| $products = $shopify->Product->post($productInfo);
 |
-|//Get variants of a product (using Child resource)
-|$products = $shopify->Product($productID)->Variant->get();
+| //Get variants of a product (using Child resource)
+| $products = $shopify->Product($productID)->Variant->get();
 |
 */
 use PHPShopify\Exception\SdkException;
@@ -71,6 +71,64 @@ class ShopifyClient
      * @var array
      */
     protected $config;
+
+    /**
+     * List of available resources which can be called from this client
+     *
+     * @var string[]
+     */
+    protected $resources = array(
+        'AbandonedCheckout',
+        'ApplicationCharge',
+        'Blog',
+        'CarrierService',
+        'Collect',
+        'Comment',
+        'Country',
+        'CustomCollection',
+        'Customer',
+        'CustomerSavedSearch',
+        'Discount',
+        'Event',
+        'FulfillmentService',
+        'GiftCard',
+        'Location',
+        'Metafield',
+        'Multipass',
+        'Order',
+        'Page',
+        'Policy',
+        'Product',
+        'RecurringApplicationCharge',
+        'Redirect',
+        'ScriptTag',
+        'ShippingZone',
+        'Shop',
+        'SmartCollection',
+        'Theme',
+        'User',
+        'Webhook',
+    );
+
+    /**
+     * List of resources which are only available through a parent resource
+     *
+     * @var array Array key is the child resource name and array value is the parent resource name
+     */
+    protected $childResources = array(
+        'Article'           => 'Blog',
+        'Asset'             => 'Theme',
+        'CustomerAddress'   => 'Customer',
+        'Fulfillment'       => 'Order',
+        'FulfillmentEvent'  => 'Fulfillment',
+        'OrderRisk'         => 'Order',
+        'ProductImage'      => 'Product',
+        'ProductVariant'    => 'Product',
+        'Province'          => 'Country',
+        'Refund'            => 'Order',
+        'Transaction'       => 'Order',
+        'UsageCharge'       => 'RecurringApplicationCharge',
+    );
 
     /*
      * ShopifyClient constructor
@@ -128,6 +186,15 @@ class ShopifyClient
      */
     public function __call($resourceName, $arguments)
     {
+        if (!in_array($resourceName, $this->resources)) {
+            if (isset($this->childResources[$resourceName])) {
+                $message = "$resourceName is a child resource of " . $this->childResources[$resourceName] . ". Cannot be accessed directly.";
+            } else {
+                $message = "Invalid resource name $resourceName. Pls check the API Reference to get the appropriate resource name.";
+            }
+            throw new SdkException($message);
+        }
+
         $resourceClassName = __NAMESPACE__ . "\\$resourceName";
 
         //If first argument is provided, it will be considered as the ID of the resource.

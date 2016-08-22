@@ -46,6 +46,7 @@ abstract class ShopifyAPI
 
     /**
      * The base URL of the API Resource (excluding the '.json' extension).
+     *
      * Example : https://myshop.myshopify.com/admin/products
      *
      * @var string
@@ -61,6 +62,7 @@ abstract class ShopifyAPI
 
     /**
      * List of child Resource names / classes
+     * 
      * If any array item has an associative key => value pair, value will be considered as the resource name
      * (by which it will be called) and key will be the associated class name.
      *
@@ -84,12 +86,17 @@ abstract class ShopifyAPI
 
     /**
      * List of custom GET / POST / PUT / DELETE actions
+     *
      * Custom actions can be used without calling the get(), post(), put(), delete() methods directly
      * @example: ['enable', 'disable', 'remove','default' => 'makeDefault']
      * Methods can be called like enable(), disable(), remove(), makeDefault() etc.
-     * If any array item has an associative key => value pair, value will be considered as the method name and key will be the associated path to be used with the action.
+     * If any array item has an associative key => value pair, value will be considered as the method name
+     * and key will be the associated path to be used with the action.
      *
-     * @var array
+     * @var array $customGetActions
+     * @var array $customPostActions
+     * @var array $customPutActions
+     * @var array $customDeleteActions
      */
     protected $customGetActions = array();
     protected $customPostActions = array();
@@ -98,6 +105,7 @@ abstract class ShopifyAPI
 
     /**
      * The ID of the resource
+     *
      * If provided, the actions will be called against that specific resource ID
      *
      * @var integer
@@ -125,6 +133,7 @@ abstract class ShopifyAPI
 
     /**
      * Return ShopifyAPI instance for the child resource.
+     *
      * @example $shopify->Product($productID)->Image->get(); //Here Product is the parent resource and Image is a child resource
      * Called like an object properties (without parenthesis)
      *
@@ -139,6 +148,7 @@ abstract class ShopifyAPI
 
     /**
      * Return ShopifyAPI instance for the child resource or call a custom action for the resource
+     *
      * @example $shopify->Product($productID)->Image($imageID)->get(); //Here Product is the parent resource and Image is a child resource
      * Called like an object method (with parenthesis) optionally with the resource ID as the first argument
      * @example $shopify->Discount($discountID)->enable(); //Calls custom action enable() on Discount resource
@@ -240,6 +250,7 @@ abstract class ShopifyAPI
 
     /**
      * Get the resource key to be used for while sending data to the API
+     *
      * Normally its the same as $resourceKey, when it's different, the specific resource class will override this function
      *
      * @return string
@@ -251,6 +262,7 @@ abstract class ShopifyAPI
 
     /**
      * Get the pluralized version of the resource key
+     *
      * Normally its the same as $resourceKey appended with 's', when it's different, the specific resource class will override this function
      *
      * @return string
@@ -262,6 +274,7 @@ abstract class ShopifyAPI
 
     /**
      * Get the resource path to be used to generate the api url
+     *
      * Normally its the same as the pluralized version of the resource key,
      * when it's different, the specific resource class will override this function
      *
@@ -450,6 +463,8 @@ abstract class ShopifyAPI
      * @param array $dataArray
      * @param string $dataKey
      *
+     * @internal
+     *
      * @return array
      */
     protected function wrapData($dataArray, $dataKey = null)
@@ -463,6 +478,8 @@ abstract class ShopifyAPI
      * Convert an array to string
      *
      * @param array $array
+     *
+     * @internal
      *
      * @return string
      */

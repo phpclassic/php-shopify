@@ -15,8 +15,10 @@ namespace PHPShopify;
  * Customer -> Child Resources
  * --------------------------------------------------------------------------
  * @property-read ShopifyAPI $Address
+ * @property-read ShopifyAPI $Metafield
  *
  * @method ShopifyAPI Address(integer $id = null)
+ * @method ShopifyAPI Metafield(integer $id = null)
  *
  */
 class Customer extends ShopifyAPI
@@ -35,6 +37,7 @@ class Customer extends ShopifyAPI
      * @inheritDoc
      */
     protected $childResource = array(
-        'CustomerAddress' => 'Address'
+        'CustomerAddress' => 'Address',
+        'Metafield',
     );
 }

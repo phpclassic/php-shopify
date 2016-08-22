@@ -15,9 +15,11 @@ namespace PHPShopify;
  * --------------------------------------------------------------------------
  * @property-read ShopifyAPI $Article
  * @property-read ShopifyAPI $Event
+ * @property-read ShopifyAPI $Metafield
  *
  * @method ShopifyAPI Article(integer $id = null)
  * @method ShopifyAPI Event(integer $id = null)
+ * @method ShopifyAPI Metafield(integer $id = null)
  *
  */
 class Blog extends ShopifyAPI
@@ -33,5 +35,6 @@ class Blog extends ShopifyAPI
     protected $childResource = array(
         'Article',
         'Event',
+        'Metafield',
     );
 }

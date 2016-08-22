@@ -15,8 +15,10 @@ namespace PHPShopify;
  * CustomCollection -> Child Resources
  * --------------------------------------------------------------------------
  * @property-read ShopifyAPI $Event
+ * @property-read ShopifyAPI $Metafield
  *
  * @method ShopifyAPI Event(integer $id = null)
+ * @method ShopifyAPI Metafield(integer $id = null)
  *
  */
 class CustomCollection extends ShopifyAPI
@@ -31,5 +33,6 @@ class CustomCollection extends ShopifyAPI
      */
     protected $childResource = array(
         'Event',
+        'Metafield',
     );
 }

@@ -20,12 +20,14 @@ namespace PHPShopify;
  * @property-read ShopifyAPI $Refund
  * @property-read ShopifyAPI $Transaction
  * @property-read ShopifyAPI $Event
+ * @property-read ShopifyAPI $Metafield
  *
  * @method ShopifyAPI Fulfillment(integer $id = null)
  * @method ShopifyAPI Risk(integer $id = null)
  * @method ShopifyAPI Refund(integer $id = null)
  * @method ShopifyAPI Transaction(integer $id = null)
  * @method ShopifyAPI Event(integer $id = null)
+ * @method ShopifyAPI Metafield(integer $id = null)
  *
  */
 class Order extends ShopifyAPI
@@ -44,5 +46,6 @@ class Order extends ShopifyAPI
         'Refund',
         'Transaction',
         'Event',
+        'Metafield',
     );
 }

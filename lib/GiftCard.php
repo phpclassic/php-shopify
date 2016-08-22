@@ -15,6 +15,7 @@ namespace PHPShopify;
  * GiftCard -> Custom actions
  * --------------------------------------------------------------------------
  * @method array disable()      Disable a gift card. Disabling a gift card is permanent and cannot be undone.
+ * @method array search()       Search for gift cards matching supplied query
  *
  */
 class GiftCard extends ShopifyAPI

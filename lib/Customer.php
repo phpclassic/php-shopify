@@ -19,7 +19,10 @@ namespace PHPShopify;
  *
  * @method ShopifyAPI Address(integer $id = null)
  * @method ShopifyAPI Metafield(integer $id = null)
- *
+ * --------------------------------------------------------------------------
+ * Customer -> Custom actions
+ * --------------------------------------------------------------------------
+ * @method array search()      Search for customers matching supplied query
  */
 class Customer extends ShopifyAPI
 {

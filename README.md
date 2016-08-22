@@ -25,7 +25,7 @@ PHPShopify uses curl extension for handling http calls to the API. So you need t
 
 You can use PHPShopify in a pretty simple object oriented way. 
 
-#### Configure ShopifyClient
+#### Configure ShopifyClient SDK
 If you are using your own private API, provide the ApiKey and Password. For Third party apps, use the permanent access token which you have got from the app.
 
 ```php
@@ -52,7 +52,7 @@ $shopify = new PHPShopify\ShopifyClient($config);
 ```
 
 ##### Now you can do `get()`, `post()`, `put()`, `delete()` calling the resources in the object oriented way. All resources are named as same as it is named in shopify API reference. (See the resource map below.) 
-> All the requests returns an array (which can be single resource or an array of multiple resources) if succeeded. When no result is expected (for example a DELETE request), an empty array will be returned.
+> All the requests returns an array (which can be a single resource array or an array of multiple resources) if succeeded. When no result is expected (for example a DELETE request), an empty array will be returned.
 
 Get all product list (GET request)
 
@@ -118,6 +118,7 @@ $shopify->WebHook($webHookID)->delete());
 
 ###The child resources can be used in a nested way.
 > You must provide the ID of the parent resource when trying to get any child resource
+
 For example, get the images of a product (GET request)
 
 ```php
@@ -174,7 +175,7 @@ Delete any specific article from a specific blog (DELETE request)
 $blogArticle = $shopify->Blog($blogID)->Article($articleID)->delete();
 ```
 
-### Available Resource Mapping
+### Resource Mapping
 Some resources are available directly, some resources are only available through parent resources and a few resources can be accessed both ways. It is recommended that you see the details in the related Shopify API Reference page about each resource. Each resource name here is linked to related Shopify API Reference page.
 > Use the resources only by listed resource map. Trying to get a resource directly which is only available through parent resource may end up with errors.
 
@@ -236,13 +237,34 @@ Some resources are available directly, some resources are only available through
 - Theme -> [Asset](https://help.shopify.com/api/reference/asset/)
 - [User](https://help.shopify.com/api/reference/user) _(read only, Shopify Plus Only_
 - [Webhook](https://help.shopify.com/api/reference/webhook)
-- []()
 
-### Custom actions
-There are several action methods which can be called without calling the `get()`, `post()`, `put()`, `delete()` methods directly, which eventually results in a custom call to one of the `get()`, `post()`, `put()`, `delete()` methods.
-The custom methods are specific to some resources which may not be available for other resources.  It is recommended that you see the details in the related Shopify API Reference page about each action. We will just list the available actions here with some brief info.
+### Custom Actions
+There are several action methods which can be called without calling the `get()`, `post()`, `put()`, `delete()` methods directly, but eventually results in a custom call to one of those methods.
 
-- Comment -> 
+For example, get count of total projects
+```php
+$productCount = $shopify->Product->count();
+```
+
+Make an address default for the customer.
+```php
+$shopify->Customer($customerID)->Address($addressID)->makeDefault();
+```
+
+Search for customers with keyword "Bob" living in country "United States".
+```php
+$shopify->Customer->search("Bob country:United States");
+```
+
+#### Custom Actions List
+The custom methods are specific to some resources which may not be available for other resources.  It is recommended that you see the details in the related Shopify API Reference page about each action. We will just list the available actions here with some brief info. each action name is linked to an example in Shopify API Reference which has more details information.
+
+- _(Any resource type)_ ->
+    - [count()](https://help.shopify.com/api/reference/product#count)
+    Get a count of all the resources.
+    Unlike all other actions, this function returns an integer value.
+
+- Comment ->
     - [spam()](https://help.shopify.com/api/reference/comment#spam)
     Mark a Comment as spam
     - [notSpam()](https://help.shopify.com/api/reference/comment#not_spam)
@@ -254,10 +276,14 @@ The custom methods are specific to some resources which may not be available for
     - [restore()](https://help.shopify.com/api/reference/comment#restore)
     Restore a Comment
     
+- Customer ->
+    - [search()](https://help.shopify.com/api/reference/customer#search)
+    Search for customers matching supplied query
+    
 - Customer -> Address ->
     - [makeDefault()](https://help.shopify.com/api/reference/customeraddress#default)
     Sets the address as default for the customer
-    - [set()](https://help.shopify.com/api/reference/customeraddress#set)
+    - [set($params)](https://help.shopify.com/api/reference/customeraddress#set)
     Perform bulk operations against a number of addresses
     
 - Discount ->
@@ -277,6 +303,8 @@ The custom methods are specific to some resources which may not be available for
 - GiftCard ->
     - [disable()](https://help.shopify.com/api/reference/gift_card#disable)
     Disable a gift card.
+    - [search()](https://help.shopify.com/api/reference/gift_card#search)
+    Search for gift cards matching supplied query
 
 - Order -> Refund ->
     - [calculate()](https://help.shopify.com/api/reference/refund#calculate)
@@ -296,5 +324,5 @@ The custom methods are specific to some resources which may not be available for
     - [current()](https://help.shopify.com/api/reference/user#current)
     Get the current logged-in user
 
-#Reference
+## Reference
 - [Shopify API Reference](https://help.shopify.com/api/reference/)

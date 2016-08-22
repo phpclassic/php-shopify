@@ -308,16 +308,15 @@ abstract class ShopifyAPI
      *
      * @return array
      */
-    public function get($urlParams = array(), $url = null)
+    public function get($urlParams = array(), $url = null, $dataKey = null)
     {
-
         if (!$url) $url  = $this->generateUrl($urlParams);
 
         $this->prepareRequest();
 
         $response = CurlRequest::get($url, $this->httpHeaders);
 
-        $dataKey = $this->id ? $this->resourceKey : $this->pluralizeKey();
+        if (!$dataKey) $dataKey = $this->id ? $this->resourceKey : $this->pluralizeKey();
 
         return $this->processResponse($response, $dataKey);
 
@@ -327,22 +326,14 @@ abstract class ShopifyAPI
      * Get count for the number of resources available
      *
      * @param array $urlParams Check Shopify API reference of the specific resource for the list of URL parameters
-     * @param string $url
-     *
-     * @uses CurlRequest::get() to send the HTTP request
      *
      * @return integer
      */
-    public function count($urlParams = array(), $url = null)
+    public function count($urlParams = array())
     {
+        $url = $this->generateUrl($urlParams, 'count');
 
-        if (!$url) $url = $this->generateUrl($urlParams, 'count');
-
-        $this->prepareRequest();
-
-        $response = CurlRequest::get($url, $this->httpHeaders);
-
-        return $this->processResponse($response, 'count');
+        return $this->get(array(), $url, 'count');
     }
 
     /**

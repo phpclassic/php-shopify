@@ -265,9 +265,9 @@ The custom methods are specific to some resources which may not be available for
     Unlike all other actions, this function returns an integer value.
 
 - Comment ->
-    - [spam()](https://help.shopify.com/api/reference/comment#spam)
+    - [markSpam()](https://help.shopify.com/api/reference/comment#spam)
     Mark a Comment as spam
-    - [notSpam()](https://help.shopify.com/api/reference/comment#not_spam)
+    - [markNotSpam()](https://help.shopify.com/api/reference/comment#not_spam)
     Mark a Comment as not spam
     - [approve()](https://help.shopify.com/api/reference/comment#approve)
     Approve a Comment

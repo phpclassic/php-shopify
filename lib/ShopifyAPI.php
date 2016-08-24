@@ -35,14 +35,7 @@ abstract class ShopifyAPI
      *
      * @var array
      */
-    protected $httpHeaders;
-
-    /**
-     * Prepared JSON string to be posted with request
-     *
-     * @var string
-     */
-    protected $postDataJSON;
+    protected $httpHeaders = array();
 
     /**
      * The base URL of the API Resource (excluding the '.json' extension).
@@ -129,6 +122,10 @@ abstract class ShopifyAPI
         $parentResource = isset($config['ParentResource']) ? $config['ParentResource'] : '';
 
         $this->resourceUrl = $config['ApiUrl'] . $parentResource . $this->getResourcePath() . ($this->id ? '/' . $this->id : '');
+
+        if (isset($config['AccessToken'])) {
+            $this->httpHeaders['X-Shopify-Access-Token'] = $config['AccessToken'];
+        }
     }
 
     /**
@@ -171,7 +168,7 @@ abstract class ShopifyAPI
             $childKey = array_search($name, $this->childResource);
 
             if ($childKey === false) {
-                throw new \SdkException("Child Resource $name is not available for " . $this->getResourceName());
+                throw new SdkException("Child Resource $name is not available for " . $this->getResourceName());
             }
 
             //If any associative key is given to the childname, then it will be considered as the class name,
@@ -303,8 +300,9 @@ abstract class ShopifyAPI
      *
      * @param array $urlParams Check Shopify API reference of the specific resource for the list of URL parameters
      * @param string $url
+     * @param string $dataKey Keyname to fetch data from response array
      *
-     * @uses CurlRequest::get() to send the HTTP request
+     * @uses HttpRequestJson::get() to send the HTTP request
      *
      * @return array
      */
@@ -312,9 +310,7 @@ abstract class ShopifyAPI
     {
         if (!$url) $url  = $this->generateUrl($urlParams);
 
-        $this->prepareRequest();
-
-        $response = CurlRequest::get($url, $this->httpHeaders);
+        $response = HttpRequestJson::get($url, $this->httpHeaders);
 
         if (!$dataKey) $dataKey = $this->id ? $this->resourceKey : $this->pluralizeKey();
 
@@ -364,17 +360,17 @@ abstract class ShopifyAPI
      * @param array $dataArray Check Shopify API reference of the specific resource for the list of required and optional data elements to be provided
      * @param string $url
      *
-     * @uses CurlRequest::post() to send the HTTP request
+     * @uses HttpRequestJson::post() to send the HTTP request
      *
      * @return array
      */
     public function post($dataArray, $url = null)
     {
         if (!$url) $url = $this->generateUrl();
-        
-        $this->prepareRequest($dataArray);
 
-        $response = CurlRequest::post($url, $this->postDataJSON, $this->httpHeaders);
+        if (!empty($dataArray)) $dataArray = $this->wrapData($dataArray);
+
+        $response = HttpRequestJson::post($url, $dataArray, $this->httpHeaders);
 
         return $this->processResponse($response, $this->resourceKey);
     }
@@ -385,7 +381,7 @@ abstract class ShopifyAPI
      * @param array $dataArray Check Shopify API reference of the specific resource for the list of required and optional data elements to be provided
      * @param string $url
      *
-     * @uses CurlRequest::put() to send the HTTP request
+     * @uses HttpRequestJson::put() to send the HTTP request
      *
      * @return array
      */
@@ -394,9 +390,9 @@ abstract class ShopifyAPI
 
         if (!$url) $url = $this->generateUrl();
 
-        $this->prepareRequest($dataArray);
+        if (!empty($dataArray)) $dataArray = $this->wrapData($dataArray);
 
-        $response = CurlRequest::put($url, $this->postDataJSON, $this->httpHeaders);
+        $response = HttpRequestJson::put($url, $dataArray, $this->httpHeaders);
 
         return $this->processResponse($response, $this->resourceKey);
     }
@@ -407,7 +403,7 @@ abstract class ShopifyAPI
      * @param array $urlParams Check Shopify API reference of the specific resource for the list of URL parameters
      * @param string $url
      *
-     * @uses CurlRequest::delete() to send the HTTP request
+     * @uses HttpRequestJson::delete() to send the HTTP request
      *
      * @return array an empty array will be returned if the request is successfully completed
      */
@@ -415,37 +411,9 @@ abstract class ShopifyAPI
     {
         if (!$url) $url = $this->generateUrl($urlParams);
 
-        $this->prepareRequest();
-
-        $response = CurlRequest::delete($url, $this->httpHeaders);
+        $response = HttpRequestJson::delete($url, $this->httpHeaders);
 
         return $this->processResponse($response);
-    }
-
-    /**
-     * Prepare the data and request headers before making the call
-     *
-     * @param array $dataArray
-     *
-     * @return void
-     */
-    public function prepareRequest($dataArray = array())
-    {
-        if (!empty($dataArray)) $dataArray = $this->wrapData($dataArray);
-
-        $this->postDataJSON = json_encode($dataArray);
-
-        $this->httpHeaders = array();
-
-        if (isset($this->config['AccessToken'])) {
-            $this->httpHeaders['X-Shopify-Access-Token'] = $this->config['AccessToken'];
-        }
-
-        if (!empty($dataArray)) {
-            $this->httpHeaders['Content-type'] = 'application/json';
-            $this->httpHeaders['Content-Length'] = strlen($this->postDataJSON);
-        }
-
     }
 
     /**
@@ -497,25 +465,25 @@ abstract class ShopifyAPI
     /**
      * Process the request response
      *
-     * @param string $response JSON response from the API
-     * @param string $dataKey key to be looked for in the data
+     * @param array $responseArray Request response in array format
+     * @param string $dataKey Keyname to fetch data from response array
      *
      * @throws ApiException if the response has an error specified
      * @throws CurlException if response received with unexpected HTTP code.
      *
      * @return array
      */
-    public function processResponse($response, $dataKey = false)
+    public function processResponse($responseArray, $dataKey = null)
     {
-        $responseArray = json_decode($response, true);
-
         if ($responseArray === null) {
             //Something went wrong, Checking HTTP Codes
             $httpOK = 200; //Request Successful, OK.
             $httpCreated = 201; //Create Successful.
+
+            //should be null if any other library used for http calls
             $httpCode = CurlRequest::$lastHttpCode;
 
-            if ($httpCode != $httpOK && $httpCode != $httpCreated) {
+            if ($httpCode != null && $httpCode != $httpOK && $httpCode != $httpCreated) {
                 throw new Exception\CurlException("Request failed with HTTP Code $httpCode.");
             }
         }

@@ -18,15 +18,15 @@ composer require phpclassic/php-shopify
 ```
 
 ### Requirements
-PHPShopify uses curl extension for handling http calls to the API. So you need to be have enabled the curl extension.
->However if you prefer to use any other available package library for handling HTTP calls, you can easily do so by modifying 1 line in each of the `get()`, `post()`, `put()`, `delete()` methods in `PHPShopify\ShopifyAPI` class.
+PHPShopify uses curl extension for handling http calls. So you need to have the curl extension installed and enabled with PHP.
+>However if you prefer to use any other available package library for handling HTTP calls, you can easily do so by modifying 1 line in each of the `get()`, `post()`, `put()`, `delete()` methods in `PHPShopify\HttpRequestJson` class.
 
 ## Usage
 
 You can use PHPShopify in a pretty simple object oriented way. 
 
 #### Configure ShopifyClient SDK
-If you are using your own private API, provide the ApiKey and Password. For Third party apps, use the permanent access token which you have got from the app.
+If you are using your own private API, provide the ApiKey and Password. 
 
 ```php
 $config = array(
@@ -34,18 +34,71 @@ $config = array(
     'ApiKey' => '***YOUR-PRIVATE-API-KEY***',
     'Password' => '***YOUR-PRIVATE-API-PASSWORD***',
 );
+
+PHPShopify\ShopifyClient::config($config);
 ```
 
-Or
+For Third party apps, use the permanent access token.
 
 ```php
 $config = array(
     'ShopUrl' => 'yourshop.myshopify.com',
     'AccessToken' => '***ACCESS-TOKEN-FOR-THIRD-PARTY-APP***',
 );
+
+PHPShopify\ShopifyClient::config($config);
+```
+##### How to get the permanent access token for a shop?
+There is a AuthHelper class to help you getting the permanent access token from the shop using oAuth. 
+
+1. First, you need to configure the client with additional parameter SharedSecret
+
+```php
+$config = array(
+    'ShopUrl' => 'yourshop.myshopify.com',
+    'ApiKey' => '***YOUR-PRIVATE-API-KEY***',
+    'SharedSecret' => '***YOUR-SHARED-SECRET***',
+);
+
+PHPShopify\ShopifyClient::config($config);
+```
+
+2. Create the authentication request 
+
+> The redirect url must be white listed from your app admin as one of **Application Redirect URLs**.
+
+```php
+$scopes = 'read_products,write_products,read_script_tags,write_script_tags';
+//This is also valid
+//$scopes = array('read_products','write_products','read_script_tags', 'write_script_tags'); 
+$redirectUrl = 'https://yourappurl.com/your_redirect_url.php';
+
+\PHPShopify\AuthHelper::createAuthRequest($scopes, $redirectUrl);
+```
+
+3. Get the access token when redirected back to the `$redirectUrl`
+
+```php
+PHPShopify\ShopifyClient::config($config);
+$accessToken = \PHPShopify\AuthHelper::getAccessToken();
+//Now store it in database or somewhere else
+```
+
+> You can use the same page for creating the request and getting the access token. In that case just skip the 2nd parameter `$redirectUrl` while calling `createAuthRequest()` method. The AuthHelper class will do the rest for you.
+
+```php
+PHPShopify\ShopifyClient::config($config);
+$accessToken = \PHPShopify\AuthHelper::createAuthRequest($scopes);
+//Now store it in database or somewhere else
 ```
 
 #### Get the ShopifyClient SDK Object
+
+```php
+$shopify = new PHPShopify\ShopifyClient;
+```
+
+You can provide the configuration as a parameter while instantiating the object (if you didn't configure already by calling `config()` method)
 
 ```php
 $shopify = new PHPShopify\ShopifyClient($config);

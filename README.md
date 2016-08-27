@@ -51,7 +51,7 @@ PHPShopify\ShopifyClient::config($config);
 ##### How to get the permanent access token for a shop?
 There is a AuthHelper class to help you getting the permanent access token from the shop using oAuth. 
 
-1. First, you need to configure the client with additional parameter SharedSecret
+1) First, you need to configure the client with additional parameter SharedSecret
 
 ```php
 $config = array(
@@ -63,11 +63,12 @@ $config = array(
 PHPShopify\ShopifyClient::config($config);
 ```
 
-2. Create the authentication request 
+2) Create the authentication request 
 
 > The redirect url must be white listed from your app admin as one of **Application Redirect URLs**.
 
 ```php
+//your_authorize_url.php
 $scopes = 'read_products,write_products,read_script_tags,write_script_tags';
 //This is also valid
 //$scopes = array('read_products','write_products','read_script_tags', 'write_script_tags'); 
@@ -76,17 +77,19 @@ $redirectUrl = 'https://yourappurl.com/your_redirect_url.php';
 \PHPShopify\AuthHelper::createAuthRequest($scopes, $redirectUrl);
 ```
 
-3. Get the access token when redirected back to the `$redirectUrl`
+3) Get the access token when redirected back to the `$redirectUrl` after app authorization. 
 
 ```php
+//your_redirect_url.php
 PHPShopify\ShopifyClient::config($config);
 $accessToken = \PHPShopify\AuthHelper::getAccessToken();
 //Now store it in database or somewhere else
 ```
 
-> You can use the same page for creating the request and getting the access token. In that case just skip the 2nd parameter `$redirectUrl` while calling `createAuthRequest()` method. The AuthHelper class will do the rest for you.
+> You can use the same page for creating the request and getting the access token (redirect url). In that case just skip the 2nd parameter `$redirectUrl` while calling `createAuthRequest()` method. The AuthHelper class will do the rest for you.
 
 ```php
+//your_authorize_and_redirect_url.php
 PHPShopify\ShopifyClient::config($config);
 $accessToken = \PHPShopify\AuthHelper::createAuthRequest($scopes);
 //Now store it in database or somewhere else

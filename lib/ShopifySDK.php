@@ -146,13 +146,13 @@ class ShopifySDK
     }
 
     /**
-     * Return ShopifyAPI instance for a resource.
+     * Return ShopifyResource instance for a resource.
      * @example $shopify->Product->get(); //Returns all available Products
      * Called like an object properties (without parenthesis)
      *
      * @param string $resourceName
      *
-     * @return ShopifyAPI
+     * @return ShopifyResource
      */
     public function __get($resourceName)
     {
@@ -160,16 +160,16 @@ class ShopifySDK
     }
 
     /**
-     * Return ShopifyAPI instance for a resource.
+     * Return ShopifyResource instance for a resource.
      * Called like an object method (with parenthesis) optionally with the resource ID as the first argument
      * @example $shopify->Product($productID); //Return a specific product defined by $productID
      *
      * @param string $resourceName
      * @param array $arguments
      *
-     * @throws SdkException if the $name is not a valid ShopifyAPI resource.
+     * @throws SdkException if the $name is not a valid ShopifyResource resource.
      *
-     * @return ShopifyAPI
+     * @return ShopifyResource
      */
     public function __call($resourceName, $arguments)
     {

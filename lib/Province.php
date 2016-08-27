@@ -10,7 +10,7 @@
 namespace PHPShopify;
 
 
-class Province extends ShopifyAPI
+class Province extends ShopifyResource
 {
     /**
      * @inheritDoc

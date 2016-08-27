@@ -10,7 +10,7 @@
 namespace PHPShopify;
 
 
-class FulfillmentEvent extends ShopifyAPI
+class FulfillmentEvent extends ShopifyResource
 {
     /**
      * @inheritDoc

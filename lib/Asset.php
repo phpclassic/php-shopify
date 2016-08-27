@@ -10,7 +10,7 @@
 namespace PHPShopify;
 
 
-class Asset extends ShopifyAPI
+class Asset extends ShopifyResource
 {
     /**
      * @inheritDoc

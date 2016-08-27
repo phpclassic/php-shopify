@@ -10,7 +10,7 @@
 namespace PHPShopify;
 
 
-class ProductImage extends ShopifyAPI
+class ProductImage extends ShopifyResource
 {
     /**
      * @inheritDoc

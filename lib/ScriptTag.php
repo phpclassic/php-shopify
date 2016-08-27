@@ -10,7 +10,7 @@
 namespace PHPShopify;
 
 
-class ScriptTag extends ShopifyAPI
+class ScriptTag extends ShopifyResource
 {
     /**
      * @inheritDoc

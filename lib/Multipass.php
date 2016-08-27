@@ -12,7 +12,7 @@ namespace PHPShopify;
 
 use PHPShopify\Exception\ApiException;
 
-class Multipass extends ShopifyAPI
+class Multipass extends ShopifyResource
 {
 
     /**

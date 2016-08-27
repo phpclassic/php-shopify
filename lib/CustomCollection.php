@@ -14,14 +14,14 @@ namespace PHPShopify;
  * --------------------------------------------------------------------------
  * CustomCollection -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyAPI $Event
- * @property-read ShopifyAPI $Metafield
+ * @property-read ShopifyResource $Event
+ * @property-read ShopifyResource $Metafield
  *
- * @method ShopifyAPI Event(integer $id = null)
- * @method ShopifyAPI Metafield(integer $id = null)
+ * @method ShopifyResource Event(integer $id = null)
+ * @method ShopifyResource Metafield(integer $id = null)
  *
  */
-class CustomCollection extends ShopifyAPI
+class CustomCollection extends ShopifyResource
 {
     /**
      * @inheritDoc

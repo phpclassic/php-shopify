@@ -14,12 +14,12 @@ namespace PHPShopify;
  * --------------------------------------------------------------------------
  * Article -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyAPI $Event
+ * @property-read ShopifyResource $Event
  *
- * @method ShopifyAPI Event(integer $id = null)
+ * @method ShopifyResource Event(integer $id = null)
  *
  */
-class Article extends ShopifyAPI
+class Article extends ShopifyResource
 {
     /**
      * @inheritDoc

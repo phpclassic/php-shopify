@@ -10,7 +10,7 @@
 namespace PHPShopify;
 
 
-class Webhook extends ShopifyAPI
+class Webhook extends ShopifyResource
 {
     /**
      * @inheritDoc

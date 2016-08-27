@@ -10,7 +10,7 @@
 namespace PHPShopify;
 
 
-class Metafield extends ShopifyAPI
+class Metafield extends ShopifyResource
 {
     /**
      * @inheritDoc

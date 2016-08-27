@@ -10,7 +10,7 @@
 namespace PHPShopify;
 
 
-class ApplicationCharge extends ShopifyAPI
+class ApplicationCharge extends ShopifyResource
 {
     /**
      * @inheritDoc

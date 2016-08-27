@@ -10,7 +10,7 @@
 namespace PHPShopify;
 
 
-class UsageCharge extends ShopifyAPI
+class UsageCharge extends ShopifyResource
 {
     /**
      * @inheritDoc

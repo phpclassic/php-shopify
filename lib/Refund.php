@@ -17,7 +17,7 @@ namespace PHPShopify;
  * @method array calculate()      Calculate a Refund.
  *
  */
-class Refund extends ShopifyAPI
+class Refund extends ShopifyResource
 {
     /**
      * @inheritDoc

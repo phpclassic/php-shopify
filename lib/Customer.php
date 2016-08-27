@@ -14,17 +14,17 @@ namespace PHPShopify;
  * --------------------------------------------------------------------------
  * Customer -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyAPI $Address
- * @property-read ShopifyAPI $Metafield
+ * @property-read ShopifyResource $Address
+ * @property-read ShopifyResource $Metafield
  *
- * @method ShopifyAPI Address(integer $id = null)
- * @method ShopifyAPI Metafield(integer $id = null)
+ * @method ShopifyResource Address(integer $id = null)
+ * @method ShopifyResource Metafield(integer $id = null)
  * --------------------------------------------------------------------------
  * Customer -> Custom actions
  * --------------------------------------------------------------------------
  * @method array search()      Search for customers matching supplied query
  */
-class Customer extends ShopifyAPI
+class Customer extends ShopifyResource
 {
     /**
      * @inheritDoc

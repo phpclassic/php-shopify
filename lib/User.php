@@ -17,7 +17,7 @@ namespace PHPShopify;
  * @method array current()      Get the current logged-in user
  *
  */
-class User extends ShopifyAPI
+class User extends ShopifyResource
 {
     /**
      * @inheritDoc

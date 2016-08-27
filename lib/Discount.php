@@ -18,7 +18,7 @@ namespace PHPShopify;
  * @method array disable()      Disable a discount
  *
  */
-class Discount extends ShopifyAPI
+class Discount extends ShopifyResource
 {
     /**
      * @inheritDoc

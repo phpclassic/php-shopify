@@ -14,9 +14,9 @@ namespace PHPShopify;
  * --------------------------------------------------------------------------
  * Fulfillment -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyAPI $Event
+ * @property-read ShopifyResource $Event
  *
- * @method ShopifyAPI Event(integer $id = null)
+ * @method ShopifyResource Event(integer $id = null)
  *
  * --------------------------------------------------------------------------
  * Fulfillment -> Custom actions
@@ -26,7 +26,7 @@ namespace PHPShopify;
  * @method array cancel()       Cancel a fulfillment
  *
  */
-class Fulfillment extends ShopifyAPI
+class Fulfillment extends ShopifyResource
 {
     /**
      * @inheritDoc

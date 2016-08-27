@@ -15,9 +15,9 @@ namespace PHPShopify;
  * --------------------------------------------------------------------------
  * Comment -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyAPI $Event
+ * @property-read ShopifyResource $Event
  *
- * @method ShopifyAPI Event(integer $id = null)
+ * @method ShopifyResource Event(integer $id = null)
  *
  * --------------------------------------------------------------------------
  * Comment -> Custom actions
@@ -29,7 +29,7 @@ namespace PHPShopify;
  * @method array restore()      Restore a Comment
  *
  */
-class Comment extends ShopifyAPI
+class Comment extends ShopifyResource
 {
     /**
      * @inheritDoc

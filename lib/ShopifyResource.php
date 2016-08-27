@@ -21,7 +21,7 @@ use PHPShopify\Exception\CurlException;
 | This class handles get, post, put, delete and any other custom actions for the API
 |
 */
-abstract class ShopifyAPI
+abstract class ShopifyResource
 {
     /**
      * HTTP request headers
@@ -122,14 +122,14 @@ abstract class ShopifyAPI
     }
 
     /**
-     * Return ShopifyAPI instance for the child resource.
+     * Return ShopifyResource instance for the child resource.
      *
      * @example $shopify->Product($productID)->Image->get(); //Here Product is the parent resource and Image is a child resource
      * Called like an object properties (without parenthesis)
      *
      * @param string $childName
      *
-     * @return ShopifyAPI
+     * @return ShopifyResource
      */
     public function __get($childName)
     {
@@ -137,7 +137,7 @@ abstract class ShopifyAPI
     }
 
     /**
-     * Return ShopifyAPI instance for the child resource or call a custom action for the resource
+     * Return ShopifyResource instance for the child resource or call a custom action for the resource
      *
      * @example $shopify->Product($productID)->Image($imageID)->get(); //Here Product is the parent resource and Image is a child resource
      * Called like an object method (with parenthesis) optionally with the resource ID as the first argument
@@ -150,7 +150,7 @@ abstract class ShopifyAPI
      *
      * @throws SdkException if the $name is not a valid child resource or custom action method.
      *
-     * @return mixed / ShopifyAPI
+     * @return mixed / ShopifyResource
      */
     public function __call($name, $arguments)
     {

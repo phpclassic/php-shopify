@@ -15,22 +15,22 @@ namespace PHPShopify;
  * --------------------------------------------------------------------------
  * Order -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyAPI $Fulfillment
- * @property-read ShopifyAPI $Risk
- * @property-read ShopifyAPI $Refund
- * @property-read ShopifyAPI $Transaction
- * @property-read ShopifyAPI $Event
- * @property-read ShopifyAPI $Metafield
+ * @property-read ShopifyResource $Fulfillment
+ * @property-read ShopifyResource $Risk
+ * @property-read ShopifyResource $Refund
+ * @property-read ShopifyResource $Transaction
+ * @property-read ShopifyResource $Event
+ * @property-read ShopifyResource $Metafield
  *
- * @method ShopifyAPI Fulfillment(integer $id = null)
- * @method ShopifyAPI Risk(integer $id = null)
- * @method ShopifyAPI Refund(integer $id = null)
- * @method ShopifyAPI Transaction(integer $id = null)
- * @method ShopifyAPI Event(integer $id = null)
- * @method ShopifyAPI Metafield(integer $id = null)
+ * @method ShopifyResource Fulfillment(integer $id = null)
+ * @method ShopifyResource Risk(integer $id = null)
+ * @method ShopifyResource Refund(integer $id = null)
+ * @method ShopifyResource Transaction(integer $id = null)
+ * @method ShopifyResource Event(integer $id = null)
+ * @method ShopifyResource Metafield(integer $id = null)
  *
  */
-class Order extends ShopifyAPI
+class Order extends ShopifyResource
 {
     /**
      * @inheritDoc

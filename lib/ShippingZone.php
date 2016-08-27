@@ -10,7 +10,7 @@
 namespace PHPShopify;
 
 
-class ShippingZone extends ShopifyAPI
+class ShippingZone extends ShopifyResource
 {
     /**
      * @inheritDoc

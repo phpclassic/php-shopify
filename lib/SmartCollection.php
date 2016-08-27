@@ -14,9 +14,9 @@ namespace PHPShopify;
  * --------------------------------------------------------------------------
  * SmartCollection -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyAPI $Event
+ * @property-read ShopifyResource $Event
  *
- * @method ShopifyAPI Event(integer $id = null)
+ * @method ShopifyResource Event(integer $id = null)
  *
  * --------------------------------------------------------------------------
  * SmartCollection -> Custom actions
@@ -24,7 +24,7 @@ namespace PHPShopify;
  * @method array sortOrder($params)     Set the ordering type and/or the manual order of products in a smart collection
  *
  */
-class SmartCollection extends ShopifyAPI
+class SmartCollection extends ShopifyResource
 {
     /**
      * @inheritDoc

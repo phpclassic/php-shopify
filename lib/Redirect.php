@@ -10,7 +10,7 @@
 namespace PHPShopify;
 
 
-class Redirect extends ShopifyAPI
+class Redirect extends ShopifyResource
 {
     /**
      * @inheritDoc

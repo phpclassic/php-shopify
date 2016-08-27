@@ -14,12 +14,12 @@ namespace PHPShopify;
  * --------------------------------------------------------------------------
  * ProductVariant -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyAPI $Metafield
+ * @property-read ShopifyResource $Metafield
  *
- * @method ShopifyAPI Metafield(integer $id = null)
+ * @method ShopifyResource Metafield(integer $id = null)
  *
  */
-class ProductVariant extends ShopifyAPI
+class ProductVariant extends ShopifyResource
 {
     /**
      * @inheritDoc

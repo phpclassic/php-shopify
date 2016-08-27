@@ -10,7 +10,7 @@
 namespace PHPShopify;
 
 
-class OrderRisk extends ShopifyAPI
+class OrderRisk extends ShopifyResource
 {
     /**
      * @inheritDoc

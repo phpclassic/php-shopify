@@ -10,7 +10,7 @@
 namespace PHPShopify;
 
 
-class Location extends ShopifyAPI
+class Location extends ShopifyResource
 {
     /**
      * @inheritDoc

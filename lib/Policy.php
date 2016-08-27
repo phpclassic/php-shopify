@@ -10,7 +10,7 @@
 namespace PHPShopify;
 
 
-class Policy extends ShopifyAPI
+class Policy extends ShopifyResource
 {
     /**
      * @inheritDoc

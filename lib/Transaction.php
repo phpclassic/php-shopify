@@ -10,7 +10,7 @@
 namespace PHPShopify;
 
 
-class Transaction extends ShopifyAPI
+class Transaction extends ShopifyResource
 {
     /**
      * @inheritDoc

@@ -18,7 +18,7 @@ namespace PHPShopify;
  * @method array set($params)       Perform bulk operations against a number of addresses
  *
  */
-class CustomerAddress extends ShopifyAPI
+class CustomerAddress extends ShopifyResource
 {
     /**
      * @inheritDoc

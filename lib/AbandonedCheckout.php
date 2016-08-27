@@ -10,7 +10,7 @@
 namespace PHPShopify;
 
 
-class AbandonedCheckout extends ShopifyAPI
+class AbandonedCheckout extends ShopifyResource
 {
     /**
      * @inheritDoc

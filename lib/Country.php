@@ -14,12 +14,12 @@ namespace PHPShopify;
  * --------------------------------------------------------------------------
  * Country -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyAPI $Province
+ * @property-read ShopifyResource $Province
  *
- * @method ShopifyAPI Province(integer $id = null)
+ * @method ShopifyResource Province(integer $id = null)
  *
  */
-class Country extends ShopifyAPI
+class Country extends ShopifyResource
 {
     /**
      * @inheritDoc

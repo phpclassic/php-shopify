@@ -18,7 +18,7 @@ namespace PHPShopify;
  * @method array search()       Search for gift cards matching supplied query
  *
  */
-class GiftCard extends ShopifyAPI
+class GiftCard extends ShopifyResource
 {
     /**
      * @inheritDoc

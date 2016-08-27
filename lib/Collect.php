@@ -10,7 +10,7 @@
 namespace PHPShopify;
 
 
-class Collect extends ShopifyAPI
+class Collect extends ShopifyResource
 {
     /**
      * @inheritDoc

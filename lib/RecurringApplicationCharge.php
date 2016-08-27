@@ -14,9 +14,9 @@ namespace PHPShopify;
  * --------------------------------------------------------------------------
  * RecurringApplicationCharge -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyAPI $UsageCharge
+ * @property-read ShopifyResource $UsageCharge
  *
- * @method ShopifyAPI UsageCharge(integer $id = null)
+ * @method ShopifyResource UsageCharge(integer $id = null)
  *
  * --------------------------------------------------------------------------
  * RecurringApplicationCharge -> Custom actions
@@ -25,7 +25,7 @@ namespace PHPShopify;
  * @method array customize($data)     Customize a recurring application charge
  *
  */
-class RecurringApplicationCharge extends ShopifyAPI
+class RecurringApplicationCharge extends ShopifyResource
 {
     /**
      * @inheritDoc

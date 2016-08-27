@@ -13,16 +13,16 @@ namespace PHPShopify;
  * --------------------------------------------------------------------------
  * Blog -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyAPI $Article
- * @property-read ShopifyAPI $Event
- * @property-read ShopifyAPI $Metafield
+ * @property-read ShopifyResource $Article
+ * @property-read ShopifyResource $Event
+ * @property-read ShopifyResource $Metafield
  *
- * @method ShopifyAPI Article(integer $id = null)
- * @method ShopifyAPI Event(integer $id = null)
- * @method ShopifyAPI Metafield(integer $id = null)
+ * @method ShopifyResource Article(integer $id = null)
+ * @method ShopifyResource Event(integer $id = null)
+ * @method ShopifyResource Metafield(integer $id = null)
  *
  */
-class Blog extends ShopifyAPI
+class Blog extends ShopifyResource
 {
     /**
      * @inheritDoc

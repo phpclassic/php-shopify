@@ -10,7 +10,7 @@
 namespace PHPShopify;
 
 
-class CarrierService extends ShopifyAPI
+class CarrierService extends ShopifyResource
 {
     /**
      * @inheritDoc

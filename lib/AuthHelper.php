@@ -118,7 +118,7 @@ class AuthHelper
      * Get Access token for the API
      * Call this when being redirected from shopify page ( to the $redirectUrl) after authentication
      *
-     * @throws SdkException if SharedSecret or ApiKey is missing in SDK configuration
+     * @throws SdkException if SharedSecret or ApiKey is missing in SDK configuration or request is not valid
      *
      * @return string
      */
@@ -140,6 +140,8 @@ class AuthHelper
             $response = HttpRequestJson::post($config['AdminUrl'] . 'oauth/access_token', $data);
 
             return isset($response['access_token']) ? $response['access_token'] : null;
+        } else {
+            throw new SdkException("This request is not initiated from a valid shopify shop!");
         }
     }
 }

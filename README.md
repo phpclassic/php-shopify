@@ -7,7 +7,7 @@ Install with Composer
 composer require phpclassic/php-shopify
 ```
 
->You may not be able to install using composer until a stable version is available. For the time being you can download the zip file and put the extracted folder into `vendor/phpclassic` folder and add the following code into your root `composer.json` file:
+>You may not be able to install using composer until a stable version is available. For the time being you can download the zip file, put the extracted folder into `vendor/phpclassic` folder and add the following code into your root `composer.json` file:
 
 ```
     "autoload": {
@@ -110,13 +110,13 @@ $shopify = new PHPShopify\ShopifySDK($config);
 ##### Now you can do `get()`, `post()`, `put()`, `delete()` calling the resources in the object oriented way. All resources are named as same as it is named in shopify API reference. (See the resource map below.) 
 > All the requests returns an array (which can be a single resource array or an array of multiple resources) if succeeded. When no result is expected (for example a DELETE request), an empty array will be returned.
 
-Get all product list (GET request)
+- Get all product list (GET request)
 
 ```php
 $products = $shopify->Product->get();
 ```
 
-Get any specific product with ID (GET request)
+- Get any specific product with ID (GET request)
 
 ```php
 $productID = 23564666666;
@@ -124,7 +124,8 @@ $product = $shopify->Product($productID)->get();
 ```
 
 You can also filter the results by using the url parameters (as specified by Shopify API Reference for each specific resource). 
-For example get the list of cancelled orders after a specified date and time (and `fields` specifies the data columns for each row to be rendered) : 
+
+- For example get the list of cancelled orders after a specified date and time (and `fields` specifies the data columns for each row to be rendered) : 
 
 ```php
 $params = array(
@@ -136,7 +137,7 @@ $params = array(
 $orders = $shopify->Order->get($params);
 ```
 
-Create a new order (POST Request)
+- Create a new order (POST Request)
 
 ```php
 $order = array (
@@ -153,7 +154,7 @@ $order = array (
 $shopify->Order->post($order);
 ```
 
-Update an order (PUT Request)
+- Update an order (PUT Request)
 
 ```php
 $updateInfo = array (
@@ -163,7 +164,7 @@ $updateInfo = array (
 $shopify->Order($orderID)->put($order);
 ```
 
-Remove a WebHook (DELETE request)
+- Remove a WebHook (DELETE request)
 
 ```php
 $webHookID = 453487303;
@@ -175,14 +176,14 @@ $shopify->WebHook($webHookID)->delete());
 ###The child resources can be used in a nested way.
 > You must provide the ID of the parent resource when trying to get any child resource
 
-For example, get the images of a product (GET request)
+- For example, get the images of a product (GET request)
 
 ```php
 $productID = 23564666666;
 $productImages = $shopify->Product($productID)->Image->get();
 ```
 
-Add a new address for a customer (POST Request)
+- Add a new address for a customer (POST Request)
 
 ```php
 $address = array(
@@ -201,7 +202,7 @@ $customerID = 4425749127;
 $shopify->Customer($customerID)->Address->post($address);
 ```
 
-Create a fulfillment event (POST request)
+- Create a fulfillment event (POST request)
 
 ```php
 $fulfillmentEvent = array(
@@ -211,7 +212,7 @@ $fulfillmentEvent = array(
 $shopify->Order($orderID)->Fulfillment($fulfillmentID)->Event->post($fulfillmentEvent);
 ```
 
-Update a Blog article (PUT request)
+- Update a Blog article (PUT request)
 
 ```php
 $blogID = 23564666666;
@@ -225,7 +226,7 @@ $updateArtilceInfo = array(
 $shopify->Blog($blogID)->Article($articleID)->put($updateArtilceInfo);
 ```
 
-Delete any specific article from a specific blog (DELETE request)
+- Delete any specific article from a specific blog (DELETE request)
 
 ```php
 $blogArticle = $shopify->Blog($blogID)->Article($articleID)->delete();
@@ -291,23 +292,23 @@ Some resources are available directly, some resources are only available through
 - SmartCollection -> [Event](https://help.shopify.com/api/reference/event/)
 - [Theme](https://help.shopify.com/api/reference/theme)
 - Theme -> [Asset](https://help.shopify.com/api/reference/asset/)
-- [User](https://help.shopify.com/api/reference/user) _(read only, Shopify Plus Only_
+- [User](https://help.shopify.com/api/reference/user) _(read only, Shopify Plus Only)_
 - [Webhook](https://help.shopify.com/api/reference/webhook)
 
 ### Custom Actions
 There are several action methods which can be called without calling the `get()`, `post()`, `put()`, `delete()` methods directly, but eventually results in a custom call to one of those methods.
 
-For example, get count of total projects
+- For example, get count of total projects
 ```php
 $productCount = $shopify->Product->count();
 ```
 
-Make an address default for the customer.
+- Make an address default for the customer.
 ```php
 $shopify->Customer($customerID)->Address($addressID)->makeDefault();
 ```
 
-Search for customers with keyword "Bob" living in country "United States".
+- Search for customers with keyword "Bob" living in country "United States".
 ```php
 $shopify->Customer->search("Bob country:United States");
 ```

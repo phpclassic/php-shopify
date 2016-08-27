@@ -18,14 +18,11 @@ class Multipass extends ShopifyAPI
     /**
      * Multipass constructor.
      *
-     * @param array $config
      * @param integer $id
      *
      * @throws ApiException
-     *
-     * @return void
      */
-    public function __construct($config, $id = null)
+    public function __construct($id = null)
     {
         throw new ApiException("Multipass API is not available yet!");
     }

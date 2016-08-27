@@ -70,7 +70,7 @@ class ShopifyClient
      *
      * @var array
      */
-    protected $config;
+    public static $config;
 
     /**
      * List of available resources which can be called from this client
@@ -135,23 +135,17 @@ class ShopifyClient
      *
      * @param array $config
      *
-     * @throws SdkException if both AccessToken and ApiKey+Password Combination are missing
-     *
      * @return void
      */
     public function __construct($config)
     {
-
-
         if (isset($config['ApiKey']) && isset($config['Password'])) {
-            $config['ApiUrl'] = ShopifyClient::getAdminUrl($config['ShopUrl'], $config['ApiKey'], $config['Password']);
-        } elseif (!isset($config['AccessToken'])) {
-            throw new SdkException("Either AccessToken or ApiKey+Password Combination must be provided!");
+            $config['ApiUrl'] = AuthHelper::getAdminUrl($config['ShopUrl'], $config['ApiKey'], $config['Password']);
         } else {
-            $config['ApiUrl'] = ShopifyClient::getAdminUrl($config['ShopUrl']);
+            $config['ApiUrl'] = AuthHelper::getAdminUrl($config['ShopUrl']);
         }
 
-        $this->config = $config;
+        ShopifyClient::$config = $config;
     }
 
     /**
@@ -197,138 +191,19 @@ class ShopifyClient
         $resourceID = !empty($arguments) ? $arguments[0] : null;
 
         //Initiate the resource object
-        $resource = new $resourceClassName($this->config, $resourceID);
+        $resource = new $resourceClassName($resourceID);
 
         return $resource;
     }
 
     /**
-     * Return the admin url, based on a given shop url
+     * Configure the SDK client
      *
-     * @param string $shopUrl
-     * @param string $apiKey
-     * @param string $apiPassword
-     * @return string
+     * @param $config
+     * @return ShopifyClient
      */
-    public static function getAdminUrl($shopUrl, $apiKey = null, $apiPassword = null)
+    public static function config($config)
     {
-        //Remove https:// and trailing slash (if provided)
-        $shopUrl = preg_replace('#^https?://|/$#', '', $shopUrl);
-
-        if($apiKey && $apiPassword) {
-            $adminUrl = "https://$apiKey:$apiPassword@$shopUrl/admin/";
-        } else {
-            $adminUrl = "https://$shopUrl/admin/";
-        }
-        return $adminUrl;
-    }
-
-    /**
-     * Verify if the request is made from shopify using hmac hash value
-     *
-     * @throws SdkException if hmac is not found in the url parameters
-     *
-     * @param string $sharedSecret Shared Secret of the Shopify App
-     *
-     * @return bool
-     */
-    public static function verifyShopifyRequest($sharedSecret)
-    {
-        $data = $_GET;
-        //Get the hmac and remove it from array
-        if (isset($data['hmac'])) {
-            $hmac = $data['hmac'];
-            unset($data['hmac']);
-        } else {
-            throw new SdkException("HMAC value not found in url parameters.");
-        }
-        //signature validation is deprecated
-        if (isset($data['signature'])) {
-            unset($data['signature']);
-        }
-        //Create data string for the remaining url parameters
-        $dataString = http_build_query($data);
-
-        $realHmac = hash_hmac('sha256', $dataString, $sharedSecret);
-
-        //hash the values before comparing (to prevent time attack)
-        if(md5($realHmac) === md5($hmac)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Redirect the user to the authorization page to allow the app access to the shop
-     *
-     * @see https://help.shopify.com/api/guides/authentication/oauth#scopes For allowed scopes
-     *
-     * @param array $config
-     * @param string|string[] $scopes Scopes required by app
-     * @param string $redirectUrl
-     *
-     * @return void
-     */
-    public static function createAuthRequest($config, $scopes, $redirectUrl = null)
-    {
-        if (!$redirectUrl) {
-            //If redirect url is the same as this url, then need to check for access token when redirected back from shopify
-            if(isset($_GET['code'])) {
-                return self::getAccessToken($config);
-            } else {
-                $redirectUrl = self::getCurrentUrl();
-            }
-        }
-
-        if (is_array($scopes)) {
-            $scopes = join(',', $scopes);
-        }
-        $authUrl = self::getAdminUrl($config['ShopUrl']) . 'oauth/authorize?client_id=' . $config['ApiKey'] . '&redirect_uri=' . $redirectUrl . "&scope=$scopes";
-
-        header("Location: $authUrl");
-    }
-
-    /**
-     * Get Access token for the API
-     * Call this when being redirected from shopify page ( to the $redirectUrl) after authentication
-     *
-     * @param array $config
-     *
-     * @return string
-     */
-    public static function getAccessToken($config)
-    {
-        if(self::verifyShopifyRequest($config['SharedSecret'])) {
-            $data = array(
-                'client_id' => $config['ApiKey'],
-                'client_secret' => $config['SharedSecret'],
-                'code' => $_GET['code'],
-            );
-
-            $response = HttpRequestJson::post(self::getAdminUrl($config['ShopUrl']) . 'oauth/access_token', $data);
-
-            return isset($response['access_token']) ? $response['access_token'] : null;
-        }
-    }
-
-    /**
-     * Get the url of the current page
-     *
-     * @return string
-     */
-    public static function getCurrentUrl()
-    {
-        if (isset($_SERVER['HTTPS']) &&
-            ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
-            isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-            $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
-            $protocol = 'https';
-        }
-        else {
-            $protocol = 'http';
-        }
-
-        return "$protocol://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        return new ShopifyClient($config);
     }
 }

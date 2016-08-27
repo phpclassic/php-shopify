@@ -24,13 +24,6 @@ use PHPShopify\Exception\CurlException;
 abstract class ShopifyAPI
 {
     /**
-     * Shop / API configurations
-     *
-     * @var array
-     */
-    protected $config;
-
-    /**
      * HTTP request headers
      *
      * @var array
@@ -108,23 +101,23 @@ abstract class ShopifyAPI
     /**
      * Create a new Shopify API resource instance.
      *
-     * @param  array  $config
      * @param integer $id
+     * @param string $parentResourceUrl
      *
-     * @return void
+     * @throws SdkException if Either AccessToken or ApiKey+Password Combination is not found in configuration
      */
-    public function __construct($config, $id = null)
+    public function __construct($id = null, $parentResourceUrl = '')
     {
         $this->id = $id;
 
-        $this->config = $config;
+        $config = ShopifyClient::$config;
 
-        $parentResource = isset($config['ParentResource']) ? $config['ParentResource'] : '';
-
-        $this->resourceUrl = $config['ApiUrl'] . $parentResource . $this->getResourcePath() . ($this->id ? '/' . $this->id : '');
+        $this->resourceUrl = ($parentResourceUrl ? $parentResourceUrl . '/' :  $config['ApiUrl']) . $this->getResourcePath() . ($this->id ? '/' . $this->id : '');
 
         if (isset($config['AccessToken'])) {
             $this->httpHeaders['X-Shopify-Access-Token'] = $config['AccessToken'];
+        } elseif (!isset($config['ApiKey']) || !isset($config['Password'])) {
+            throw new SdkException("Either AccessToken or ApiKey+Password Combination (in case of private API) is required to access the resources. Please check SDK configuration!");
         }
     }
 
@@ -177,17 +170,11 @@ abstract class ShopifyAPI
 
             $childClass = __NAMESPACE__ . "\\" . $childClassName;
 
-            $config = $this->config;
-
-            //Set the parent resource path for the child class
-            $config['ParentResource'] = (isset($config['ParentResource']) ? $config['ParentResource'] : '') . $this->getResourcePath() . '/' . $this->id . '/';
-
-
             //If first argument is provided, it will be considered as the ID of the resource.
             $resourceID = !empty($arguments) ? $arguments[0] : null;
 
 
-            $api = new $childClass($config, $resourceID);
+            $api = new $childClass($resourceID, $this->resourceUrl);
 
             return $api;
         } else {

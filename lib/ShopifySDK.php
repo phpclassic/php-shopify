@@ -30,7 +30,7 @@ namespace PHPShopify;
 |    'AccessToken' => '***ACCESS-TOKEN-FOR-THIRD-PARTY-APP***',
 | );
 | //Create the shopify client object
-| $shopify = new ShopifyClient($config);
+| $shopify = new ShopifySDK($config);
 |
 | //Get shop details
 | $products = $shopify->Shop->get();
@@ -63,7 +63,7 @@ namespace PHPShopify;
 */
 use PHPShopify\Exception\SdkException;
 
-class ShopifyClient
+class ShopifySDK
 {
     /**
      * Shop / API configurations
@@ -131,7 +131,7 @@ class ShopifyClient
     );
 
     /*
-     * ShopifyClient constructor
+     * ShopifySDK constructor
      *
      * @param array $config
      *
@@ -140,8 +140,8 @@ class ShopifyClient
     public function __construct($config = array())
     {
         if(!empty($config)) {
-            ShopifyClient::$config = $config;
-            ShopifyClient::setAdminUrl();
+            ShopifySDK::$config = $config;
+            ShopifySDK::setAdminUrl();
         }
     }
 
@@ -198,7 +198,7 @@ class ShopifyClient
      *
      * @param array $config
      *
-     * @return ShopifyClient
+     * @return ShopifySDK
      */
     public static function config($config)
     {
@@ -211,7 +211,7 @@ class ShopifyClient
             self::setAdminUrl();
         }
 
-        return new ShopifyClient;
+        return new ShopifySDK;
     }
 
     /**

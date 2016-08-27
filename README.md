@@ -25,7 +25,7 @@ PHPShopify uses curl extension for handling http calls. So you need to have the 
 
 You can use PHPShopify in a pretty simple object oriented way. 
 
-#### Configure ShopifyClient SDK
+#### Configure ShopifySDK
 If you are using your own private API, provide the ApiKey and Password. 
 
 ```php
@@ -35,7 +35,7 @@ $config = array(
     'Password' => '***YOUR-PRIVATE-API-PASSWORD***',
 );
 
-PHPShopify\ShopifyClient::config($config);
+PHPShopify\ShopifySDK::config($config);
 ```
 
 For Third party apps, use the permanent access token.
@@ -46,12 +46,12 @@ $config = array(
     'AccessToken' => '***ACCESS-TOKEN-FOR-THIRD-PARTY-APP***',
 );
 
-PHPShopify\ShopifyClient::config($config);
+PHPShopify\ShopifySDK::config($config);
 ```
 ##### How to get the permanent access token for a shop?
 There is a AuthHelper class to help you getting the permanent access token from the shop using oAuth. 
 
-1) First, you need to configure the client with additional parameter SharedSecret
+1) First, you need to configure the SDK with additional parameter SharedSecret
 
 ```php
 $config = array(
@@ -60,7 +60,7 @@ $config = array(
     'SharedSecret' => '***YOUR-SHARED-SECRET***',
 );
 
-PHPShopify\ShopifyClient::config($config);
+PHPShopify\ShopifySDK::config($config);
 ```
 
 2) Create the authentication request 
@@ -81,7 +81,7 @@ $redirectUrl = 'https://yourappurl.com/your_redirect_url.php';
 
 ```php
 //your_redirect_url.php
-PHPShopify\ShopifyClient::config($config);
+PHPShopify\ShopifySDK::config($config);
 $accessToken = \PHPShopify\AuthHelper::getAccessToken();
 //Now store it in database or somewhere else
 ```
@@ -90,21 +90,21 @@ $accessToken = \PHPShopify\AuthHelper::getAccessToken();
 
 ```php
 //your_authorize_and_redirect_url.php
-PHPShopify\ShopifyClient::config($config);
+PHPShopify\ShopifySDK::config($config);
 $accessToken = \PHPShopify\AuthHelper::createAuthRequest($scopes);
 //Now store it in database or somewhere else
 ```
 
-#### Get the ShopifyClient SDK Object
+#### Get the ShopifySDK Object
 
 ```php
-$shopify = new PHPShopify\ShopifyClient;
+$shopify = new PHPShopify\ShopifySDK;
 ```
 
 You can provide the configuration as a parameter while instantiating the object (if you didn't configure already by calling `config()` method)
 
 ```php
-$shopify = new PHPShopify\ShopifyClient($config);
+$shopify = new PHPShopify\ShopifySDK($config);
 ```
 
 ##### Now you can do `get()`, `post()`, `put()`, `delete()` calling the resources in the object oriented way. All resources are named as same as it is named in shopify API reference. (See the resource map below.) 

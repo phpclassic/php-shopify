@@ -110,7 +110,7 @@ abstract class ShopifyAPI
     {
         $this->id = $id;
 
-        $config = ShopifyClient::$config;
+        $config = ShopifySDK::$config;
 
         $this->resourceUrl = ($parentResourceUrl ? $parentResourceUrl . '/' :  $config['AdminUrl']) . $this->getResourcePath() . ($this->id ? '/' . $this->id : '');
 

@@ -70,7 +70,7 @@ class ShopifyClient
      *
      * @var array
      */
-    public static $config;
+    public static $config = array();
 
     /**
      * List of available resources which can be called from this client
@@ -137,15 +137,12 @@ class ShopifyClient
      *
      * @return void
      */
-    public function __construct($config)
+    public function __construct($config = array())
     {
-        if (isset($config['ApiKey']) && isset($config['Password'])) {
-            $config['ApiUrl'] = AuthHelper::getAdminUrl($config['ShopUrl'], $config['ApiKey'], $config['Password']);
-        } else {
-            $config['ApiUrl'] = AuthHelper::getAdminUrl($config['ShopUrl']);
+        if(!empty($config)) {
+            ShopifyClient::$config = $config;
+            ShopifyClient::setAdminUrl();
         }
-
-        ShopifyClient::$config = $config;
     }
 
     /**
@@ -199,11 +196,55 @@ class ShopifyClient
     /**
      * Configure the SDK client
      *
-     * @param $config
+     * @param array $config
+     *
      * @return ShopifyClient
      */
     public static function config($config)
     {
-        return new ShopifyClient($config);
+        foreach ($config as $key => $value) {
+            self::$config[$key] = $value;
+        }
+
+        //Re-set the admin url if shop url is changed
+        if(isset($config['ShopUrl'])) {
+            self::setAdminUrl();
+        }
+
+        return new ShopifyClient;
+    }
+
+    /**
+     * Set the admin url, based on the configured shop url
+     *
+     * @return string
+     */
+    public static function setAdminUrl()
+    {
+        $shopUrl = self::$config['ShopUrl'];
+
+        //Remove https:// and trailing slash (if provided)
+        $shopUrl = preg_replace('#^https?://|/$#', '', $shopUrl);
+
+        if(isset(self::$config['ApiKey']) && isset(self::$config['Password'])) {
+            $apiKey = self::$config['ApiKey'];
+            $apiPassword = self::$config['Password'];
+            $adminUrl = "https://$apiKey:$apiPassword@$shopUrl/admin/";
+        } else {
+            $adminUrl = "https://$shopUrl/admin/";
+        }
+
+        self::$config['AdminUrl'] = $adminUrl;
+
+        return $adminUrl;
+    }
+
+    /**
+     * Get the admin url of the configured shop
+     *
+     * @return string
+     */
+    public static function getAdminUrl() {
+        return self::$config['AdminUrl'];
     }
 }

@@ -13,27 +13,6 @@ use PHPShopify\Exception\SdkException;
 class AuthHelper
 {
     /**
-     * Return the admin url, based on a given shop url
-     *
-     * @param string $shopUrl
-     * @param string $apiKey
-     * @param string $apiPassword
-     * @return string
-     */
-    public static function getAdminUrl($shopUrl, $apiKey = null, $apiPassword = null)
-    {
-        //Remove https:// and trailing slash (if provided)
-        $shopUrl = preg_replace('#^https?://|/$#', '', $shopUrl);
-
-        if($apiKey && $apiPassword) {
-            $adminUrl = "https://$apiKey:$apiPassword@$shopUrl/admin/";
-        } else {
-            $adminUrl = "https://$shopUrl/admin/";
-        }
-        return $adminUrl;
-    }
-
-    /**
      * Get the url of the current page
      *
      * @return string
@@ -130,7 +109,7 @@ class AuthHelper
         if (is_array($scopes)) {
             $scopes = join(',', $scopes);
         }
-        $authUrl = $config['ApiUrl'] . 'oauth/authorize?client_id=' . $config['ApiKey'] . '&redirect_uri=' . $redirectUrl . "&scope=$scopes";
+        $authUrl = $config['AdminUrl'] . 'oauth/authorize?client_id=' . $config['ApiKey'] . '&redirect_uri=' . $redirectUrl . "&scope=$scopes";
 
         header("Location: $authUrl");
     }
@@ -158,7 +137,7 @@ class AuthHelper
                 'code' => $_GET['code'],
             );
 
-            $response = HttpRequestJson::post($config['ApiUrl'] . 'oauth/access_token', $data);
+            $response = HttpRequestJson::post($config['AdminUrl'] . 'oauth/access_token', $data);
 
             return isset($response['access_token']) ? $response['access_token'] : null;
         }

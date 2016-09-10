@@ -319,7 +319,7 @@ $shopify->Customer->search("Bob country:United States");
 #### Custom Actions List
 The custom methods are specific to some resources which may not be available for other resources.  It is recommended that you see the details in the related Shopify API Reference page about each action. We will just list the available actions here with some brief info. each action name is linked to an example in Shopify API Reference which has more details information.
 
-- _(Any resource type)_ ->
+- _(Any resource type except ApplicationCharge, CarrierService, FulfillmentService, Location, Policy, RecurringApplicationCharge, ShippingZone, Shop, Theme)_ ->
     - [count()](https://help.shopify.com/api/reference/product#count)
     Get a count of all the resources.
     Unlike all other actions, this function returns an integer value.

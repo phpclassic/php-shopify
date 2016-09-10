@@ -29,6 +29,11 @@ class Theme extends ShopifyResource
     /**
      * @inheritDoc
      */
+    public $countEnabled = false;
+
+    /**
+     * @inheritDoc
+     */
     protected $childResource = array(
         'Asset'
     );

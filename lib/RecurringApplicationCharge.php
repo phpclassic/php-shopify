@@ -35,6 +35,11 @@ class RecurringApplicationCharge extends ShopifyResource
     /**
      * @inheritDoc
      */
+    public $countEnabled = false;
+
+    /**
+     * @inheritDoc
+     */
     protected $childResource = array(
         'UsageCharge',
     );

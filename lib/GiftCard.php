@@ -28,7 +28,7 @@ class GiftCard extends ShopifyResource
     /**
      * @inheritDoc
      */
-    protected $searchEnabled = true;
+    public $searchEnabled = true;
 
     /**
      * Disable a gift card.

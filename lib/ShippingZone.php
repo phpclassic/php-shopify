@@ -20,5 +20,10 @@ class ShippingZone extends ShopifyResource
     /**
      * @inheritDoc
      */
+    public $countEnabled = false;
+
+    /**
+     * @inheritDoc
+     */
     public $readOnly = true;
 }

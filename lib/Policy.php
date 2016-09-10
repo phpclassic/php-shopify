@@ -20,6 +20,11 @@ class Policy extends ShopifyResource
     /**
      * @inheritDoc
      */
+    public $countEnabled = false;
+
+    /**
+     * @inheritDoc
+     */
     public $readOnly = true;
 
     /**

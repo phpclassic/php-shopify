@@ -20,5 +20,10 @@ class Location extends ShopifyResource
     /**
      * @inheritDoc
      */
+    public $countEnabled = false;
+
+    /**
+     * @inheritDoc
+     */
     public $readOnly = true;
 }

@@ -61,7 +61,14 @@ abstract class ShopifyResource
      *
      * @var boolean
      */
-    protected $searchEnabled = false;
+    public $searchEnabled = false;
+
+    /**
+     * If count is enabled for the resource
+     *
+     * @var boolean
+     */
+    public $countEnabled = true;
 
     /**
      * If the resource is read only. (No POST / PUT / DELETE actions)
@@ -314,6 +321,10 @@ abstract class ShopifyResource
      */
     public function count($urlParams = array())
     {
+        if (!$this->countEnabled) {
+            throw new SdkException("Count is not available for " . $this->getResourceName());
+        }
+
         $url = $this->generateUrl($urlParams, 'count');
 
         return $this->get(array(), $url, 'count');

@@ -34,7 +34,7 @@ class Customer extends ShopifyResource
     /**
      * @inheritDoc
      */
-    protected $searchEnabled = true;
+    public $searchEnabled = true;
 
     /**
      * @inheritDoc

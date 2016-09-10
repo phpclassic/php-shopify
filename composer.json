@@ -20,6 +20,10 @@
             "PHPShopify\\": "lib/"
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    "autoload-dev": {
+        "psr-4": {"PHPShopify\\": "tests/"}
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.5"
+    }
 }

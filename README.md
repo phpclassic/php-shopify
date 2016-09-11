@@ -365,6 +365,14 @@ The custom methods are specific to some resources which may not be available for
     Disable a gift card.
     - [search()](https://help.shopify.com/api/reference/gift_card#search)
     Search for gift cards matching supplied query
+    
+- Order ->
+    - [close()](https://help.shopify.com/api/reference/order#close)
+    Close an Order
+    - [open()](https://help.shopify.com/api/reference/order#open)
+    Re-open a closed Order
+    - [cancel($data)](https://help.shopify.com/api/reference/order#cancel)
+    Cancel an Order
 
 - Order -> Refund ->
     - [calculate()](https://help.shopify.com/api/reference/refund#calculate)

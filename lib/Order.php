@@ -29,6 +29,13 @@ namespace PHPShopify;
  * @method ShopifyResource Event(integer $id = null)
  * @method ShopifyResource Metafield(integer $id = null)
  *
+ * --------------------------------------------------------------------------
+ * Order -> Custom actions
+ * --------------------------------------------------------------------------
+ * @method array close()     Close an Order
+ * @method array open()         Re-open a closed Order
+ * @method array cancel($data)  Cancel an Order
+ *
  */
 class Order extends ShopifyResource
 {
@@ -47,5 +54,14 @@ class Order extends ShopifyResource
         'Transaction',
         'Event',
         'Metafield',
+    );
+
+    /**
+     * @inheritDoc
+     */
+    protected $customPostActions = array(
+        'close',
+        'open',
+        'cancel',
     );
 }

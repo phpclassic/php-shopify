@@ -66,6 +66,11 @@ use PHPShopify\Exception\SdkException;
 class ShopifySDK
 {
     /**
+     * @var float microtime of last api call
+     */
+    public static $microtimeOfLastAPICall;
+
+    /**
      * Shop / API configurations
      *
      * @var array
@@ -246,5 +251,31 @@ class ShopifySDK
      */
     public static function getAdminUrl() {
         return self::$config['AdminUrl'];
+    }
+
+    /**
+     * Maintain maximum 2 calls per second to the API
+     *
+     * @param bool $firstCallWait Whether to maintain the wait time even if it is the first API call
+     */
+    public static function checkApiCallLimit($firstCallWait = false)
+    {
+        if (static::$microtimeOfLastAPICall == null) {
+            if ($firstCallWait) {
+                usleep(500000);
+            }
+        } else {
+            $now = microtime(true);
+            $timeSinceLastCall = $now - static::$microtimeOfLastAPICall;
+            //Ensure 2 API calls per second
+            if($timeSinceLastCall < .5) {
+                $timeToWait = .5 - $timeSinceLastCall;
+                //convert time to microseconds
+                $microSecondsToWait = $timeToWait * 1000000;
+                //Wait to maintain the API call difference of .5 seconds
+                usleep($microSecondsToWait);
+            }
+        }
+        static::$microtimeOfLastAPICall = microtime(true);
     }
 }

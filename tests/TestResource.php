@@ -15,11 +15,6 @@ class TestResource extends \PHPUnit_Framework_TestCase
     public static $shopify;
 
     /**
-     * @var float microtime of last api call
-     */
-    public static $microtimeOfLastAPICall;
-
-    /**
      * @inheritDoc
      */
     public static function setUpBeforeClass()
@@ -31,6 +26,7 @@ class TestResource extends \PHPUnit_Framework_TestCase
         );
 
         self::$shopify = ShopifySDK::config($config);
+        ShopifySDK::checkApiCallLimit();
     }
 
     /**
@@ -39,28 +35,5 @@ class TestResource extends \PHPUnit_Framework_TestCase
     public static function tearDownAfterClass()
     {
         self::$shopify = null;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setUp()
-    {
-        if(static::$microtimeOfLastAPICall == null) {
-            //Maintain 2 seconds per call
-            usleep(500000);
-        } else {
-            $now = microtime(true);
-            $timeSinceLastCall = $now - static::$microtimeOfLastAPICall;
-            //Ensure 2 API calls per second
-            if($timeSinceLastCall < .5) {
-                $timeToWait = .5 - $timeSinceLastCall;
-                //convert time to microseconds
-                $microSecondsToWait = $timeToWait * 1000000;
-                //Wait to maintain the API call difference of .5 seconds
-                usleep($microSecondsToWait);
-            }
-        }
-        static::$microtimeOfLastAPICall = microtime(true);
     }
 }

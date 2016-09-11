@@ -10,5 +10,18 @@ namespace PHPShopify;
 
 class CountryTest extends TestSimpleResource
 {
+    /**
+     * @inheritDoc
+     */
+    public $postArray = array(
+        "code" => "FR",
+        "tax" => 0.25,
+    );
 
+    /**
+     * @inheritDoc
+     */
+    public $putArray = array(
+        "tax" => 0.01,
+    );
 }

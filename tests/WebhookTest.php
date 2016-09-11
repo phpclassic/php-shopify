@@ -10,5 +10,19 @@ namespace PHPShopify;
 
 class WebhookTest extends TestSimpleResource
 {
+    /**
+     * @inheritDoc
+     */
+    public $postArray = array(
+        "topic" => "orders/create",
+        "address" => "http://whatever.hostname.com/",
+        "format" => "json"
+    );
 
+    /**
+     * @inheritDoc
+     */
+    public $putArray = array(
+        "address" => "http://whatsoever.hostname.com/",
+    );
 }

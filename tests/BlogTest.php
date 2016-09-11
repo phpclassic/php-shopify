@@ -10,5 +10,17 @@ namespace PHPShopify;
 
 class BlogTest extends TestSimpleResource
 {
+    /**
+     * @inheritDoc
+     */
+    public $postArray = array(
+        "title" => "PHPShopify Test Blog",
+    );
 
+    /**
+     * @inheritDoc
+     */
+    public $putArray = array(
+        "title" => "PHPShopify Test Blog Modified",
+    );
 }

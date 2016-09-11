@@ -10,5 +10,18 @@ namespace PHPShopify;
 
 class ScriptTagTest extends TestSimpleResource
 {
+    /**
+     * @inheritDoc
+     */
+    public $postArray = array(
+        "event" => "onload",
+        "src" => "https://djavaskripped.org/fancy.js",
+    );
 
+    /**
+     * @inheritDoc
+     */
+    public $putArray = array(
+        "src" => "https://somewhere-else.com/another.js",
+    );
 }

@@ -14,6 +14,9 @@ class TestResource extends \PHPUnit_Framework_TestCase
      */
     public static $shopify;
 
+    /**
+     * @var float microtime of last api call
+     */
     public static $microtimeOfLastAPICall;
 
     /**

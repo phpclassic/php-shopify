@@ -10,17 +10,41 @@ namespace PHPShopify;
 class TestSimpleResource extends TestResource
 {
 
+    /**
+     * @var string Resource name
+     */
     public $resourceName;
-    public $errorPostArray;
+
+    /**
+     * @var array sample array for testing post
+     */
     public $postArray;
+
+    /**
+     * @var array sample array for testing put
+     */
     public $putArray;
 
+    /**
+     * @var array sample post with invalid data
+     */
+    public $errorPostArray;
+
+
+    /**
+     * TestSimpleResource constructor.
+     */
     public function __construct()
     {
         $this->resourceName = preg_replace('/.+\\\\(\w+)Test$/', '$1', get_called_class());
         parent::__construct();
     }
 
+    /**
+     * Test post resource
+     *
+     * @return int
+     */
     public function testPost()
     {
         if ($this->postArray) {
@@ -32,6 +56,8 @@ class TestSimpleResource extends TestResource
     }
 
     /**
+     * Test get resource
+     *
      * @depends testPost
      */
     public function testGet()
@@ -52,6 +78,8 @@ class TestSimpleResource extends TestResource
     }
 
     /**
+     * Test getting single resource by id
+     *
      * @depends testPost
      */
     public function testGetSelf($id)
@@ -66,6 +94,8 @@ class TestSimpleResource extends TestResource
     }
 
     /**
+     * Test put resource
+     *
      * @depends testPost
      */
     public function testPut($id)
@@ -81,6 +111,8 @@ class TestSimpleResource extends TestResource
     }
 
     /**
+     * Test delete resource
+     *
      * @depends testPost
      */
     public function testDelete($id)

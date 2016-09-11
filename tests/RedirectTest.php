@@ -10,5 +10,18 @@ namespace PHPShopify;
 
 class RedirectTest extends TestSimpleResource
 {
+    /**
+     * @inheritDoc
+     */
+    public $postArray = array(
+        "path" => "http://www.apple.com/forums",
+        "target" => "http://forums.apple.com",
+    );
 
+    /**
+     * @inheritDoc
+     */
+    public $putArray = array(
+        "path" => "/tiger",
+    );
 }

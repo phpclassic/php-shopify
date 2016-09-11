@@ -10,5 +10,18 @@ namespace PHPShopify;
 
 class CustomCollectionTest extends TestSimpleResource
 {
+    /**
+     * @inheritDoc
+     */
+    public $postArray = array(
+        "title" => "Macbooks"
+    );
 
+    /**
+     * @inheritDoc
+     */
+    public $putArray = array(
+        "title" => "Updated - Macbooks",
+        "body_html" => "<p>The best selling Macbooks ever</p>",
+    );
 }

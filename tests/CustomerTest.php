@@ -10,5 +10,19 @@ namespace PHPShopify;
 
 class CustomerTest extends TestSimpleResource
 {
+    /**
+     * @inheritDoc
+     */
+    public $postArray = array(
+        "first_name" => "Steve",
+        "last_name" => "Lastnameson",
+        "email" => "steve.lastnameson@example.com",
+    );
 
+    /**
+     * @inheritDoc
+     */
+    public $putArray = array(
+        "verified_email" => true,
+    );
 }

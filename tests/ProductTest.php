@@ -10,6 +10,9 @@ namespace PHPShopify;
 
 class ProductTest extends TestSimpleResource
 {
+    /**
+     * @inheritDoc
+     */
     public $postArray = array(
         "title" => "Burton Custom Freestlye 151",
         "body_html" => "<strong>Good snowboard!</strong>",
@@ -29,8 +32,14 @@ class ProductTest extends TestSimpleResource
         ]
     );
 
-    //Posting without title, triggers an error
+    /**
+     * @inheritDoc
+     * Posting without title, triggers an error
+     */
     public $errorPostArray = array("description" => "A mystery!");
 
+    /**
+     * @inheritDoc
+     */
     public $putArray = array("title" => "New product title");
 }

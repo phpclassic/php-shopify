@@ -10,5 +10,23 @@ namespace PHPShopify;
 
 class FulfillmentServiceTest extends TestSimpleResource
 {
+    /**
+     * @inheritDoc
+     */
+    public $postArray = array(
+        "name" => "MarsFulfillment",
+        "callback_url" => "http://google.com",
+        "inventory_management" => true,
+        "tracking_support" => true,
+        "requires_shipping_method" => true,
+        "format" => "json"
+    );
+
+    /**
+     * @inheritDoc
+     */
+    public $putArray = array(
+        "inventory_management" => false
+    );
 
 }

@@ -10,16 +10,6 @@ Install with Composer
 composer require phpclassic/php-shopify
 ```
 
->You may not be able to install using composer until a stable version is available. For the time being you can download the zip file, put the extracted folder into `vendor/phpclassic` folder and add the following code into your root `composer.json` file:
-
-```
-    "autoload": {
-        "psr-4": {
-            "PHPShopify\\": "vendor/phpclassic/php-shopify/lib/"
-        }
-    }
-```
-
 ### Requirements
 PHPShopify uses curl extension for handling http calls. So you need to have the curl extension installed and enabled with PHP.
 >However if you prefer to use any other available package library for handling HTTP calls, you can easily do so by modifying 1 line in each of the `get()`, `post()`, `put()`, `delete()` methods in `PHPShopify\HttpRequestJson` class.

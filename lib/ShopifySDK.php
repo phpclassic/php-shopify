@@ -221,6 +221,7 @@ class ShopifySDK
             self::setAdminUrl();
         }
 
+        //If want to keep more wait time than .5 seconds for each call
         if (isset($config['AllowedTimePerCall'])) {
             static::$timeAllowedForEachApiCall = $config['AllowedTimePerCall'];
         }

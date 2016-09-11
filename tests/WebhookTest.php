@@ -15,7 +15,7 @@ class WebhookTest extends TestSimpleResource
      */
     public $postArray = array(
         "topic" => "orders/create",
-        "address" => "http://whatever.hostname.com/",
+        "address" => "http://whatever.phpclassic.com/",
         "format" => "json"
     );
 
@@ -23,6 +23,6 @@ class WebhookTest extends TestSimpleResource
      * @inheritDoc
      */
     public $putArray = array(
-        "address" => "http://whatsoever.hostname.com/",
+        "address" => "http://whatsoever.phpclassic.com/",
     );
 }

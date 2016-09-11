@@ -68,7 +68,12 @@ class ShopifySDK
     /**
      * @var float microtime of last api call
      */
-    public static $microtimeOfLastAPICall;
+    public static $microtimeOfLastApiCall;
+
+    /**
+     * @var float Minimum gap in seconds to maintain between 2 api calls
+     */
+    public static $timeAllowedForEachApiCall = .5;
 
     /**
      * Shop / API configurations
@@ -216,6 +221,10 @@ class ShopifySDK
             self::setAdminUrl();
         }
 
+        if (isset($config['AllowedTimePerCall'])) {
+            static::$timeAllowedForEachApiCall = $config['AllowedTimePerCall'];
+        }
+
         return new ShopifySDK;
     }
 
@@ -256,26 +265,33 @@ class ShopifySDK
     /**
      * Maintain maximum 2 calls per second to the API
      *
+     * @see https://help.shopify.com/api/guides/api-call-limit
+     *
      * @param bool $firstCallWait Whether to maintain the wait time even if it is the first API call
      */
     public static function checkApiCallLimit($firstCallWait = false)
     {
-        if (static::$microtimeOfLastAPICall == null) {
+        $timeToWait = 0;
+        if (static::$microtimeOfLastApiCall == null) {
             if ($firstCallWait) {
-                usleep(500000);
+                $timeToWait = static::$timeAllowedForEachApiCall;
             }
         } else {
             $now = microtime(true);
-            $timeSinceLastCall = $now - static::$microtimeOfLastAPICall;
+            $timeSinceLastCall = $now - static::$microtimeOfLastApiCall;
             //Ensure 2 API calls per second
-            if($timeSinceLastCall < .5) {
-                $timeToWait = .5 - $timeSinceLastCall;
-                //convert time to microseconds
-                $microSecondsToWait = $timeToWait * 1000000;
-                //Wait to maintain the API call difference of .5 seconds
-                usleep($microSecondsToWait);
+            if($timeSinceLastCall < static::$timeAllowedForEachApiCall) {
+                $timeToWait = static::$timeAllowedForEachApiCall - $timeSinceLastCall;
             }
         }
-        static::$microtimeOfLastAPICall = microtime(true);
+
+        if ($timeToWait) {
+            //convert time to microseconds
+            $microSecondsToWait = $timeToWait * 1000000;
+            //Wait to maintain the API call difference of .5 seconds
+            usleep($microSecondsToWait);
+        }
+
+        static::$microtimeOfLastApiCall = microtime(true);
     }
 }

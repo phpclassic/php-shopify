@@ -23,6 +23,7 @@ class TestResource extends \PHPUnit_Framework_TestCase
             'ShopUrl' => 'phpclassic.myshopify.com',
             'ApiKey' => '81781200c08b31208031f983ab930f2a',
             'Password' => '5260904f8293bce93ddd4d65c535faa4',
+            'AllowedTimePerCall' => 1, //2 test builds run at the same time, so keep 1 sec gap instead of .5 sec.
         );
 
         self::$shopify = ShopifySDK::config($config);

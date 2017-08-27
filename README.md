@@ -275,6 +275,8 @@ Some resources are available directly, some resources are only available through
 - Product -> Variant -> [Metafield](https://help.shopify.com/api/reference/metafield)
 - Product -> [Event](https://help.shopify.com/api/reference/event/)
 - Product -> [Metafield](https://help.shopify.com/api/reference/metafield)
+- [ProductVariant](https://help.shopify.com/api/reference/product_variant)
+- ProductVariant -> [Metafield](https://help.shopify.com/api/reference/metafield)
 - [RecurringApplicationCharge](https://help.shopify.com/api/reference/recurringapplicationcharge)
 - RecurringApplicationCharge -> [UsageCharge](https://help.shopify.com/api/reference/usagecharge)
 - [Redirect](https://help.shopify.com/api/reference/redirect)

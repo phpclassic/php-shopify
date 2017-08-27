@@ -109,6 +109,7 @@ class ShopifySDK
         'Page',
         'Policy',
         'Product',
+        'ProductVariant',
         'RecurringApplicationCharge',
         'Redirect',
         'ScriptTag',

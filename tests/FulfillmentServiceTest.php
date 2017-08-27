@@ -26,7 +26,7 @@ class FulfillmentServiceTest extends TestSimpleResource
      * @inheritDoc
      */
     public $putArray = array(
-        "inventory_management" => false
+        "tracking_support" => false
     );
 
 }

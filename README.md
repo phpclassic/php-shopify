@@ -166,7 +166,7 @@ $shopify->WebHook($webHookID)->delete());
 ```
 
 
-###The child resources can be used in a nested way.
+### The child resources can be used in a nested way.
 > You must provide the ID of the parent resource when trying to get any child resource
 
 - For example, get the images of a product (GET request)

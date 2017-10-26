@@ -85,7 +85,7 @@ class AuthHelper
      *
      * @return void
      */
-    public static function createAuthRequest($scopes, $redirectUrl = null)
+    public static function createAuthRequest($scopes, $redirectUrl = null, $state = null, $options = null)
     {
         $config = ShopifySDK::$config;
 
@@ -109,7 +109,15 @@ class AuthHelper
         if (is_array($scopes)) {
             $scopes = join(',', $scopes);
         }
-        $authUrl = $config['AdminUrl'] . 'oauth/authorize?client_id=' . $config['ApiKey'] . '&redirect_uri=' . $redirectUrl . "&scope=$scopes";
+        if(!empty($state)) {
+            $state = '&state=' . $state;
+        }
+        if(!empty($options)) {
+            $options = '&grant_options[]=' . join(',', $options);
+        }
+        // Official call structure
+        // https://{shop}.myshopify.com/admin/oauth/authorize?client_id={api_key}&scope={scopes}&redirect_uri={redirect_uri}&state={nonce}&grant_options[]={option}
+        $authUrl = $config['AdminUrl'] . 'oauth/authorize?client_id=' . $config['ApiKey'] . '&redirect_uri=' . $redirectUrl . "&scope=$scopes" . $state . $options;
 
         header("Location: $authUrl");
     }

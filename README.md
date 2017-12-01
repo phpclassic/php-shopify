@@ -157,12 +157,12 @@ $updateInfo = array (
 $shopify->Order($orderID)->put($order);
 ```
 
-- Remove a WebHook (DELETE request)
+- Remove a Webhook (DELETE request)
 
 ```php
 $webHookID = 453487303;
 
-$shopify->WebHook($webHookID)->delete());
+$shopify->Webhook($webHookID)->delete());
 ```
 
 

@@ -68,7 +68,6 @@ class HttpRequestJson
     {
         self::prepareRequest($httpHeaders);
 
-        ShopifySDK::checkApiCallLimit();
         $response = CurlRequest::get($url, self::$httpHeaders);
 
         return self::processResponse($response);
@@ -87,7 +86,6 @@ class HttpRequestJson
     {
         self::prepareRequest($httpHeaders, $dataArray);
 
-        ShopifySDK::checkApiCallLimit();
         $response = CurlRequest::post($url, self::$postDataJSON, self::$httpHeaders);
 
         return self::processResponse($response);
@@ -106,7 +104,6 @@ class HttpRequestJson
     {
         self::prepareRequest($httpHeaders, $dataArray);
 
-        ShopifySDK::checkApiCallLimit();
         $response = CurlRequest::put($url, self::$postDataJSON, self::$httpHeaders);
 
         return self::processResponse($response);
@@ -124,7 +121,6 @@ class HttpRequestJson
     {
         self::prepareRequest($httpHeaders);
 
-        ShopifySDK::checkApiCallLimit();
         $response = CurlRequest::delete($url, self::$httpHeaders);
 
         return self::processResponse($response);

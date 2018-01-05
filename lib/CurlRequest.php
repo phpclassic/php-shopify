@@ -140,18 +140,24 @@ class CurlRequest
      */
     protected static function processRequest($ch)
     {
-        // $output contains the output string
-        $output = curl_exec($ch);
-
+        # Check for 429 leaky bucket error
+        while(1) {
+             $output = curl_exec($ch);
+             self::$lastHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+             if(self::$lastHttpCode != 429) {
+                break; 
+             } 
+             usleep(500000);
+        }
+    
         if (curl_errno($ch)) {
             throw new Exception\CurlException(curl_errno($ch) . ' : ' . curl_error($ch));
         }
-
-        self::$lastHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         // close curl resource to free up system resources
         curl_close($ch);
 
         return $output;
     }
+    
 }

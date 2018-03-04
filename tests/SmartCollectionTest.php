@@ -16,12 +16,12 @@ class SmartCollectionTest extends TestSimpleResource
     public $postArray = array(
         "title" => "Macbooks",
         "published" => false,
-        "rules": [
-          [
-            "column" => "vendor",
-            "relation" => "equals",
-            "condition" => "Apple"
-          ]
+        "rules"=> [
+            [
+                "column" => "vendor",
+                "relation" => "equals",
+                "condition" => "Apple"
+            ]
         ],
     );
 

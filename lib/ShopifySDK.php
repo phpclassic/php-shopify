@@ -118,6 +118,7 @@ class ShopifySDK
         'SmartCollection',
         'Theme',
         'User',
+        'Variant',
         'Webhook',
     );
 

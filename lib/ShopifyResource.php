@@ -28,7 +28,7 @@ abstract class ShopifyResource
      * @var int
      */
     private $apiBucketLimit = 40;
-    private $apiCallBucket;
+    private $apiCallBucket = [];
 
     /**
      * HTTP request headers
@@ -313,6 +313,7 @@ abstract class ShopifyResource
         while($this->isBucketFull()){
             sleep(1);
         }
+        $this->apiCallBucket[] = time();
 
         $response = HttpRequestJson::get($url, $this->httpHeaders);
 
@@ -380,6 +381,7 @@ abstract class ShopifyResource
         while($this->isBucketFull()){
             sleep(1);
         }
+        $this->apiCallBucket[] = time();
         $response = HttpRequestJson::post($url, $dataArray, $this->httpHeaders);
 
         return $this->processResponse($response, $this->resourceKey);
@@ -404,6 +406,7 @@ abstract class ShopifyResource
         while($this->isBucketFull()){
             sleep(1);
         }
+        $this->apiCallBucket[] = time();
         $response = HttpRequestJson::put($url, $dataArray, $this->httpHeaders);
 
         return $this->processResponse($response, $this->resourceKey);
@@ -425,6 +428,7 @@ abstract class ShopifyResource
         while($this->isBucketFull()){
             sleep(1);
         }
+        $this->apiCallBucket[] = time();
         $response = HttpRequestJson::delete($url, $this->httpHeaders);
 
         return $this->processResponse($response);

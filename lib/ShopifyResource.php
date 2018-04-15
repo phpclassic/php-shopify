@@ -24,6 +24,13 @@ use PHPShopify\Exception\CurlException;
 abstract class ShopifyResource
 {
     /**
+     * @see: https://help.shopify.com/api/getting-started/api-call-limit
+     * @var int
+     */
+    private $apiBucketLimit = 40;
+    private $apiCallBucket;
+
+    /**
      * HTTP request headers
      *
      * @var array
@@ -303,6 +310,9 @@ abstract class ShopifyResource
     public function get($urlParams = array(), $url = null, $dataKey = null)
     {
         if (!$url) $url  = $this->generateUrl($urlParams);
+        while($this->isBucketFull()){
+            sleep(1);
+        }
 
         $response = HttpRequestJson::get($url, $this->httpHeaders);
 
@@ -367,7 +377,9 @@ abstract class ShopifyResource
         if (!$url) $url = $this->generateUrl();
 
         if (!empty($dataArray)) $dataArray = $this->wrapData($dataArray);
-
+        while($this->isBucketFull()){
+            sleep(1);
+        }
         $response = HttpRequestJson::post($url, $dataArray, $this->httpHeaders);
 
         return $this->processResponse($response, $this->resourceKey);
@@ -389,7 +401,9 @@ abstract class ShopifyResource
         if (!$url) $url = $this->generateUrl();
 
         if (!empty($dataArray)) $dataArray = $this->wrapData($dataArray);
-
+        while($this->isBucketFull()){
+            sleep(1);
+        }
         $response = HttpRequestJson::put($url, $dataArray, $this->httpHeaders);
 
         return $this->processResponse($response, $this->resourceKey);
@@ -408,7 +422,9 @@ abstract class ShopifyResource
     public function delete($urlParams = array(), $url = null)
     {
         if (!$url) $url = $this->generateUrl($urlParams);
-
+        while($this->isBucketFull()){
+            sleep(1);
+        }
         $response = HttpRequestJson::delete($url, $this->httpHeaders);
 
         return $this->processResponse($response);
@@ -498,4 +514,31 @@ abstract class ShopifyResource
             return $responseArray;
         }
     }
+
+    public function isBucketFull()
+    {
+        //clear old bucket contents
+        if(!empty($this->apiCallBucket)) {
+            $this->apiCallBucket = array_filter(
+                $this->apiCallBucket, function ($apiCallTimeStamp) {
+                    /* Bucket leaks each second */
+                    return ($apiCallTimeStamp < time()-1);
+                }
+            );
+        }
+
+        //
+        if (empty($this->apiCallBucket)){
+            return false;
+        }
+
+        //check if 40 elements left
+        if(count($this->apiCallBucket) == $this->apiBucketLimit){
+            return true;
+        }
+
+        return false;
+    }
+
+
 }

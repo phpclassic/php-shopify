@@ -48,7 +48,7 @@ abstract class ShopifyResource
 
     /**
      * List of child Resource names / classes
-     * 
+     *
      * If any array item has an associative key => value pair, value will be considered as the resource name
      * (by which it will be called) and key will be the associated class name.
      *

@@ -140,8 +140,36 @@ class CurlRequest
      */
     protected static function processRequest($ch)
     {
+        $headers = [];
         // $output contains the output string
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADERFUNCTION,
+            function($curl, $header) use (&$headers)
+            {
+                $len = strlen($header);
+                $header = explode(':', $header, 2);
+                if (count($header) < 2) // ignore invalid headers
+                    return $len;
+
+                $name = strtolower(trim($header[0]));
+                if (!array_key_exists($name, $headers))
+                    $headers[$name] = [trim($header[1])];
+                else
+                    $headers[$name][] = trim($header[1]);
+
+                return $len;
+            }
+        );
+
         $output = curl_exec($ch);
+
+        if(isset($headers['x-shopify-shop-api-call-limit'])){
+            list($currentState,$limit) = explode('/',$headers['x-shopify-shop-api-call-limit'][0]);
+            if($currentState >= $limit-3){
+                //var_dump($currentState.' sleeping for 1s');
+                sleep(1);
+            }
+        }
 
         if (curl_errno($ch)) {
             throw new Exception\CurlException(curl_errno($ch) . ' : ' . curl_error($ch));

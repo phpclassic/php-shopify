@@ -24,6 +24,12 @@ use PHPShopify\Exception\CurlException;
 abstract class ShopifyResource
 {
     /**
+     * @see: https://help.shopify.com/api/getting-started/api-call-limit
+     * @var int
+     */
+    private $apiBucketLimit = 40;
+
+    /**
      * HTTP request headers
      *
      * @var array
@@ -303,6 +309,10 @@ abstract class ShopifyResource
     public function get($urlParams = array(), $url = null, $dataKey = null)
     {
         if (!$url) $url  = $this->generateUrl($urlParams);
+        while($this->isBucketFull()){
+            sleep(1);
+        }
+        $this->apiCallBucket[] = time();
 
         $response = HttpRequestJson::get($url, $this->httpHeaders);
 
@@ -367,7 +377,10 @@ abstract class ShopifyResource
         if (!$url) $url = $this->generateUrl();
 
         if (!empty($dataArray)) $dataArray = $this->wrapData($dataArray);
-
+        while($this->isBucketFull()){
+            sleep(1);
+        }
+        $this->apiCallBucket[] = time();
         $response = HttpRequestJson::post($url, $dataArray, $this->httpHeaders);
 
         return $this->processResponse($response, $this->resourceKey);
@@ -389,7 +402,10 @@ abstract class ShopifyResource
         if (!$url) $url = $this->generateUrl();
 
         if (!empty($dataArray)) $dataArray = $this->wrapData($dataArray);
-
+        while($this->isBucketFull()){
+            sleep(1);
+        }
+        $this->apiCallBucket[] = time();
         $response = HttpRequestJson::put($url, $dataArray, $this->httpHeaders);
 
         return $this->processResponse($response, $this->resourceKey);
@@ -408,7 +424,10 @@ abstract class ShopifyResource
     public function delete($urlParams = array(), $url = null)
     {
         if (!$url) $url = $this->generateUrl($urlParams);
-
+        while($this->isBucketFull()){
+            sleep(1);
+        }
+        $this->apiCallBucket[] = time();
         $response = HttpRequestJson::delete($url, $this->httpHeaders);
 
         return $this->processResponse($response);
@@ -498,4 +517,5 @@ abstract class ShopifyResource
             return $responseArray;
         }
     }
+
 }

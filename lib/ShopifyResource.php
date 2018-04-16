@@ -310,8 +310,6 @@ abstract class ShopifyResource
     {
         if (!$url) $url  = $this->generateUrl($urlParams);
 
-        $this->apiCallBucket[] = time();
-
         $response = HttpRequestJson::get($url, $this->httpHeaders);
 
         if (!$dataKey) $dataKey = $this->id ? $this->resourceKey : $this->pluralizeKey();
@@ -376,7 +374,6 @@ abstract class ShopifyResource
 
         if (!empty($dataArray)) $dataArray = $this->wrapData($dataArray);
 
-        $this->apiCallBucket[] = time();
         $response = HttpRequestJson::post($url, $dataArray, $this->httpHeaders);
 
         return $this->processResponse($response, $this->resourceKey);
@@ -399,7 +396,6 @@ abstract class ShopifyResource
 
         if (!empty($dataArray)) $dataArray = $this->wrapData($dataArray);
 
-        $this->apiCallBucket[] = time();
         $response = HttpRequestJson::put($url, $dataArray, $this->httpHeaders);
 
         return $this->processResponse($response, $this->resourceKey);
@@ -419,7 +415,6 @@ abstract class ShopifyResource
     {
         if (!$url) $url = $this->generateUrl($urlParams);
 
-        $this->apiCallBucket[] = time();
         $response = HttpRequestJson::delete($url, $this->httpHeaders);
 
         return $this->processResponse($response);

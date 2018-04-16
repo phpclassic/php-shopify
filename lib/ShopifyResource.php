@@ -28,7 +28,6 @@ abstract class ShopifyResource
      * @var int
      */
     private $apiBucketLimit = 40;
-    private $apiCallBucket = [];
 
     /**
      * HTTP request headers
@@ -518,31 +517,5 @@ abstract class ShopifyResource
             return $responseArray;
         }
     }
-
-    public function isBucketFull()
-    {
-        //clear old bucket contents
-        if(!empty($this->apiCallBucket)) {
-            $this->apiCallBucket = array_filter(
-                $this->apiCallBucket, function ($apiCallTimeStamp) {
-                    /* Bucket leaks each second */
-                    return ($apiCallTimeStamp < time()-1);
-                }
-            );
-        }
-
-        //
-        if (empty($this->apiCallBucket)){
-            return false;
-        }
-
-        //check if 40 elements left
-        if(count($this->apiCallBucket) == $this->apiBucketLimit){
-            return true;
-        }
-
-        return false;
-    }
-
 
 }

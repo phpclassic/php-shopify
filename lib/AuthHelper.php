@@ -80,12 +80,13 @@ class AuthHelper
      *
      * @param string|string[] $scopes Scopes required by app
      * @param string $redirectUrl
+     * @param bool $autoRedirect
      *
      * @throws SdkException if required configuration is not provided in $config
      *
-     * @return void
+     * @return string
      */
-    public static function createAuthRequest($scopes, $redirectUrl = null)
+    public static function createAuthRequest($scopes, $redirectUrl = null, $autoRedirect = false)
     {
         $config = ShopifySDK::$config;
 
@@ -98,12 +99,12 @@ class AuthHelper
                 throw new SdkException("SharedSecret is required for getting access token. Please check SDK configuration!");
             }
 
-            //If redirect url is the same as this url, then need to check for access token when redirected back from shopify
+            // If redirect url is the same as this url, then need to check for access token when redirected back from shopify
             if(isset($_GET['code'])) {
-                return self::getAccessToken($config);
-            } else {
-                $redirectUrl = self::getCurrentUrl();
+                return self::getAccessToken();
             }
+
+            $redirectUrl = self::getCurrentUrl();
         }
 
         if (is_array($scopes)) {
@@ -111,7 +112,12 @@ class AuthHelper
         }
         $authUrl = $config['AdminUrl'] . 'oauth/authorize?client_id=' . $config['ApiKey'] . '&redirect_uri=' . $redirectUrl . "&scope=$scopes";
 
-        header("Location: $authUrl");
+        if (!$autoRedirect) {
+            header("Location: $authUrl");
+            exit;
+        }
+
+        return $authUrl;
     }
 
     /**

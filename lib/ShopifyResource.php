@@ -97,16 +97,6 @@ abstract class ShopifyResource
     protected $customDeleteActions = array();
 
     /**
-     * Some actions from inventory levels do not wrap the content of the request
-     *
-     * Wrapping such request body leads to errors. This list is used to disable this wrapping
-     * on certain methods.
-     *
-     * @var array
-     */
-    protected $customPostActionsNoWrap = array();
-
-    /**
      * The ID of the resource
      *
      * If provided, the actions will be called against that specific resource ID
@@ -235,7 +225,7 @@ abstract class ShopifyResource
 
             $url = $this->generateUrl($urlParams, $customAction);
 
-            return $this->$httpMethod($dataArray, $url, !in_array($name, $this->customPostActionsNoWrap));
+            return $this->$httpMethod($dataArray, $url);
         }
     }
 
@@ -365,22 +355,18 @@ abstract class ShopifyResource
     /**
      * Call POST method to create a new resource
      *
-     * @param array  $dataArray Check Shopify API reference of the specific resource for the list of required and optional data elements to be provided
+     * @param array $dataArray Check Shopify API reference of the specific resource for the list of required and optional data elements to be provided
      * @param string $url
      *
-     * @param bool   $wrapBody
-     *
-     * @return array
-     * @throws ApiException
-     * @throws CurlException
      * @uses HttpRequestJson::post() to send the HTTP request
      *
+     * @return array
      */
-    public function post($dataArray, $url = null, $wrapBody = true)
+    public function post($dataArray, $url = null)
     {
         if (!$url) $url = $this->generateUrl();
 
-        if ($wrapBody && !empty($dataArray)) $dataArray = $this->wrapData($dataArray);
+        if (!empty($dataArray)) $dataArray = $this->wrapData($dataArray);
 
         $response = HttpRequestJson::post($url, $dataArray, $this->httpHeaders);
 

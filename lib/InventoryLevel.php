@@ -26,10 +26,4 @@ class InventoryLevel extends ShopifyResource
         'connect',
         'set',
     ];
-
-    protected $customPostActionsNoWrap = [
-        'adjust',
-        'connect',
-        'set',
-    ];
 }

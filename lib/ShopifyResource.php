@@ -48,7 +48,7 @@ abstract class ShopifyResource
 
     /**
      * List of child Resource names / classes
-     * 
+     *
      * If any array item has an associative key => value pair, value will be considered as the resource name
      * (by which it will be called) and key will be the associated class name.
      *
@@ -95,6 +95,16 @@ abstract class ShopifyResource
     protected $customPostActions = array();
     protected $customPutActions = array();
     protected $customDeleteActions = array();
+
+    /**
+     * Some actions from inventory levels do not wrap the content of the request
+     *
+     * Wrapping such request body leads to errors. This list is used to disable this wrapping
+     * on certain methods.
+     *
+     * @var array
+     */
+    protected $customPostActionsNoWrap = array();
 
     /**
      * The ID of the resource
@@ -225,7 +235,7 @@ abstract class ShopifyResource
 
             $url = $this->generateUrl($urlParams, $customAction);
 
-            return $this->$httpMethod($dataArray, $url);
+            return $this->$httpMethod($dataArray, $url, !in_array($name, $this->customPostActionsNoWrap));
         }
     }
 
@@ -355,18 +365,22 @@ abstract class ShopifyResource
     /**
      * Call POST method to create a new resource
      *
-     * @param array $dataArray Check Shopify API reference of the specific resource for the list of required and optional data elements to be provided
+     * @param array  $dataArray Check Shopify API reference of the specific resource for the list of required and optional data elements to be provided
      * @param string $url
      *
-     * @uses HttpRequestJson::post() to send the HTTP request
+     * @param bool   $wrapBody
      *
      * @return array
+     * @throws ApiException
+     * @throws CurlException
+     * @uses HttpRequestJson::post() to send the HTTP request
+     *
      */
-    public function post($dataArray, $url = null)
+    public function post($dataArray, $url = null, $wrapBody = true)
     {
         if (!$url) $url = $this->generateUrl();
 
-        if (!empty($dataArray)) $dataArray = $this->wrapData($dataArray);
+        if ($wrapBody && !empty($dataArray)) $dataArray = $this->wrapData($dataArray);
 
         $response = HttpRequestJson::post($url, $dataArray, $this->httpHeaders);
 

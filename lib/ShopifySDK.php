@@ -102,6 +102,8 @@ class ShopifySDK
         'Event',
         'FulfillmentService',
         'GiftCard',
+        'InventoryItem',
+        'InventoryLevel',
         'Location',
         'Metafield',
         'Multipass',

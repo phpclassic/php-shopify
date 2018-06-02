@@ -254,6 +254,8 @@ Some resources are available directly, some resources are only available through
 - [Event](https://help.shopify.com/api/reference/event/)
 - [FulfillmentService](https://help.shopify.com/api/reference/fulfillmentservice)
 - [GiftCard](https://help.shopify.com/api/reference/gift_card) _(Shopify Plus Only)_
+- [InventoryItem](https://help.shopify.com/api/reference/inventoryitem)
+- [InventoryLevel](https://help.shopify.com/api/reference/inventorylevel)
 - [Location](https://help.shopify.com/api/reference/location/) _(read only)_
 - [Metafield](https://help.shopify.com/api/reference/metafield)
 - [Multipass](https://help.shopify.com/api/reference/multipass) _(Shopify Plus Only, API not available yet)_
@@ -357,6 +359,14 @@ The custom methods are specific to some resources which may not be available for
     Disable a gift card.
     - [search()](https://help.shopify.com/api/reference/gift_card#search)
     Search for gift cards matching supplied query
+    
+- InventoryLevel ->
+    - [adjust($data)](https://help.shopify.com/api/reference/inventorylevel#adjust)
+    Adjust inventory level.
+    - [connect($data)](https://help.shopify.com/api/reference/inventorylevel#connect)
+    Connect an inventory item to a location.
+    - [set($data)](https://help.shopify.com/api/reference/inventorylevel#set)
+    Set an inventory level for a single inventory item within a location.
     
 - Order ->
     - [close()](https://help.shopify.com/api/reference/order#close)

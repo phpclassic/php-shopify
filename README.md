@@ -277,6 +277,7 @@ Some resources are available directly, some resources are only available through
 - Product -> Variant -> [Metafield](https://help.shopify.com/api/reference/metafield)
 - Product -> [Event](https://help.shopify.com/api/reference/event/)
 - Product -> [Metafield](https://help.shopify.com/api/reference/metafield)
+- [ProductListing](https://help.shopify.com/api/reference/sales_channels/productlisting)
 - [ProductVariant](https://help.shopify.com/api/reference/product_variant)
 - ProductVariant -> [Metafield](https://help.shopify.com/api/reference/metafield)
 - [RecurringApplicationCharge](https://help.shopify.com/api/reference/recurringapplicationcharge)
@@ -379,6 +380,10 @@ The custom methods are specific to some resources which may not be available for
 - Order -> Refund ->
     - [calculate()](https://help.shopify.com/api/reference/refund#calculate)
     Calculate a Refund.
+    
+- ProductListing ->
+    - [productIds()](https://help.shopify.com/api/reference/sales_channels/productlisting#product_ids)
+    Retrieve product_ids that are published to your app.
     
 - RecurringApplicationCharge -> 
     - [activate()](https://help.shopify.com/api/reference/recurringapplicationcharge#activate)

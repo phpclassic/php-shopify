@@ -225,7 +225,11 @@ abstract class ShopifyResource
 
             $url = $this->generateUrl($urlParams, $customAction);
 
-            return $this->$httpMethod($dataArray, $url);
+            if ($httpMethod == 'post' || $httpMethod == 'put') {
+                return $this->$httpMethod($dataArray, $url, false);
+            } else {
+                return $this->$httpMethod($dataArray, $url);
+            }
         }
     }
 
@@ -357,16 +361,17 @@ abstract class ShopifyResource
      *
      * @param array $dataArray Check Shopify API reference of the specific resource for the list of required and optional data elements to be provided
      * @param string $url
+     * @param bool $wrapData
      *
      * @uses HttpRequestJson::post() to send the HTTP request
      *
      * @return array
      */
-    public function post($dataArray, $url = null)
+    public function post($dataArray, $url = null, $wrapData = true)
     {
         if (!$url) $url = $this->generateUrl();
 
-        if (!empty($dataArray)) $dataArray = $this->wrapData($dataArray);
+        if ($wrapData && !empty($dataArray)) $dataArray = $this->wrapData($dataArray);
 
         $response = HttpRequestJson::post($url, $dataArray, $this->httpHeaders);
 
@@ -378,17 +383,18 @@ abstract class ShopifyResource
      *
      * @param array $dataArray Check Shopify API reference of the specific resource for the list of required and optional data elements to be provided
      * @param string $url
+     * @param bool $wrapData
      *
      * @uses HttpRequestJson::put() to send the HTTP request
      *
      * @return array
      */
-    public function put($dataArray, $url = null)
+    public function put($dataArray, $url = null, $wrapData = true)
     {
 
         if (!$url) $url = $this->generateUrl();
 
-        if (!empty($dataArray)) $dataArray = $this->wrapData($dataArray);
+        if ($wrapData && !empty($dataArray)) $dataArray = $this->wrapData($dataArray);
 
         $response = HttpRequestJson::put($url, $dataArray, $this->httpHeaders);
 

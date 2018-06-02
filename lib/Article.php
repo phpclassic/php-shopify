@@ -31,5 +31,6 @@ class Article extends ShopifyResource
      */
     protected $childResource = array(
         'Event',
+        'Metafield',
     );
 }

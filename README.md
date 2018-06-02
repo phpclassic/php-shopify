@@ -234,6 +234,7 @@ Some resources are available directly, some resources are only available through
 - [Blog](https://help.shopify.com/api/reference/blog/)
 - Blog -> [Article](https://help.shopify.com/api/reference/article/)
 - Blog -> Article -> [Event](https://help.shopify.com/api/reference/event/)
+- Blog -> Article -> [Metafield](https://help.shopify.com/api/reference/metafield)
 - Blog -> [Event](https://help.shopify.com/api/reference/event/)
 - Blog -> [Metafield](https://help.shopify.com/api/reference/metafield)
 - [CarrierService](https://help.shopify.com/api/reference/carrierservice/)

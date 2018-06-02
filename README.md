@@ -154,7 +154,7 @@ $updateInfo = array (
     "fulfillment_status" => "fulfilled",
 );
 
-$shopify->Order($orderID)->put($order);
+$shopify->Order($orderID)->put($updateInfo);
 ```
 
 - Remove a Webhook (DELETE request)

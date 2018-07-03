@@ -10,12 +10,11 @@
 namespace PHPShopify;
 
 
-/*
+/**
  * --------------------------------------------------------------------------
  * CustomerAddress -> Custom actions
  * --------------------------------------------------------------------------
  * @method array makeDefault()      Sets the address as default for the customer
- * @method array set($params)       Perform bulk operations against a number of addresses
  *
  */
 class CustomerAddress extends ShopifyResource

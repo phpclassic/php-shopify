@@ -426,8 +426,6 @@ abstract class ShopifyResource
      * @param array $dataArray
      * @param string $dataKey
      *
-     * @internal
-     *
      * @return array
      */
     protected function wrapData($dataArray, $dataKey = null)

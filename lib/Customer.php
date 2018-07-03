@@ -10,15 +10,15 @@
 namespace PHPShopify;
 
 
-/*
+/**
  * --------------------------------------------------------------------------
  * Customer -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyResource $Address
- * @property-read ShopifyResource $Metafield
+ * @property-read CustomerAddress $Address
+ * @property-read Metafield $Metafield
  *
- * @method ShopifyResource Address(integer $id = null)
- * @method ShopifyResource Metafield(integer $id = null)
+ * @method CustomerAddress Address(integer $id = null)
+ * @method Metafield Metafield(integer $id = null)
  * --------------------------------------------------------------------------
  * Customer -> Custom actions
  * --------------------------------------------------------------------------

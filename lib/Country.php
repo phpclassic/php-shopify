@@ -10,13 +10,13 @@
 namespace PHPShopify;
 
 
-/*
+/**
  * --------------------------------------------------------------------------
  * Country -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyResource $Province
+ * @property-read Province $Province
  *
- * @method ShopifyResource Province(integer $id = null)
+ * @method Province Province(integer $id = null)
  *
  */
 class Country extends ShopifyResource

@@ -9,17 +9,17 @@
 
 namespace PHPShopify;
 
-/*
+/**
  * --------------------------------------------------------------------------
  * Blog -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyResource $Article
- * @property-read ShopifyResource $Event
- * @property-read ShopifyResource $Metafield
+ * @property-read Article $Article
+ * @property-read Event $Event
+ * @property-read Metafield $Metafield
  *
- * @method ShopifyResource Article(integer $id = null)
- * @method ShopifyResource Event(integer $id = null)
- * @method ShopifyResource Metafield(integer $id = null)
+ * @method Article Article(integer $id = null)
+ * @method Event Event(integer $id = null)
+ * @method Metafield Metafield(integer $id = null)
  *
  */
 class Blog extends ShopifyResource

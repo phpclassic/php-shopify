@@ -114,6 +114,7 @@ class ShopifySDK
         'ProductVariant',
         'RecurringApplicationCharge',
         'Redirect',
+        'Report',
         'ScriptTag',
         'ShippingZone',
         'Shop',

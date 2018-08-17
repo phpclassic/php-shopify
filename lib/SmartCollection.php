@@ -36,6 +36,7 @@ class SmartCollection extends ShopifyResource
      */
     protected $childResource = array(
         'Event',
+        'Metafield',
     );
 
     /**

@@ -80,12 +80,14 @@ class AuthHelper
      *
      * @param string|string[] $scopes Scopes required by app
      * @param string $redirectUrl
-     *
+     * @param string $state
+     * @param string[] $options
+     * @param bool $redirect
      * @throws SdkException if required configuration is not provided in $config
      *
-     * @return void
+     * @return void|string
      */
-    public static function createAuthRequest($scopes, $redirectUrl = null, $state = null, $options = null)
+    public static function createAuthRequest($scopes, $redirectUrl = null, $state = null, $options = null, $redirect = null)
     {
         $config = ShopifySDK::$config;
 
@@ -118,6 +120,10 @@ class AuthHelper
         // Official call structure
         // https://{shop}.myshopify.com/admin/oauth/authorize?client_id={api_key}&scope={scopes}&redirect_uri={redirect_uri}&state={nonce}&grant_options[]={option}
         $authUrl = $config['AdminUrl'] . 'oauth/authorize?client_id=' . $config['ApiKey'] . '&redirect_uri=' . $redirectUrl . "&scope=$scopes" . $state . $options;
+
+        if (!is_null($redirect)) {
+            return $authUrl;
+        }
 
         header("Location: $authUrl");
     }

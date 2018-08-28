@@ -70,6 +70,12 @@ $redirectUrl = 'https://yourappurl.com/your_redirect_url.php';
 \PHPShopify\AuthHelper::createAuthRequest($scopes, $redirectUrl);
 ```
 
+> If you want the function to return the authentication url instead of auto-redirecting, you can set the argument `$return` (5th argument) to `true`.
+
+```php
+\PHPShopify\AuthHelper::createAuthRequest($scopes, $redirectUrl, null, null, true);
+```
+
 3) Get the access token when redirected back to the `$redirectUrl` after app authorization. 
 
 ```php

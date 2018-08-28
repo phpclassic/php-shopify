@@ -11,30 +11,30 @@ namespace PHPShopify;
 
 
 
-/*
+/**
  * --------------------------------------------------------------------------
  * Order -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyResource $Fulfillment
- * @property-read ShopifyResource $Risk
- * @property-read ShopifyResource $Refund
- * @property-read ShopifyResource $Transaction
- * @property-read ShopifyResource $Event
- * @property-read ShopifyResource $Metafield
+ * @property-read Fulfillment $Fulfillment
+ * @property-read OrderRisk $Risk
+ * @property-read Refund $Refund
+ * @property-read Transaction $Transaction
+ * @property-read Event $Event
+ * @property-read Metafield $Metafield
  *
- * @method ShopifyResource Fulfillment(integer $id = null)
- * @method ShopifyResource Risk(integer $id = null)
- * @method ShopifyResource Refund(integer $id = null)
- * @method ShopifyResource Transaction(integer $id = null)
- * @method ShopifyResource Event(integer $id = null)
- * @method ShopifyResource Metafield(integer $id = null)
+ * @method Fulfillment Fulfillment(integer $id = null)
+ * @method OrderRisk Risk(integer $id = null)
+ * @method Refund Refund(integer $id = null)
+ * @method Transaction Transaction(integer $id = null)
+ * @method Event Event(integer $id = null)
+ * @method Metafield Metafield(integer $id = null)
  *
  * --------------------------------------------------------------------------
  * Order -> Custom actions
  * --------------------------------------------------------------------------
  * @method array close()     Close an Order
  * @method array open()         Re-open a closed Order
- * @method array cancel($data)  Cancel an Order
+ * @method array cancel(array $data)  Cancel an Order
  *
  */
 class Order extends ShopifyResource

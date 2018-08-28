@@ -10,13 +10,13 @@
 namespace PHPShopify;
 
 
-/*
+/**
  * --------------------------------------------------------------------------
  * Theme -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyResource $Asset
+ * @property-read Asset $Asset
  *
- * @method ShopifyResource Asset(integer $id = null)
+ * @method Asset Asset(integer $id = null)
  *
  */
 class Theme extends ShopifyResource

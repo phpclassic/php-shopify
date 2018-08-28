@@ -10,13 +10,13 @@
 namespace PHPShopify;
 
 
-/*
+/**
  * --------------------------------------------------------------------------
  * CustomerSavedSearch -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyResource $Customer
+ * @property-read Customer $Customer
  *
- * @method ShopifyResource Customer(integer $id = null)
+ * @method Customer Customer(integer $id = null)
  *
  */
 class CustomerSavedSearch extends ShopifyResource

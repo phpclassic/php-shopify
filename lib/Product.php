@@ -10,19 +10,19 @@
 namespace PHPShopify;
 
 
-/*
+/**
  * --------------------------------------------------------------------------
  * Product -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyResource $Image
- * @property-read ShopifyResource $Variant
- * @property-read ShopifyResource $Metafield
- * @property-read ShopifyResource $Event
+ * @property-read ProductImage $Image
+ * @property-read ProductVariant $Variant
+ * @property-read Metafield $Metafield
+ * @property-read Event $Event
  *
- * @method ShopifyResource Image(integer $id = null)
- * @method ShopifyResource Variant(integer $id = null)
- * @method ShopifyResource Metafield(integer $id = null)
- * @method ShopifyResource Event(integer $id = null)
+ * @method ProductImage Image(integer $id = null)
+ * @method ProductVariant Variant(integer $id = null)
+ * @method Metafield Metafield(integer $id = null)
+ * @method Event Event(integer $id = null)
  *
  */
 class Product extends ShopifyResource

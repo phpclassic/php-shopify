@@ -10,15 +10,15 @@
 namespace PHPShopify;
 
 
-/*
+/**
  * --------------------------------------------------------------------------
  * Page -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyResource $Event
- * @property-read ShopifyResource $Metafield
+ * @property-read Event $Event
+ * @property-read Metafield $Metafield
  *
- * @method ShopifyResource Event(integer $id = null)
- * @method ShopifyResource Metafield(integer $id = null)
+ * @method Event Event(integer $id = null)
+ * @method Metafield Metafield(integer $id = null)
  *
  */
 class Page extends ShopifyResource

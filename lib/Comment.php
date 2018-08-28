@@ -10,14 +10,14 @@
 namespace PHPShopify;
 
 
-/*
+/**
  *
  * --------------------------------------------------------------------------
  * Comment -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyResource $Event
+ * @property-read Event $Event
  *
- * @method ShopifyResource Event(integer $id = null)
+ * @method Event Event(integer $id = null)
  *
  * --------------------------------------------------------------------------
  * Comment -> Custom actions

@@ -82,12 +82,12 @@ class AuthHelper
      * @param string $redirectUrl
      * @param string $state
      * @param string[] $options
-     * @param bool $redirect
+     * @param bool $return If true, will return the authentical url instead of auto-redirecting to the page.
      * @throws SdkException if required configuration is not provided in $config
      *
      * @return void|string
      */
-    public static function createAuthRequest($scopes, $redirectUrl = null, $state = null, $options = null, $redirect = null)
+    public static function createAuthRequest($scopes, $redirectUrl = null, $state = null, $options = null, $return = false)
     {
         $config = ShopifySDK::$config;
 
@@ -121,7 +121,7 @@ class AuthHelper
         // https://{shop}.myshopify.com/admin/oauth/authorize?client_id={api_key}&scope={scopes}&redirect_uri={redirect_uri}&state={nonce}&grant_options[]={option}
         $authUrl = $config['AdminUrl'] . 'oauth/authorize?client_id=' . $config['ApiKey'] . '&redirect_uri=' . $redirectUrl . "&scope=$scopes" . $state . $options;
 
-        if (!is_null($redirect)) {
+        if ($return) {
             return $authUrl;
         }
 

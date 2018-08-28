@@ -18,4 +18,9 @@ class ReportTest extends TestSimpleResource
     public $putArray = array(
         "name" => "A new app report - updated",
     );
+
+    /**
+     * @inheritDoc
+     */
+    public $countEnabled = false;
 }

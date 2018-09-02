@@ -22,7 +22,7 @@ class GiftCard extends ShopifyResource
     /**
      * @inheritDoc
      */
-    protected $resourceKey = 'gift_card';
+    protected $resourceKey = 'gift_cards';
 
     /**
      * @inheritDoc

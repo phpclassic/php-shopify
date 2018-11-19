@@ -47,6 +47,8 @@ class CurlRequest
         //Return the transfer as a string
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
+        curl_setopt($ch, CURLOPT_USERAGENT, 'PHPClassic/PHPShopify');
+
         $headers = array();
         foreach ($httpHeaders as $key => $value) {
             $headers[] = "$key: $value";

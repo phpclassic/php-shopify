@@ -39,6 +39,8 @@ abstract class ShopifyResource
      */
     protected $resourceUrl;
 
+    protected $config;
+
     /**
      * Key of the API Resource which is used to fetch data from request responses
      *
@@ -108,16 +110,16 @@ abstract class ShopifyResource
     /**
      * Create a new Shopify API resource instance.
      *
+     * @param array $config
      * @param integer $id
      * @param string $parentResourceUrl
      *
      * @throws SdkException if Either AccessToken or ApiKey+Password Combination is not found in configuration
      */
-    public function __construct($id = null, $parentResourceUrl = '')
+    public function __construct($config, $id = null, $parentResourceUrl = '')
     {
+        $this->config = $config;
         $this->id = $id;
-
-        $config = ShopifySDK::$config;
 
         $this->resourceUrl = ($parentResourceUrl ? $parentResourceUrl . '/' :  $config['AdminUrl']) . $this->getResourcePath() . ($this->id ? '/' . $this->id : '');
 
@@ -181,7 +183,7 @@ abstract class ShopifyResource
             $resourceID = !empty($arguments) ? $arguments[0] : null;
 
 
-            $api = new $childClass($resourceID, $this->resourceUrl);
+            $api = new $childClass($this->config, $resourceID, $this->resourceUrl);
 
             return $api;
         } else {

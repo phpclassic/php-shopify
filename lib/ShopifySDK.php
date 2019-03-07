@@ -147,7 +147,7 @@ class ShopifySDK
      *
      * @var array
      */
-    public static $config = array();
+    public $config = array();
 
     /**
      * List of available resources which can be called from this client
@@ -223,8 +223,8 @@ class ShopifySDK
     public function __construct($config = array())
     {
         if(!empty($config)) {
-            ShopifySDK::$config = $config;
-            ShopifySDK::setAdminUrl();
+            $this->config = $config;
+            $this->setAdminUrl();
         }
     }
 
@@ -271,7 +271,7 @@ class ShopifySDK
         $resourceID = !empty($arguments) ? $arguments[0] : null;
 
         //Initiate the resource object
-        $resource = new $resourceClassName($resourceID);
+        $resource = new $resourceClassName( $this->config, $resourceID);
 
         return $resource;
     }
@@ -283,15 +283,15 @@ class ShopifySDK
      *
      * @return ShopifySDK
      */
-    public static function config($config)
+    public function config($config)
     {
         foreach ($config as $key => $value) {
-            self::$config[$key] = $value;
+            $this->config[$key] = $value;
         }
 
         //Re-set the admin url if shop url is changed
         if(isset($config['ShopUrl'])) {
-            self::setAdminUrl();
+            $this->setAdminUrl();
         }
 
         //If want to keep more wait time than .5 seconds for each call
@@ -307,22 +307,22 @@ class ShopifySDK
      *
      * @return string
      */
-    public static function setAdminUrl()
+    public function setAdminUrl()
     {
-        $shopUrl = self::$config['ShopUrl'];
+        $shopUrl = $this->config['ShopUrl'];
 
         //Remove https:// and trailing slash (if provided)
         $shopUrl = preg_replace('#^https?://|/$#', '', $shopUrl);
 
-        if(isset(self::$config['ApiKey']) && isset(self::$config['Password'])) {
-            $apiKey = self::$config['ApiKey'];
-            $apiPassword = self::$config['Password'];
+        if(isset($this->config['ApiKey']) && isset($this->config['Password'])) {
+            $apiKey = $this->config['ApiKey'];
+            $apiPassword = $this->config['Password'];
             $adminUrl = "https://$apiKey:$apiPassword@$shopUrl/admin/";
         } else {
             $adminUrl = "https://$shopUrl/admin/";
         }
 
-        self::$config['AdminUrl'] = $adminUrl;
+        $this->config['AdminUrl'] = $adminUrl;
 
         return $adminUrl;
     }
@@ -332,8 +332,8 @@ class ShopifySDK
      *
      * @return string
      */
-    public static function getAdminUrl() {
-        return self::$config['AdminUrl'];
+    public function getAdminUrl() {
+        return $this->config['AdminUrl'];
     }
 
     /**

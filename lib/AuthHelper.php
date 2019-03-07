@@ -39,15 +39,15 @@ class AuthHelper
      *
      * @return bool
      */
-    public static function verifyShopifyRequest()
+    public static function verifyShopifyRequest( &$config )
     {
         $data = $_GET;
 
-        if(!isset(ShopifySDK::$config['SharedSecret'])) {
+        if(!isset($config['SharedSecret'])) {
             throw new SdkException("Please provide SharedSecret while configuring the SDK client.");
         }
 
-        $sharedSecret = ShopifySDK::$config['SharedSecret'];
+        $sharedSecret = $config['SharedSecret'];
 
         //Get the hmac and remove it from array
         if (isset($data['hmac'])) {
@@ -87,10 +87,8 @@ class AuthHelper
      *
      * @return void|string
      */
-    public static function createAuthRequest($scopes, $redirectUrl = null, $state = null, $options = null, $return = false)
+    public static function createAuthRequest(&$config, $scopes, $redirectUrl = null, $state = null, $options = null, $return = false)
     {
-        $config = ShopifySDK::$config;
-
         if(!isset($config['ShopUrl']) || !isset($config['ApiKey'])) {
             throw new SdkException("ShopUrl and ApiKey are required for authentication request. Please check SDK configuration!");
         }
@@ -136,10 +134,8 @@ class AuthHelper
      *
      * @return string
      */
-    public static function getAccessToken()
+    public static function getAccessToken(&$config)
     {
-        $config = ShopifySDK::$config;
-
         if(!isset($config['SharedSecret']) || !isset($config['ApiKey'])) {
             throw new SdkException("SharedSecret and ApiKey are required for getting access token. Please check SDK configuration!");
         }

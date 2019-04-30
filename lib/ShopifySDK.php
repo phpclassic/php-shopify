@@ -214,6 +214,12 @@ class ShopifySDK
     );
 
     /*
+     * Current supported version of Shopify API
+     * See https://help.shopify.com/en/api/versioning
+     */
+    public static $version = '2019-04';
+
+    /*
      * ShopifySDK constructor
      *
      * @param array $config
@@ -310,6 +316,7 @@ class ShopifySDK
     public static function setAdminUrl()
     {
         $shopUrl = self::$config['ShopUrl'];
+        $version = self::$version;
 
         //Remove https:// and trailing slash (if provided)
         $shopUrl = preg_replace('#^https?://|/$#', '', $shopUrl);
@@ -317,9 +324,9 @@ class ShopifySDK
         if(isset(self::$config['ApiKey']) && isset(self::$config['Password'])) {
             $apiKey = self::$config['ApiKey'];
             $apiPassword = self::$config['Password'];
-            $adminUrl = "https://$apiKey:$apiPassword@$shopUrl/admin/";
+            $adminUrl = "https://$apiKey:$apiPassword@$shopUrl/admin/api/$version/";
         } else {
-            $adminUrl = "https://$shopUrl/admin/";
+            $adminUrl = "https://$shopUrl/admin/api/$version/";
         }
 
         self::$config['AdminUrl'] = $adminUrl;

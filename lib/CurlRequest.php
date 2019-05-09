@@ -9,6 +9,7 @@ namespace PHPShopify;
 
 
 use PHPShopify\Exception\CurlException;
+use PHPShopify\Exception\ResourceRateLimitException;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,8 @@ class CurlRequest
 
         //Return the transfer as a string
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        curl_setopt($ch, CURLOPT_HEADER, true);
 
         $headers = array();
         foreach ($httpHeaders as $key => $value) {
@@ -141,15 +144,24 @@ class CurlRequest
     protected static function processRequest($ch)
     {
         # Check for 429 leaky bucket error
-        while(1) {
-             $output = curl_exec($ch);
-             self::$lastHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-             if(self::$lastHttpCode != 429) {
-                break; 
-             } 
-             usleep(500000);
+        while (1) {
+            $output   = curl_exec($ch);
+            $response = new CurlResponse($output);
+
+            self::$lastHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            if (self::$lastHttpCode != 429) {
+                break;
+            }
+
+            $limitHeader = explode('/', $response->getHeader('X-Shopify-Shop-Api-Call-Limit'), 2);
+
+            if (isset($limitHeader[1]) && $limitHeader[0] < $limitHeader[1]) {
+                throw new ResourceRateLimitException($response->getBody());
+            }
+
+            usleep(500000);
         }
-    
+
         if (curl_errno($ch)) {
             throw new Exception\CurlException(curl_errno($ch) . ' : ' . curl_error($ch));
         }
@@ -157,7 +169,7 @@ class CurlRequest
         // close curl resource to free up system resources
         curl_close($ch);
 
-        return $output;
+        return $response->getBody();
     }
     
 }

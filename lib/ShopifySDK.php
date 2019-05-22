@@ -149,7 +149,9 @@ class ShopifySDK
      *
      * @var array
      */
-    public static $config = array();
+    public static $config = array(
+        'ApiVersion' => '2019-04'
+    );
 
     /**
      * List of available resources which can be called from this client
@@ -225,8 +227,7 @@ class ShopifySDK
     public function __construct($config = array())
     {
         if(!empty($config)) {
-            ShopifySDK::$config = $config;
-            ShopifySDK::setAdminUrl();
+            ShopifySDK::config($config);
         }
     }
 
@@ -315,13 +316,14 @@ class ShopifySDK
 
         //Remove https:// and trailing slash (if provided)
         $shopUrl = preg_replace('#^https?://|/$#', '', $shopUrl);
+        $apiVersion = self::$config['ApiVersion'];
 
         if(isset(self::$config['ApiKey']) && isset(self::$config['Password'])) {
             $apiKey = self::$config['ApiKey'];
             $apiPassword = self::$config['Password'];
-            $adminUrl = "https://$apiKey:$apiPassword@$shopUrl/admin/";
+            $adminUrl = "https://$apiKey:$apiPassword@$shopUrl/admin/api/$apiVersion/";
         } else {
-            $adminUrl = "https://$shopUrl/admin/";
+            $adminUrl = "https://$shopUrl/admin/api/$apiVersion/";
         }
 
         self::$config['AdminUrl'] = $adminUrl;

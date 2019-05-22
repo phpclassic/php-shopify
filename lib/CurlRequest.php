@@ -49,6 +49,7 @@ class CurlRequest
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
         curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'PHPClassic/PHPShopify');
 
         $headers = array();
         foreach ($httpHeaders as $key => $value) {

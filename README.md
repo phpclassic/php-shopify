@@ -264,6 +264,7 @@ Some resources are available directly, some resources are only available through
 - [InventoryItem](https://help.shopify.com/api/reference/inventoryitem)
 - [InventoryLevel](https://help.shopify.com/api/reference/inventorylevel)
 - [Location](https://help.shopify.com/api/reference/location/) _(read only)_
+- Location -> [InventoryLevel](https://help.shopify.com/api/reference/inventorylevel)
 - [Metafield](https://help.shopify.com/api/reference/metafield)
 - [Multipass](https://help.shopify.com/api/reference/multipass) _(Shopify Plus Only, API not available yet)_
 - [Order](https://help.shopify.com/api/reference/order)

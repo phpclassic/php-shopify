@@ -255,6 +255,7 @@ Some resources are available directly, some resources are only available through
 - [Customer](https://help.shopify.com/api/reference/customer/)
 - Customer -> [Address](https://help.shopify.com/api/reference/customeraddress/)
 - Customer -> [Metafield](https://help.shopify.com/api/reference/metafield)
+- Customer -> [Order](https://help.shopify.com/api/reference/order)
 - [CustomerSavedSearch](https://help.shopify.com/api/reference/customersavedsearch/)
 - CustomerSavedSearch -> [Customer](https://help.shopify.com/api/reference/customer/)
 - [Discount](https://help.shopify.com/api/reference/discount) _(Shopify Plus Only)_

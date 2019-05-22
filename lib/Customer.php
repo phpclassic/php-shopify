@@ -42,5 +42,6 @@ class Customer extends ShopifyResource
     protected $childResource = array(
         'CustomerAddress' => 'Address',
         'Metafield',
+        'Order'
     );
 }

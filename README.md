@@ -343,6 +343,8 @@ The custom methods are specific to some resources which may not be available for
 - Customer ->
     - [search()](https://help.shopify.com/api/reference/customer#search)
     Search for customers matching supplied query
+    - [send_invite($data)](https://help.shopify.com/en/api/reference/customers/customer#send_invite)
+    Sends an account invite to a customer.
     
 - Customer -> Address ->
     - [makeDefault()](https://help.shopify.com/api/reference/customeraddress#default)

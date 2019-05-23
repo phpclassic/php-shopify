@@ -44,4 +44,20 @@ class Customer extends ShopifyResource
         'Metafield',
         'Order'
     );
+
+    /**
+     * Sends an account invite to a customer.
+     *
+     * @param array $customer_invite Customized invite data
+     *
+     * @return array
+     */
+    public function send_invite($customer_invite = array())
+    {
+        if (empty ( $customer_invite ) ) $customer_invite = new \stdClass();
+        $url = $this->generateUrl(array(), 'send_invite');
+        $dataArray = $this->wrapData($customer_invite, 'customer_invite');
+
+        return $this->post($dataArray, $url, false);
+    }
 }

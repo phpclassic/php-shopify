@@ -321,12 +321,13 @@ class ShopifySDK
         if(isset(self::$config['ApiKey']) && isset(self::$config['Password'])) {
             $apiKey = self::$config['ApiKey'];
             $apiPassword = self::$config['Password'];
-            $adminUrl = "https://$apiKey:$apiPassword@$shopUrl/admin/api/$apiVersion/";
+            $adminUrl = "https://$apiKey:$apiPassword@$shopUrl/admin/";
         } else {
-            $adminUrl = "https://$shopUrl/admin/api/$apiVersion/";
+            $adminUrl = "https://$shopUrl/admin/";
         }
 
         self::$config['AdminUrl'] = $adminUrl;
+        self::$config['ApiUrl'] = $adminUrl . "api/$apiVersion/";
 
         return $adminUrl;
     }
@@ -338,6 +339,15 @@ class ShopifySDK
      */
     public static function getAdminUrl() {
         return self::$config['AdminUrl'];
+    }
+
+    /**
+     * Get the api url of the configured shop
+     *
+     * @return string
+     */
+    public static function getApiUrl() {
+        return self::$config['ApiUrl'];
     }
 
     /**

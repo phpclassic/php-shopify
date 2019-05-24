@@ -153,6 +153,9 @@ $order = array (
 $shopify->Order->post($order);
 ```
 
+> Note that you don't need to wrap the data array with the resource key (`order` in this case), which is the expected syntax from Shopify API. This is automatically handled by this SDK.
+
+
 - Update an order (PUT Request)
 
 ```php

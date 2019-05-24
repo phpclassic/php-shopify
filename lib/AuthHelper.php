@@ -39,9 +39,11 @@ class AuthHelper
      *
      * @return bool
      */
-    public static function verifyShopifyRequest()
+    public static function verifyShopifyRequest($data = null)
     {
-        $data = $_GET;
+        if ($data === null) {
+            $data = $_GET;
+        }
 
         if(!isset(ShopifySDK::$config['SharedSecret'])) {
             throw new SdkException("Please provide SharedSecret while configuring the SDK client.");
@@ -49,28 +51,30 @@ class AuthHelper
 
         $sharedSecret = ShopifySDK::$config['SharedSecret'];
 
-        //Get the hmac and remove it from array
-        if (isset($data['hmac'])) {
-            $hmac = $data['hmac'];
-            unset($data['hmac']);
-        } else {
+        if (!isset($data['hmac'])) {
             throw new SdkException("HMAC value not found in url parameters.");
         }
-        //signature validation is deprecated
-        if (isset($data['signature'])) {
-            unset($data['signature']);
-        }
-        //Create data string for the remaining url parameters
-        $dataString = http_build_query($data);
+
+        $hmac = $data['hmac'];
+        unset($data['hmac'], $data['signature']);
+
+        $parts = array_map( function ($key, $param) {
+            // Map array values (ids[]=123&ids[]=456) to the correct format (ids=["123", "456"]).
+            // See: https://ecommerce.shopify.com/c/shopify-apis-and-technology/t/hmac-calculation-vs-ids-arrays-320575
+            if (is_array($param)) {
+                $param = '["' . implode('", "', $param) . '"]';
+            }
+
+            return $key . '=' . $param;
+        }, array_keys($data), $data);
+
+        ksort($parts);
+        $dataString = implode('&', $parts);;
 
         $realHmac = hash_hmac('sha256', $dataString, $sharedSecret);
 
         //hash the values before comparing (to prevent time attack)
-        if(md5($realHmac) === md5($hmac)) {
-            return true;
-        } else {
-            return false;
-        }
+        return md5($realHmac) === md5($hmac);
     }
 
     /**

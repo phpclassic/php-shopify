@@ -27,6 +27,20 @@ class CurlRequest
      */
     public static $lastHttpCode;
 
+    /**
+     * URL of the last executed request
+     *
+     * @var string
+     */
+    public static $lastRequestUrl;
+
+    /**
+     * Payload of the last executed request
+     *
+     * @var string
+     */
+    public static $lastRequestData = null;
+
 
     /**
      * Initialize the curl resource
@@ -54,6 +68,8 @@ class CurlRequest
         //Set HTTP Headers
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
+        self::$lastRequestUrl = $url;
+
         return $ch;
 
     }
@@ -70,6 +86,8 @@ class CurlRequest
     {
         //Initialize the Curl resource
         $ch = self::init($url, $httpHeaders);
+
+        self::$lastRequestData = null;
 
         return self::processRequest($ch);
     }
@@ -90,6 +108,8 @@ class CurlRequest
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
+        self::$lastRequestData = $data;
+
         return self::processRequest($ch);
     }
 
@@ -109,6 +129,8 @@ class CurlRequest
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
+        self::$lastRequestData = $data;
+
         return self::processRequest($ch);
     }
 
@@ -125,6 +147,8 @@ class CurlRequest
         $ch = self::init($url, $httpHeaders);
         //set the request type
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+
+        self::$lastRequestData = null;
 
         return self::processRequest($ch);
     }

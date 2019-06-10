@@ -234,7 +234,7 @@ $shopify->Blog($blogID)->Article($articleID)->put($updateArtilceInfo);
 $blogArticle = $shopify->Blog($blogID)->Article($articleID)->delete();
 ```
 
-### GraphQL <sup>*v1.1-beta*</sup>
+### GraphQL <sup>*v1.1*</sup>
 The GraphQL Admin API is a GraphQL-based alternative to the REST-based Admin API, and makes the functionality of the Shopify admin available at a single GraphQL endpoint. The full set of supported types can be found in the [GraphQL Admin API reference](https://help.shopify.com/en/api/graphql-admin-api/reference).
 You can simply call the GraphQL resource and make a post request with a GraphQL string:
 
@@ -278,6 +278,7 @@ Some resources are available directly, some resources are only available through
 - Comment -> [Event](https://help.shopify.com/api/reference/event/)
 - [Country](https://help.shopify.com/api/reference/country/)
 - Country -> [Province](https://help.shopify.com/api/reference/province/)
+- [Currency](https://help.shopify.com/en/api/reference/store-properties/currency)
 - [CustomCollection]()
 - CustomCollection -> [Event](https://help.shopify.com/api/reference/event/)
 - CustomCollection -> [Metafield](https://help.shopify.com/api/reference/metafield)

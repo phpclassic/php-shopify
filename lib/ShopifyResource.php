@@ -446,7 +446,7 @@ abstract class ShopifyResource
      */
     protected function castString($array)
     {
-        if (is_string($array)) return $array;
+        if ( ! is_array($array)) return (string) $array;
 
         $string = '';
         $i = 0;

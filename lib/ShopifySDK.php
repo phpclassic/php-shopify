@@ -60,6 +60,9 @@ namespace PHPShopify;
 | //Get variants of a product (using Child resource)
 | $products = $shopify->Product($productID)->Variant->get();
 |
+| //GraphQL
+| $data = $shopify->GraphQL->post($graphQL);
+|
 */
 use PHPShopify\Exception\SdkException;
 
@@ -97,6 +100,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read Theme $Theme
  * @property-read User $User
  * @property-read Webhook $Webhook
+ * @property-read GraphQL $GraphQL
  *
  * @method AbandonedCheckout AbandonedCheckout(integer $id = null)
  * @method Blog Blog(integer $id = null)
@@ -131,6 +135,7 @@ use PHPShopify\Exception\SdkException;
  * @method Theme Theme(int $id = null)
  * @method User User(integer $id = null)
  * @method Webhook Webhook(integer $id = null)
+ * @method GraphQL GraphQL()
  */
 class ShopifySDK
 {
@@ -194,6 +199,7 @@ class ShopifySDK
         'Theme',
         'User',
         'Webhook',
+        'GraphQL'
     );
 
     /**

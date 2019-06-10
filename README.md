@@ -234,6 +234,32 @@ $shopify->Blog($blogID)->Article($articleID)->put($updateArtilceInfo);
 $blogArticle = $shopify->Blog($blogID)->Article($articleID)->delete();
 ```
 
+### GraphQL <sup>*v1.1*</sup>
+The GraphQL Admin API is a GraphQL-based alternative to the REST-based Admin API, and makes the functionality of the Shopify admin available at a single GraphQL endpoint. The full set of supported types can be found in the [GraphQL Admin API reference](https://help.shopify.com/en/api/graphql-admin-api/reference).
+You can simply call the GraphQL resource and make a post request with a GraphQL string:
+
+> The GraphQL Admin API requires an access token for making authenticated requests. So it won't work with `ApiKey` and `Password` which is allowed for REST API resources.
+
+```php
+$graphQL = <<<Query
+query {
+  shop {
+    name
+    primaryDomain {
+      url
+      host
+    }
+  }
+}
+Query;
+
+$data = $shopify->GraphQL->post($graphQL);
+```
+
+##### GraphQL Builder
+This SDK only accepts a GraphQL string as input. You can build your GraphQL from [Shopify GraphQL Builder](https://help.shopify.com/en/api/graphql-admin-api/graphiql-builder)
+
+
 ### Resource Mapping
 Some resources are available directly, some resources are only available through parent resources and a few resources can be accessed both ways. It is recommended that you see the details in the related Shopify API Reference page about each resource. Each resource name here is linked to related Shopify API Reference page.
 > Use the resources only by listed resource map. Trying to get a resource directly which is only available through parent resource may end up with errors.
@@ -252,6 +278,7 @@ Some resources are available directly, some resources are only available through
 - Comment -> [Event](https://help.shopify.com/api/reference/event/)
 - [Country](https://help.shopify.com/api/reference/country/)
 - Country -> [Province](https://help.shopify.com/api/reference/province/)
+- [Currency](https://help.shopify.com/en/api/reference/store-properties/currency)
 - [CustomCollection]()
 - CustomCollection -> [Event](https://help.shopify.com/api/reference/event/)
 - CustomCollection -> [Metafield](https://help.shopify.com/api/reference/metafield)
@@ -304,6 +331,7 @@ Some resources are available directly, some resources are only available through
 - Theme -> [Asset](https://help.shopify.com/api/reference/asset/)
 - [User](https://help.shopify.com/api/reference/user) _(read only, Shopify Plus Only)_
 - [Webhook](https://help.shopify.com/api/reference/webhook)
+- [GraphQL](https://help.shopify.com/en/api/graphql-admin-api/reference)
 
 ### Custom Actions
 There are several action methods which can be called without calling the `get()`, `post()`, `put()`, `delete()` methods directly, but eventually results in a custom call to one of those methods.

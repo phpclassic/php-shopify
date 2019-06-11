@@ -7,8 +7,21 @@
 
 namespace PHPShopify\Exception;
 
+use Throwable;
 
 class CurlException extends \Exception
 {
+    private $lastRequestData;
 
+    public function __construct($message = "", array $lastRequestData = ['request_url' => null, 'request_data' => null], $code = 0, Throwable $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+
+        $this->lastRequestData = $lastRequestData;
+    }
+
+    public function getLastRequestData()
+    {
+        return $this->lastRequestData;
+    }
 }

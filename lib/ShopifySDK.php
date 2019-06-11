@@ -90,6 +90,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read Page $Page
  * @property-read Policy $Policy
  * @property-read Product $Product
+ * @property-read ProductListing $ProductListing
  * @property-read ProductVariant $ProductVariant
  * @property-read RecurringApplicationCharge $RecurringApplicationCharge
  * @property-read Redirect $Redirect
@@ -125,6 +126,7 @@ use PHPShopify\Exception\SdkException;
  * @method Page Page(integer $id = null)
  * @method Policy Policy(integer $id = null)
  * @method Product Product(integer $id = null)
+ * @method ProductListing ProductListing(integer $id = null)
  * @method ProductVariant ProductVariant(integer $id = null)
  * @method RecurringApplicationCharge RecurringApplicationCharge(integer $id = null)
  * @method Redirect Redirect(integer $id = null)
@@ -187,6 +189,7 @@ class ShopifySDK
         'Page',
         'Policy',
         'Product',
+        'ProductListing',
         'ProductVariant',
         'PriceRule',
         'RecurringApplicationCharge',

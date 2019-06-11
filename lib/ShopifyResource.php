@@ -482,7 +482,7 @@ abstract class ShopifyResource
         $lastRequestUrl = CurlRequest::$lastRequestUrl;
         $lastRequestData = CurlRequest::$lastRequestData;
 
-        $message['request_info'] = [
+        $lastRequestData = [
             'request_url' => $lastRequestUrl,
             'request_data' => $lastRequestData
         ];
@@ -496,16 +496,12 @@ abstract class ShopifyResource
             $httpCode = CurlRequest::$lastHttpCode;
 
             if ($httpCode != null && $httpCode != $httpOK && $httpCode != $httpCreated) {
-                $message['message_text'] = "Request failed with HTTP Code $httpCode.";
-
-                throw new Exception\CurlException($message);
+                throw new Exception\CurlException("Request failed with HTTP Code $httpCode.", $lastRequestData);
             }
         }
 
         if (isset($responseArray['errors'])) {
-            $message['message_text'] = $this->castString($responseArray['errors']);
-
-            throw new ApiException($message);
+            throw new ApiException($this->castString($responseArray['errors']), $lastRequestData);
         }
 
         if ($dataKey && isset($responseArray[$dataKey])) {

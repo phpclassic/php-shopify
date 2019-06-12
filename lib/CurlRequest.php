@@ -196,7 +196,12 @@ class CurlRequest
         }
 
         if (curl_errno($ch)) {
-            throw new Exception\CurlException(curl_errno($ch) . ' : ' . curl_error($ch));
+            $lastRequestData = [
+                'request_url' => self::$lastRequestUrl,
+                'request_data' => self::$lastRequestData
+            ];
+
+            throw new Exception\CurlException(addslashes(curl_errno($ch) . ' : ' . curl_error($ch)), $lastRequestData);
         }
 
         self::$lastHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);

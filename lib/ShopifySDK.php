@@ -73,6 +73,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read Collect $Collect
  * @property-read Comment $Comment
  * @property-read Country $Country
+ * @property-read Currency $Currency
  * @property-read CustomCollection $CustomCollection
  * @property-read Customer $Customer
  * @property-read CustomerSavedSearch $CustomerSavedSearch
@@ -109,6 +110,7 @@ use PHPShopify\Exception\SdkException;
  * @method Collect Collect(integer $id = null)
  * @method Comment Comment(integer $id = null)
  * @method Country Country(integer $id = null)
+ * @method Currency Currency(integer $id = null)
  * @method CustomCollection CustomCollection(integer $id = null)
  * @method Customer Customer(integer $id = null)
  * @method CustomerSavedSearch CustomerSavedSearch(integer $id = null)
@@ -173,6 +175,7 @@ class ShopifySDK
         'Collect',
         'Comment',
         'Country',
+        'Currency',
         'CustomCollection',
         'Customer',
         'CustomerSavedSearch',

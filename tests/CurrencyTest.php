@@ -9,7 +9,7 @@
 namespace PHPShopify;
 
 
-class CurrencyTest
+class CurrencyTest extends TestSimpleResource
 {
 
 }

@@ -21,6 +21,11 @@ class Currency extends ShopifyResource
     /**
      * @inheritDoc
      */
+    public $countEnabled = false;
+
+    /**
+     * @inheritDoc
+     */
     public $readOnly = true;
 
     /**

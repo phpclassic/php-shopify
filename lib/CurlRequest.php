@@ -187,6 +187,8 @@ class CurlRequest
 
         $output = curl_exec($ch);
 
+        self::$lastHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
         if(isset($headers['x-shopify-shop-api-call-limit'])){
             list($currentState,$limit) = explode('/',$headers['x-shopify-shop-api-call-limit'][0]);
             if($currentState >= $limit-3){
@@ -201,10 +203,8 @@ class CurlRequest
                 'request_data' => self::$lastRequestData
             ];
 
-            throw new Exception\CurlException(addslashes(curl_errno($ch) . ' : ' . curl_error($ch)), $lastRequestData);
+            throw new Exception\CurlException(addslashes(curl_errno($ch) . ' : ' . curl_error($ch)), $lastRequestData, self::$lastHttpCode);
         }
-
-        self::$lastHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         // close curl resource to free up system resources
         curl_close($ch);

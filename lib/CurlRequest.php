@@ -207,10 +207,9 @@ class CurlRequest
             }
         );
 
-        self::$lastRequestHeaders = curl_getinfo($ch, CURLINFO_HEADER_OUT);
-
         $output = curl_exec($ch);
 
+        self::$lastRequestHeaders = curl_getinfo($ch, CURLINFO_HEADER_OUT);
         self::$lastHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         self::$lastResponseHeaders = $headers;
         self::$lastResponseBody = $output;

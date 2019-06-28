@@ -238,7 +238,7 @@ $blogArticle = $shopify->Blog($blogID)->Article($articleID)->delete();
 The GraphQL Admin API is a GraphQL-based alternative to the REST-based Admin API, and makes the functionality of the Shopify admin available at a single GraphQL endpoint. The full set of supported types can be found in the [GraphQL Admin API reference](https://help.shopify.com/en/api/graphql-admin-api/reference).
 You can simply call the GraphQL resource and make a post request with a GraphQL string:
 
-> The GraphQL Admin API requires an access token for making authenticated requests. So it won't work with `ApiKey` and `Password` which is allowed for REST API resources.
+> The GraphQL Admin API requires an access token for making authenticated requests. You can obtain an access token either by creating a private app and using that app's API password, or by following the OAuth authorization process. [Getting Started](https://help.shopify.com/en/api/graphql-admin-api/getting-started#authentication)
 
 ```php
 $graphQL = <<<Query

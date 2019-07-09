@@ -11,17 +11,27 @@ use Throwable;
 
 class ApiException extends \Exception
 {
-    private $lastRequestData;
+    private $lastCallData;
 
-    public function __construct($message = "", array $lastRequestData = ['request_url' => null, 'request_data' => null], $code = 0, Throwable $previous = null)
+    public function __construct(
+        $message = "",
+        array $lastCallData = [
+            'request_url' => null,
+            'request_headers' => null,
+            'request_data' => null,
+            'response_headers' => null,
+            'response_body' => null
+        ],
+        $code = 0,
+        Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
 
-        $this->lastRequestData = $lastRequestData;
+        $this->lastCallData = $lastCallData;
     }
 
-    public function getLastRequestData()
+    public function getLastCallData()
     {
-        return $this->lastRequestData;
+        return $this->lastCallData;
     }
 }

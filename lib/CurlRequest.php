@@ -42,6 +42,26 @@ class CurlRequest
      */
     public static $lastRequestData = null;
 
+    /**
+     * Headers of the last executed request
+     *
+     * @var string
+     */
+    public static $lastRequestHeaders = null;
+
+    /**
+     * Headers of the last returned response
+     *
+     * @var string
+     */
+    public static $lastResponseHeaders = null;
+
+    /**
+     * Body of the last returned response
+     *
+     * @var string
+     */
+    public static $lastResponseBody = null;
 
     /**
      * Initialize the curl resource
@@ -63,7 +83,10 @@ class CurlRequest
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
         curl_setopt($ch, CURLOPT_HEADER, true);
+
         curl_setopt($ch, CURLOPT_USERAGENT, 'PHPClassic/PHPShopify');
+
+        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
         $headers = array();
         foreach ($httpHeaders as $key => $value) {
@@ -196,6 +219,9 @@ class CurlRequest
 
             self::$lastHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             if (self::$lastHttpCode != 429) {
+                self::$lastRequestHeaders = curl_getinfo($ch, CURLINFO_HEADER_OUT);
+                self::$lastResponseHeaders = json_encode($headers);
+                self::$lastResponseBody = $output;
                 break;
             }
 
@@ -209,12 +235,15 @@ class CurlRequest
         }
 
         if (curl_errno($ch)) {
-            $lastRequestData = [
+            $lastCallData = [
                 'request_url' => self::$lastRequestUrl,
-                'request_data' => self::$lastRequestData
+                'request_headers' => self::$lastRequestHeaders,
+                'request_data' => self::$lastRequestData,
+                'response_headers' => self::$lastResponseHeaders,
+                'response_body' => self::$lastResponseBody
             ];
 
-            throw new Exception\CurlException(addslashes(curl_errno($ch) . ' : ' . curl_error($ch)), $lastRequestData, self::$lastHttpCode);
+            throw new Exception\CurlException(addslashes(curl_errno($ch) . ' : ' . curl_error($ch)), $lastCallData, self::$lastHttpCode);
         }
 
         // close curl resource to free up system resources

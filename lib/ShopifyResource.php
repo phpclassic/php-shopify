@@ -477,23 +477,28 @@ abstract class ShopifyResource
      */
     public function processResponse($responseArray, $dataKey = null)
     {
+        $lastRequestUrl = CurlRequest::$lastRequestUrl;
+        $lastRequestData = CurlRequest::$lastRequestData;
+        //should be null if any other library used for http calls
+        $httpCode = CurlRequest::$lastHttpCode;
+
+        $lastRequestData = [
+            'request_url' => $lastRequestUrl,
+            'request_data' => $lastRequestData
+        ];
+
         if ($responseArray === null) {
             //Something went wrong, Checking HTTP Codes
             $httpOK = 200; //Request Successful, OK.
             $httpCreated = 201; //Create Successful.
 
-            //should be null if any other library used for http calls
-            $httpCode = CurlRequest::$lastHttpCode;
-
             if ($httpCode != null && $httpCode != $httpOK && $httpCode != $httpCreated) {
-                throw new Exception\CurlException("Request failed with HTTP Code $httpCode.");
+                throw new Exception\CurlException("Request failed with HTTP Code $httpCode.", $lastRequestData, $httpCode);
             }
         }
 
         if (isset($responseArray['errors'])) {
-            $message = $this->castString($responseArray['errors']);
-
-            throw new ApiException($message);
+            throw new ApiException($this->castString($responseArray['errors']), $lastRequestData, $httpCode);
         }
 
         if ($dataKey && isset($responseArray[$dataKey])) {
@@ -502,4 +507,5 @@ abstract class ShopifyResource
             return $responseArray;
         }
     }
+
 }

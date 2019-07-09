@@ -28,6 +28,20 @@ class CurlRequest
      */
     public static $lastHttpCode;
 
+    /**
+     * URL of the last executed request
+     *
+     * @var string
+     */
+    public static $lastRequestUrl;
+
+    /**
+     * Payload of the last executed request
+     *
+     * @var string
+     */
+    public static $lastRequestData = null;
+
 
     /**
      * Initialize the curl resource
@@ -58,6 +72,8 @@ class CurlRequest
         //Set HTTP Headers
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
+        self::$lastRequestUrl = $url;
+
         return $ch;
 
     }
@@ -74,6 +90,8 @@ class CurlRequest
     {
         //Initialize the Curl resource
         $ch = self::init($url, $httpHeaders);
+
+        self::$lastRequestData = null;
 
         return self::processRequest($ch);
     }
@@ -94,6 +112,8 @@ class CurlRequest
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
+        self::$lastRequestData = $data;
+
         return self::processRequest($ch);
     }
 
@@ -113,6 +133,8 @@ class CurlRequest
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
+        self::$lastRequestData = $data;
+
         return self::processRequest($ch);
     }
 
@@ -130,6 +152,8 @@ class CurlRequest
         //set the request type
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
 
+        self::$lastRequestData = null;
+
         return self::processRequest($ch);
     }
 
@@ -144,6 +168,27 @@ class CurlRequest
      */
     protected static function processRequest($ch)
     {
+        $headers = [];
+        // $output contains the output string
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADERFUNCTION,
+            function($curl, $header) use (&$headers)
+            {
+                $len = strlen($header);
+                $header = explode(':', $header, 2);
+                if (count($header) < 2) // ignore invalid headers
+                    return $len;
+
+                $name = strtolower(trim($header[0]));
+                if (!array_key_exists($name, $headers))
+                    $headers[$name] = [trim($header[1])];
+                else
+                    $headers[$name][] = trim($header[1]);
+
+                return $len;
+            }
+        );
+
         # Check for 429 leaky bucket error
         while (1) {
             $output   = curl_exec($ch);
@@ -164,7 +209,12 @@ class CurlRequest
         }
 
         if (curl_errno($ch)) {
-            throw new Exception\CurlException(curl_errno($ch) . ' : ' . curl_error($ch));
+            $lastRequestData = [
+                'request_url' => self::$lastRequestUrl,
+                'request_data' => self::$lastRequestData
+            ];
+
+            throw new Exception\CurlException(addslashes(curl_errno($ch) . ' : ' . curl_error($ch)), $lastRequestData, self::$lastHttpCode);
         }
 
         // close curl resource to free up system resources
@@ -172,5 +222,5 @@ class CurlRequest
 
         return $response->getBody();
     }
-    
+
 }

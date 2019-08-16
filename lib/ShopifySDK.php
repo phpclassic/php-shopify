@@ -78,6 +78,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read Customer $Customer
  * @property-read CustomerSavedSearch $CustomerSavedSearch
  * @property-read Discount $Discount
+ * @property-read DraftOrder $DraftOrder
  * @property-read PriceRule $PriceRule
  * @property-read Event $Event
  * @property-read FulfillmentService $FulfillmentService
@@ -115,6 +116,7 @@ use PHPShopify\Exception\SdkException;
  * @method Customer Customer(integer $id = null)
  * @method CustomerSavedSearch CustomerSavedSearch(integer $id = null)
  * @method Discount Discount(integer $id = null)
+ * @method DraftOrder DraftOrder(integer $id = null)
  * @method PriceRule PriceRule(integer $id = null)
  * @method Event Event(integer $id = null)
  * @method FulfillmentService FulfillmentService(integer $id = null)
@@ -144,25 +146,6 @@ use PHPShopify\Exception\SdkException;
 class ShopifySDK
 {
     /**
-     * @var float microtime of last api call
-     */
-    public static $microtimeOfLastApiCall;
-
-    /**
-     * @var float Minimum gap in seconds to maintain between 2 api calls
-     */
-    public static $timeAllowedForEachApiCall = .5;
-
-    /**
-     * Shop / API configurations
-     *
-     * @var array
-     */
-    public static $config = array(
-        'ApiVersion' => '2019-04'
-    );
-
-    /**
      * List of available resources which can be called from this client
      *
      * @var string[]
@@ -180,6 +163,7 @@ class ShopifySDK
         'Customer',
         'CustomerSavedSearch',
         'Discount',
+        'DraftOrder',
         'Event',
         'FulfillmentService',
         'GiftCard',
@@ -206,6 +190,25 @@ class ShopifySDK
         'User',
         'Webhook',
         'GraphQL'
+    );
+
+    /**
+     * @var float microtime of last api call
+     */
+    public static $microtimeOfLastApiCall;
+
+    /**
+     * @var float Minimum gap in seconds to maintain between 2 api calls
+     */
+    public static $timeAllowedForEachApiCall = .5;
+
+    /**
+     * Shop / API configurations
+     *
+     * @var array
+     */
+    public static $config = array(
+        'ApiVersion' => '2019-04'
     );
 
     /**

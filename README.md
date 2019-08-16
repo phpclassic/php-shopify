@@ -238,7 +238,7 @@ $blogArticle = $shopify->Blog($blogID)->Article($articleID)->delete();
 The GraphQL Admin API is a GraphQL-based alternative to the REST-based Admin API, and makes the functionality of the Shopify admin available at a single GraphQL endpoint. The full set of supported types can be found in the [GraphQL Admin API reference](https://help.shopify.com/en/api/graphql-admin-api/reference).
 You can simply call the GraphQL resource and make a post request with a GraphQL string:
 
-> The GraphQL Admin API requires an access token for making authenticated requests. You can obtain an access token either by creating a private app and using that app's API password, or by following the OAuth authorization process. [Getting Started](https://help.shopify.com/en/api/graphql-admin-api/getting-started#authentication)
+> The GraphQL Admin API requires an access token for making authenticated requests. You can obtain an access token either by creating a private app and using that app's API password, or by following the OAuth authorization process. See [GraphQL Authentication Guide](https://help.shopify.com/en/api/graphql-admin-api/getting-started#authentication)
 
 ```php
 $graphQL = <<<Query
@@ -288,6 +288,7 @@ Some resources are available directly, some resources are only available through
 - Customer -> [Order](https://help.shopify.com/api/reference/order)
 - [CustomerSavedSearch](https://help.shopify.com/api/reference/customersavedsearch/)
 - CustomerSavedSearch -> [Customer](https://help.shopify.com/api/reference/customer/)
+- [DraftOrder](https://help.shopify.com/api/reference/draftorder)
 - [Discount](https://help.shopify.com/api/reference/discount) _(Shopify Plus Only)_
 - [Event](https://help.shopify.com/api/reference/event/)
 - [FulfillmentService](https://help.shopify.com/api/reference/fulfillmentservice)
@@ -382,6 +383,12 @@ The custom methods are specific to some resources which may not be available for
     Sets the address as default for the customer
     - [set($params)](https://help.shopify.com/api/reference/customeraddress#set)
     Perform bulk operations against a number of addresses
+    
+- DraftOrder ->
+    - [send_invoice()]()
+    Send the invoice for a DraftOrder
+    - [complete()]()
+    Complete a DraftOrder
     
 - Discount ->
     - [enable()]()

@@ -31,6 +31,12 @@ class DraftOrder extends ShopifyResource
      */
     protected $customPostActions = array(
         'send_invoice',
+    );
+
+    /**
+     * @inheritDoc
+     */
+    protected $customPutActions = array(
         'complete',
     );
 }

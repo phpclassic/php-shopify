@@ -290,6 +290,7 @@ Some resources are available directly, some resources are only available through
 - CustomerSavedSearch -> [Customer](https://help.shopify.com/api/reference/customer/)
 - [DraftOrder](https://help.shopify.com/api/reference/draftorder)
 - [Discount](https://help.shopify.com/api/reference/discount) _(Shopify Plus Only)_
+- [DiscountCode](https://help.shopify.com/en/api/reference/discounts/discountcode)
 - [Event](https://help.shopify.com/api/reference/event/)
 - [FulfillmentService](https://help.shopify.com/api/reference/fulfillmentservice)
 - [GiftCard](https://help.shopify.com/api/reference/gift_card) _(Shopify Plus Only)_
@@ -385,9 +386,9 @@ The custom methods are specific to some resources which may not be available for
     Perform bulk operations against a number of addresses
     
 - DraftOrder ->
-    - [send_invoice()]()
+    - [send_invoice($data)]()
     Send the invoice for a DraftOrder
-    - [complete()]()
+    - [complete($data)]()
     Complete a DraftOrder
     
 - Discount ->
@@ -395,6 +396,10 @@ The custom methods are specific to some resources which may not be available for
     Enable a discount
     - [disable()]()
     Disable a discount
+    
+- DiscountCode ->
+    - [lookup($data)]()
+    Retrieves the location of a discount code.    
     
 - Fulfillment ->
     - [complete()](https://help.shopify.com/api/reference/fulfillment#complete)

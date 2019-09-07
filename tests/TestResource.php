@@ -20,9 +20,9 @@ class TestResource extends \PHPUnit_Framework_TestCase
     public static function setUpBeforeClass()
     {
         $config = array(
-            'ShopUrl' => 'phpclassic.myshopify.com',
-            'ApiKey' => '81781200c08b31208031f983ab930f2a',
-            'Password' => '5260904f8293bce93ddd4d65c535faa4',
+            'ShopUrl' => getenv('SHOPIFY_SHOP_URL'), //Your shop URL
+            'ApiKey' => getenv('SHOPIFY_API_KEY'), //Your Private API Key
+            'Password' => getenv('SHOPIFY_API_PASSWORD'), //Your Private API Password
         );
 
         self::$shopify = ShopifySDK::config($config);

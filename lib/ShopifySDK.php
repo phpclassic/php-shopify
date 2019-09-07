@@ -60,6 +60,9 @@ namespace PHPShopify;
 | //Get variants of a product (using Child resource)
 | $products = $shopify->Product($productID)->Variant->get();
 |
+| //GraphQL
+| $data = $shopify->GraphQL->post($graphQL);
+|
 */
 use PHPShopify\Exception\SdkException;
 
@@ -70,10 +73,14 @@ use PHPShopify\Exception\SdkException;
  * @property-read Collect $Collect
  * @property-read Comment $Comment
  * @property-read Country $Country
+ * @property-read Currency $Currency
  * @property-read CustomCollection $CustomCollection
  * @property-read Customer $Customer
  * @property-read CustomerSavedSearch $CustomerSavedSearch
  * @property-read Discount $Discount
+ * @property-read DiscountCode $DiscountCode
+ * @property-read DraftOrder $DraftOrder
+ * @property-read PriceRule $PriceRule
  * @property-read Event $Event
  * @property-read FulfillmentService $FulfillmentService
  * @property-read GiftCard $GiftCard
@@ -83,13 +90,10 @@ use PHPShopify\Exception\SdkException;
  * @property-read Metafield $Metafield
  * @property-read Multipass $Multipass
  * @property-read Order $Order
- * @property-read DraftOrder $DraftOrder
- * @property-read Checkout $Checkout
  * @property-read Page $Page
  * @property-read Policy $Policy
  * @property-read Product $Product
  * @property-read ProductListing $ProductListing
- * @property-read CollectionListing $CollectionListing
  * @property-read ProductVariant $ProductVariant
  * @property-read RecurringApplicationCharge $RecurringApplicationCharge
  * @property-read Redirect $Redirect
@@ -100,6 +104,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read Theme $Theme
  * @property-read User $User
  * @property-read Webhook $Webhook
+ * @property-read GraphQL $GraphQL
  *
  * @method AbandonedCheckout AbandonedCheckout(integer $id = null)
  * @method Blog Blog(integer $id = null)
@@ -107,10 +112,14 @@ use PHPShopify\Exception\SdkException;
  * @method Collect Collect(integer $id = null)
  * @method Comment Comment(integer $id = null)
  * @method Country Country(integer $id = null)
+ * @method Currency Currency(integer $id = null)
  * @method CustomCollection CustomCollection(integer $id = null)
  * @method Customer Customer(integer $id = null)
  * @method CustomerSavedSearch CustomerSavedSearch(integer $id = null)
  * @method Discount Discount(integer $id = null)
+ * @method DraftOrder DraftOrder(integer $id = null)
+ * @method DiscountCode DiscountCode(integer $id = null)
+ * @method PriceRule PriceRule(integer $id = null)
  * @method Event Event(integer $id = null)
  * @method FulfillmentService FulfillmentService(integer $id = null)
  * @method GiftCard GiftCard(integer $id = null)
@@ -120,14 +129,11 @@ use PHPShopify\Exception\SdkException;
  * @method Metafield Metafield(integer $id = null)
  * @method Multipass Multipass(integer $id = null)
  * @method Order Order(integer $id = null)
- * @method DraftOrder DraftOrder(integer $id = null)
- * @method Checkout Checkout(integer $id = null)
  * @method Page Page(integer $id = null)
  * @method Policy Policy(integer $id = null)
  * @method Product Product(integer $id = null)
- * @method ProductVariant ProductVariant(integer $id = null)
  * @method ProductListing ProductListing(integer $id = null)
- * @method CollectionListing CollectionListing(integer $id = null)
+ * @method ProductVariant ProductVariant(integer $id = null)
  * @method RecurringApplicationCharge RecurringApplicationCharge(integer $id = null)
  * @method Redirect Redirect(integer $id = null)
  * @method ScriptTag ScriptTag(integer $id = null)
@@ -137,26 +143,10 @@ use PHPShopify\Exception\SdkException;
  * @method Theme Theme(int $id = null)
  * @method User User(integer $id = null)
  * @method Webhook Webhook(integer $id = null)
+ * @method GraphQL GraphQL()
  */
 class ShopifySDK
 {
-    /**
-     * @var float microtime of last api call
-     */
-    public static $microtimeOfLastApiCall;
-
-    /**
-     * @var float Minimum gap in seconds to maintain between 2 api calls
-     */
-    public static $timeAllowedForEachApiCall = .01;
-
-    /**
-     * Shop / API configurations
-     *
-     * @var array
-     */
-    public static $config = array();
-
     /**
      * List of available resources which can be called from this client
      *
@@ -170,10 +160,13 @@ class ShopifySDK
         'Collect',
         'Comment',
         'Country',
+        'Currency',
         'CustomCollection',
         'Customer',
         'CustomerSavedSearch',
         'Discount',
+        'DiscountCode',
+        'DraftOrder',
         'Event',
         'FulfillmentService',
         'GiftCard',
@@ -183,14 +176,11 @@ class ShopifySDK
         'Metafield',
         'Multipass',
         'Order',
-        'DraftOrder',
-        'Checkout',
         'Page',
         'Policy',
         'Product',
-        'ProductVariant',
         'ProductListing',
-        'CollectionListing',
+        'ProductVariant',
         'PriceRule',
         'RecurringApplicationCharge',
         'Redirect',
@@ -202,6 +192,26 @@ class ShopifySDK
         'Theme',
         'User',
         'Webhook',
+        'GraphQL'
+    );
+
+    /**
+     * @var float microtime of last api call
+     */
+    public static $microtimeOfLastApiCall;
+
+    /**
+     * @var float Minimum gap in seconds to maintain between 2 api calls
+     */
+    public static $timeAllowedForEachApiCall = .5;
+
+    /**
+     * Shop / API configurations
+     *
+     * @var array
+     */
+    public static $config = array(
+        'ApiVersion' => '2019-04'
     );
 
     /**
@@ -222,7 +232,6 @@ class ShopifySDK
         'Province'          => 'Country',
         'Refund'            => 'Order',
         'Transaction'       => 'Order',
-        'ShippingRate'      => 'Checkout',
         'UsageCharge'       => 'RecurringApplicationCharge',
     );
 
@@ -236,8 +245,7 @@ class ShopifySDK
     public function __construct($config = array())
     {
         if(!empty($config)) {
-            ShopifySDK::$config = $config;
-            ShopifySDK::setAdminUrl();
+            ShopifySDK::config($config);
         }
     }
 
@@ -326,6 +334,7 @@ class ShopifySDK
 
         //Remove https:// and trailing slash (if provided)
         $shopUrl = preg_replace('#^https?://|/$#', '', $shopUrl);
+        $apiVersion = self::$config['ApiVersion'];
 
         if(isset(self::$config['ApiKey']) && isset(self::$config['Password'])) {
             $apiKey = self::$config['ApiKey'];
@@ -336,6 +345,7 @@ class ShopifySDK
         }
 
         self::$config['AdminUrl'] = $adminUrl;
+        self::$config['ApiUrl'] = $adminUrl . "api/$apiVersion/";
 
         return $adminUrl;
     }
@@ -347,6 +357,15 @@ class ShopifySDK
      */
     public static function getAdminUrl() {
         return self::$config['AdminUrl'];
+    }
+
+    /**
+     * Get the api url of the configured shop
+     *
+     * @return string
+     */
+    public static function getApiUrl() {
+        return self::$config['ApiUrl'];
     }
 
     /**

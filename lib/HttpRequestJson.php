@@ -25,7 +25,7 @@ class HttpRequestJson
      *
      * @var array
      */
-    private static $httpHeaders;
+    protected static $httpHeaders;
 
     /**
      * Prepared JSON string to be posted with request

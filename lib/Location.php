@@ -26,4 +26,11 @@ class Location extends ShopifyResource
      * @inheritDoc
      */
     public $readOnly = true;
+
+    /**
+     * @inheritDoc
+     */
+    protected $childResource = array(
+        'InventoryLevel',
+    );
 }

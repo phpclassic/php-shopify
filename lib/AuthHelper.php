@@ -33,23 +33,6 @@ class AuthHelper
     }
 
     /**
-     * Build a query string from a data array
-     * This is a replacement for http_build_query because that returns an url-encoded string.
-     *
-     * @param array $data Data array
-     *
-     * @return array
-     */
-    public static function buildQueryString($data)
-    {
-        $paramStrings = [];
-        foreach ($data as $key => $value) {
-            $paramStrings[] = "$key=$value";
-        }
-        return join('&', $paramStrings);
-    }
-
-    /**
      * Verify if the request is made from shopify using hmac hash value
      *
      * @throws SdkException if SharedSecret is not provided or hmac is not found in the url parameters
@@ -78,7 +61,7 @@ class AuthHelper
             unset($data['signature']);
         }
         //Create data string for the remaining url parameters
-        $dataString = self::buildQueryString($data);
+        $dataString = http_build_query($data);
 
         $realHmac = hash_hmac('sha256', $dataString, $sharedSecret);
 

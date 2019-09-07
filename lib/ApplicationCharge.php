@@ -21,9 +21,4 @@ class ApplicationCharge extends ShopifyResource
      * @inheritDoc
      */
     public $countEnabled = false;
-    
-    // To activate ApplicationCharge
-    protected $customPostActions = array(
-       'activate',
-   );
 }

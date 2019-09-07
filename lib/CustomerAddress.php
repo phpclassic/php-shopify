@@ -15,7 +15,7 @@ namespace PHPShopify;
  * CustomerAddress -> Custom actions
  * --------------------------------------------------------------------------
  * @method array makeDefault()      Sets the address as default for the customer
- *
+ * @method array set()      update multiple
  */
 class CustomerAddress extends ShopifyResource
 {
@@ -29,6 +29,7 @@ class CustomerAddress extends ShopifyResource
      */
     protected $customPutActions = array(
         'default' => 'makeDefault',
+        'set',
     );
 
     /**
@@ -48,10 +49,11 @@ class CustomerAddress extends ShopifyResource
      * @return array
      */
     //TODO Issue (Getting Error from API) : Internal server error
-    public function set($params)
+    /*public function set($params)
     {
+
         $url = $this->generateUrl($params, 'set');
 
         return $this->put(array(), $url);
-    }
+    }*/
 }

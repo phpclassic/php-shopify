@@ -1,8 +1,8 @@
 <?php
 /**
  * Created by PhpStorm.
- * @author Thomas Hondema <thomashondema@live.com>
- * Created at 8/14/19 18:28 PM UTC+02:00
+ * @author Tareq Mahmood <tareqtms@yahoo.com>
+ * Created at 8/19/16 2:59 PM UTC+06:00
  *
  * @see https://help.shopify.com/api/reference/draftorder Shopify API Reference for DraftOrder
  */
@@ -13,10 +13,18 @@ namespace PHPShopify;
 
 /**
  * --------------------------------------------------------------------------
+ * DraftOrder -> Child Resources
+ * --------------------------------------------------------------------------
+ * @property-read Metafield $Metafield
+ *
+
+ * @method Metafield Metafield(integer $id = null)
+ *
+ * --------------------------------------------------------------------------
  * DraftOrder -> Custom actions
  * --------------------------------------------------------------------------
- * @method array send_invoice()     Send the invoice for a DraftOrder
- * @method array complete()         Complete a DraftOrder
+ * @method array sendInvoice()     Sends an invoice for the order
+ * @method array complete()         Completes Draft Order
  *
  */
 class DraftOrder extends ShopifyResource
@@ -29,14 +37,15 @@ class DraftOrder extends ShopifyResource
     /**
      * @inheritDoc
      */
-    protected $customPostActions = array(
-        'send_invoice',
+    protected $childResource = array (
+        'Metafield',
     );
 
     /**
      * @inheritDoc
      */
-    protected $customPutActions = array(
+    protected $customPostActions = array(
+        'send_invoice' => 'sendInvoice',
         'complete',
     );
 }

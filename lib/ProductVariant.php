@@ -29,6 +29,11 @@ class ProductVariant extends ShopifyResource
     /**
      * @inheritDoc
      */
+    public $searchEnabled = true;
+
+    /**
+     * @inheritDoc
+     */
     protected $childResource = array(
         'Metafield',
     );

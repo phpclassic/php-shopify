@@ -119,7 +119,7 @@ abstract class ShopifyResource
 
         $config = ShopifySDK::$config;
 
-        $this->resourceUrl = ($parentResourceUrl ? $parentResourceUrl . '/' :  $config['ApiUrl']) . $this->getResourcePath() . ($this->id ? '/' . $this->id : '');
+        $this->resourceUrl = ($parentResourceUrl ? $parentResourceUrl . '/' :  $config['AdminUrl']) . $this->getResourcePath() . ($this->id ? '/' . $this->id : '');
 
         if (isset($config['AccessToken'])) {
             $this->httpHeaders['X-Shopify-Access-Token'] = $config['AccessToken'];
@@ -294,6 +294,20 @@ abstract class ShopifyResource
     }
 
     /**
+     * Generate the custom url for api request based on the params and custom action (if any)
+     *
+     * @param array $urlParams
+     * @param string $customAction
+     *
+     * @return string
+     */
+    public function addShopUrl($urlParams = array(), $url)
+    {
+
+        return $this->resourceUrl . ($url ? "/$url" : '') . (!empty($urlParams) ? '?' . http_build_query($urlParams) : '');
+    }
+
+    /**
      * Generate a HTTP GET request and return results as an array
      *
      * @param array $urlParams Check Shopify API reference of the specific resource for the list of URL parameters
@@ -392,7 +406,13 @@ abstract class ShopifyResource
     public function put($dataArray, $url = null, $wrapData = true)
     {
 
+        /*if (!$url) {
+          $url = $this->generateUrl();
+        } else {
+          $url = $this->addShopUrl($dataArray, $url);
+        }*/
         if (!$url) $url = $this->generateUrl();
+        
 
         if ($wrapData && !empty($dataArray)) $dataArray = $this->wrapData($dataArray);
 
@@ -446,16 +466,38 @@ abstract class ShopifyResource
      */
     protected function castString($array)
     {
-        if ( ! is_array($array)) return (string) $array;
+        if (is_string($array)) return $array;
 
         $string = '';
         $i = 0;
         foreach ($array as $key => $val) {
+
+          if ($key === "line_items") {
+            $line_id = array_keys($val)[0];
+            $val = reset($val);
+
+            if (isset($val['quantity']) && isset($val['quantity'][0]) && isset($val['quantity'][0]['message'])) {
+              $string = "Line item {$line_id} {$val['quantity'][0]['message']}";
+              return $string;
+            }
+
+
+          }
             //Add values separated by comma
             //prepend the key string, if it's an associative key
             //Check if the value itself is another array to be converted to string
-            $string .= ($i === $key ? '' : "$key - ") . $this->castString($val) . ', ';
-            $i++;
+            if (is_array($val) || is_object($val)) {
+              $string .= ($i === $key ? '' : "$key - ") . $this->castString($val) . ', ';
+              $i++;
+            } else if (is_array($key) || is_object($key)) {
+              $string .= ($i === $key ? '' : "$key - ") . $this->castString($key) . ', ';
+              $i++;
+            } else if (!is_array($val)) {
+              $string .= $val . ", ";
+            } else if (!is_array($key)) {
+              $string .= $key . " - ";
+            }
+
         }
 
         //Remove trailing comma and space
@@ -491,9 +533,24 @@ abstract class ShopifyResource
         }
 
         if (isset($responseArray['errors'])) {
-            $message = $this->castString($responseArray['errors']);
 
-            throw new ApiException($message);
+            $message = $responseArray;
+
+            if (is_array($message['errors'])) {
+              foreach ($message['errors'] as $key => $error) {
+                if (is_array($message['errors'][$key])) {
+
+                  throw new ApiException($this->castString($message['errors']));
+                } else {
+                  throw new ApiException($key . " " . $error);
+                }
+
+              }
+
+            } else {
+              throw new ApiException($responseArray['errors']);
+            }
+
         }
 
         if ($dataKey && isset($responseArray[$dataKey])) {

@@ -4,48 +4,50 @@
  * @author Tareq Mahmood <tareqtms@yahoo.com>
  * Created at 8/19/16 2:59 PM UTC+06:00
  *
- * @see https://help.shopify.com/api/reference/draftorder Shopify API Reference for DraftOrder
+ * @see https://help.shopify.com/api/reference/sales-channels/checkout Shopify API Reference for Checkout
  */
 
 namespace PHPShopify;
 
 
-
 /**
  * --------------------------------------------------------------------------
- * DraftOrder -> Child Resources
+ * Order -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read Metafield $Metafield
+ * @property-read ShippingRate $ShippingRate
+ *
+ * @method ShippingRate ShippingRate(integer $id = null)
  *
 
- * @method Metafield Metafield(integer $id = null)
- *
  * --------------------------------------------------------------------------
- * DraftOrder -> Custom actions
+ * Checkout -> Custom actions
  * --------------------------------------------------------------------------
- * @method array sendInvoice()     Sends an invoice for the order
- * @method array complete()         Completes Draft Order
+ * @method array complete()         Completes Checkout without payment
  *
  */
-class DraftOrder extends ShopifyResource
+class Checkout extends ShopifyResource
 {
     /**
      * @inheritDoc
      */
-    protected $resourceKey = 'draft_order';
+    protected $resourceKey = 'checkout';
+
+    /**
+     * @inheritDoc
+     */
+    public $countEnabled = false;
 
     /**
      * @inheritDoc
      */
     protected $childResource = array (
-        'Metafield',
+        'ShippingRate',
     );
-
     /**
      * @inheritDoc
      */
     protected $customPostActions = array(
-        'send_invoice' => 'sendInvoice',
         'complete',
+        'payments'
     );
 }

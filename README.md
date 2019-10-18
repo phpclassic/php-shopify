@@ -338,7 +338,7 @@ Some resources are available directly, some resources are only available through
 ### Custom Actions
 There are several action methods which can be called without calling the `get()`, `post()`, `put()`, `delete()` methods directly, but eventually results in a custom call to one of those methods.
 
-- For example, get count of total projects
+- For example, get count of total products
 ```php
 $productCount = $shopify->Product->count();
 ```

@@ -569,7 +569,6 @@ abstract class ShopifyResource
             $matchData = array();
 
             if (preg_match("/<([^>]*)>; rel=\"next\"/", $headers["Link"], $matchData)) {
-                // print_r($matchData);
                 // found rel="next"
                 $query = parse_url($matchData[1], PHP_URL_QUERY);
 

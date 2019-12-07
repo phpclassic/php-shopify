@@ -211,7 +211,7 @@ class ShopifySDK
      * @var array
      */
     public static $config = array(
-        'ApiVersion' => '2019-04'
+        'ApiVersion' => '2019-10'
     );
 
     /**

@@ -306,6 +306,13 @@ class ShopifySDK
      */
     public static function config($config)
     {
+        /**
+         * Reset config to it's initial values
+         */
+        self::$config = array(
+            'ApiVersion' => '2019-04'
+        );
+
         foreach ($config as $key => $value) {
             self::$config[$key] = $value;
         }

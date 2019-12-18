@@ -54,11 +54,14 @@ class AuthHelper
      *
      * @throws SdkException if SharedSecret is not provided or hmac is not found in the url parameters
      *
+     * @param bool|array $data The query params array
      * @return bool
      */
-    public static function verifyShopifyRequest()
+    public static function verifyShopifyRequest($data = false)
     {
-        $data = $_GET;
+        if ($data === false) {
+            $data = $_GET;
+        }
 
         if(!isset(ShopifySDK::$config['SharedSecret'])) {
             throw new SdkException("Please provide SharedSecret while configuring the SDK client.");

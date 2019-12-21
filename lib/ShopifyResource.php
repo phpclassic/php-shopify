@@ -6,13 +6,10 @@
  *
  * @see https://help.shopify.com/api/reference Shopify API Reference
  */
-
 namespace PHPShopify;
-
 use PHPShopify\Exception\ApiException;
 use PHPShopify\Exception\SdkException;
 use PHPShopify\Exception\CurlException;
-
 /*
 |--------------------------------------------------------------------------
 | Shopify API SDK Base Class
@@ -29,7 +26,12 @@ abstract class ShopifyResource
      * @var array
      */
     protected $httpHeaders = array();
-
+    /**
+     * HTTP response headers
+     *
+     * @var array
+     */
+    protected static $httpResponseHeaders = array();
     /**
      * The base URL of the API Resource (excluding the '.json' extension).
      *
@@ -38,14 +40,12 @@ abstract class ShopifyResource
      * @var string
      */
     protected $resourceUrl;
-
     /**
      * Key of the API Resource which is used to fetch data from request responses
      *
      * @var string
      */
     protected $resourceKey;
-
     /**
      * List of child Resource names / classes
      *
@@ -55,28 +55,24 @@ abstract class ShopifyResource
      * @var array
      */
     protected $childResource = array();
-
     /**
      * If search is enabled for the resource
      *
      * @var boolean
      */
     public $searchEnabled = false;
-
     /**
      * If count is enabled for the resource
      *
      * @var boolean
      */
     public $countEnabled = true;
-
     /**
      * If the resource is read only. (No POST / PUT / DELETE actions)
      *
      * @var boolean
      */
     public $readOnly = false;
-
     /**
      * List of custom GET / POST / PUT / DELETE actions
      *
@@ -95,7 +91,6 @@ abstract class ShopifyResource
     protected $customPostActions = array();
     protected $customPutActions = array();
     protected $customDeleteActions = array();
-
     /**
      * The ID of the resource
      *
@@ -104,7 +99,6 @@ abstract class ShopifyResource
      * @var integer
      */
     public $id;
-
     /**
      * Create a new Shopify API resource instance.
      *
@@ -116,18 +110,14 @@ abstract class ShopifyResource
     public function __construct($id = null, $parentResourceUrl = '')
     {
         $this->id = $id;
-
         $config = ShopifySDK::$config;
-
         $this->resourceUrl = ($parentResourceUrl ? $parentResourceUrl . '/' :  $config['ApiUrl']) . $this->getResourcePath() . ($this->id ? '/' . $this->id : '');
-
         if (isset($config['AccessToken'])) {
             $this->httpHeaders['X-Shopify-Access-Token'] = $config['AccessToken'];
         } elseif (!isset($config['ApiKey']) || !isset($config['Password'])) {
             throw new SdkException("Either AccessToken or ApiKey+Password Combination (in case of private API) is required to access the resources. Please check SDK configuration!");
         }
     }
-
     /**
      * Return ShopifyResource instance for the child resource.
      *
@@ -142,7 +132,6 @@ abstract class ShopifyResource
     {
         return $this->$childName();
     }
-
     /**
      * Return ShopifyResource instance for the child resource or call a custom action for the resource
      *
@@ -166,23 +155,16 @@ abstract class ShopifyResource
         if (ctype_upper($name[0])) {
             //Get the array key of the childResource in the childResource array
             $childKey = array_search($name, $this->childResource);
-
             if ($childKey === false) {
                 throw new SdkException("Child Resource $name is not available for " . $this->getResourceName());
             }
-
             //If any associative key is given to the childname, then it will be considered as the class name,
             //otherwise the childname will be the class name
             $childClassName = !is_numeric($childKey) ? $childKey : $name;
-
             $childClass = __NAMESPACE__ . "\\" . $childClassName;
-
             //If first argument is provided, it will be considered as the ID of the resource.
             $resourceID = !empty($arguments) ? $arguments[0] : null;
-
-
             $api = new $childClass($resourceID, $this->resourceUrl);
-
             return $api;
         } else {
             $actionMaps = array(
@@ -191,30 +173,23 @@ abstract class ShopifyResource
                 'get'   =>  'customGetActions',
                 'delete'=>  'customDeleteActions',
             );
-
             //Get the array key for the action in the actions array
             foreach ($actionMaps as $httpMethod => $actionArrayKey) {
                 $actionKey = array_search($name, $this->$actionArrayKey);
                 if ($actionKey !== false) break;
             }
-
             if ($actionKey === false) {
                 throw new SdkException("No action named $name is defined for " . $this->getResourceName());
             }
-
             //If any associative key is given to the action, then it will be considered as the method name,
             //otherwise the action name will be the method name
             $customAction = !is_numeric($actionKey) ? $actionKey : $name;
-
-
             //Get the first argument if provided with the method call
             $methodArgument = !empty($arguments) ? $arguments[0] : array();
-
             //Url parameters
             $urlParams = array();
             //Data body
             $dataArray = array();
-
             //Consider the argument as url parameters for get and delete request
             //and data array for post and put request
             if ($httpMethod == 'post' || $httpMethod == 'put') {
@@ -222,9 +197,7 @@ abstract class ShopifyResource
             } else {
                 $urlParams =  $methodArgument;
             }
-
             $url = $this->generateUrl($urlParams, $customAction);
-
             if ($httpMethod == 'post' || $httpMethod == 'put') {
                 return $this->$httpMethod($dataArray, $url, false);
             } else {
@@ -232,7 +205,6 @@ abstract class ShopifyResource
             }
         }
     }
-
     /**
      * Get the resource name (or the class name)
      *
@@ -242,7 +214,6 @@ abstract class ShopifyResource
     {
         return substr(get_called_class(), strrpos(get_called_class(), '\\') + 1);
     }
-
     /**
      * Get the resource key to be used for while sending data to the API
      *
@@ -254,7 +225,6 @@ abstract class ShopifyResource
     {
         return $this->resourceKey;
     }
-
     /**
      * Get the pluralized version of the resource key
      *
@@ -266,7 +236,6 @@ abstract class ShopifyResource
     {
         return $this->resourceKey . 's';
     }
-
     /**
      * Get the resource path to be used to generate the api url
      *
@@ -279,7 +248,6 @@ abstract class ShopifyResource
     {
         return $this->pluralizeKey();
     }
-
     /**
      * Generate the custom url for api request based on the params and custom action (if any)
      *
@@ -292,7 +260,6 @@ abstract class ShopifyResource
     {
         return $this->resourceUrl . ($customAction ? "/$customAction" : '') . '.json' . (!empty($urlParams) ? '?' . http_build_query($urlParams) : '');
     }
-
     /**
      * Generate a HTTP GET request and return results as an array
      *
@@ -307,15 +274,10 @@ abstract class ShopifyResource
     public function get($urlParams = array(), $url = null, $dataKey = null)
     {
         if (!$url) $url  = $this->generateUrl($urlParams);
-
         $response = HttpRequestJson::get($url, $this->httpHeaders);
-
         if (!$dataKey) $dataKey = $this->id ? $this->resourceKey : $this->pluralizeKey();
-
         return $this->processResponse($response, $dataKey);
-
     }
-
     /**
      * Get count for the number of resources available
      *
@@ -328,12 +290,9 @@ abstract class ShopifyResource
         if (!$this->countEnabled) {
             throw new SdkException("Count is not available for " . $this->getResourceName());
         }
-
         $url = $this->generateUrl($urlParams, 'count');
-
         return $this->get(array(), $url, 'count');
     }
-
     /**
      * Search within the resouce
      *
@@ -348,14 +307,10 @@ abstract class ShopifyResource
         if (!$this->searchEnabled) {
             throw new SdkException("Search is not available for " . $this->getResourceName());
         }
-
         if (!is_array($query)) $query = array('query' => $query);
-
         $url = $this->generateUrl($query, 'search');
-
         return $this->get(array(), $url);
     }
-
     /**
      * Call POST method to create a new resource
      *
@@ -370,14 +325,10 @@ abstract class ShopifyResource
     public function post($dataArray, $url = null, $wrapData = true)
     {
         if (!$url) $url = $this->generateUrl();
-
         if ($wrapData && !empty($dataArray)) $dataArray = $this->wrapData($dataArray);
-
         $response = HttpRequestJson::post($url, $dataArray, $this->httpHeaders);
-
         return $this->processResponse($response, $this->resourceKey);
     }
-
     /**
      * Call PUT method to update an existing resource
      *
@@ -391,16 +342,11 @@ abstract class ShopifyResource
      */
     public function put($dataArray, $url = null, $wrapData = true)
     {
-
         if (!$url) $url = $this->generateUrl();
-
         if ($wrapData && !empty($dataArray)) $dataArray = $this->wrapData($dataArray);
-
         $response = HttpRequestJson::put($url, $dataArray, $this->httpHeaders);
-
         return $this->processResponse($response, $this->resourceKey);
     }
-
     /**
      * Call DELETE method to delete an existing resource
      *
@@ -414,12 +360,9 @@ abstract class ShopifyResource
     public function delete($urlParams = array(), $url = null)
     {
         if (!$url) $url = $this->generateUrl($urlParams);
-
         $response = HttpRequestJson::delete($url, $this->httpHeaders);
-
         return $this->processResponse($response);
     }
-
     /**
      * Wrap data array with resource key
      *
@@ -431,10 +374,8 @@ abstract class ShopifyResource
     protected function wrapData($dataArray, $dataKey = null)
     {
         if (!$dataKey) $dataKey = $this->getResourcePostKey();
-
         return array($dataKey => $dataArray);
     }
-
     /**
      * Convert an array to string
      *
@@ -447,7 +388,6 @@ abstract class ShopifyResource
     protected function castString($array)
     {
         if ( ! is_array($array)) return (string) $array;
-
         $string = '';
         $i = 0;
         foreach ($array as $key => $val) {
@@ -457,17 +397,14 @@ abstract class ShopifyResource
             $string .= ($i === $key ? '' : "$key - ") . $this->castString($val) . ', ';
             $i++;
         }
-
         //Remove trailing comma and space
         $string = rtrim($string, ', ');
-
         return $string;
     }
-
     /**
      * Process the request response
      *
-     * @param array $responseArray Request response in array format
+     * @param string $response Request response in array format
      * @param string $dataKey Keyname to fetch data from response array
      *
      * @throws ApiException if the response has an error specified
@@ -475,31 +412,110 @@ abstract class ShopifyResource
      *
      * @return array
      */
-    public function processResponse($responseArray, $dataKey = null)
+    public function processResponse($response, $dataKey = null)
     {
+        $responseArray = json_decode($response->getBody(), true);
         if ($responseArray === null) {
             //Something went wrong, Checking HTTP Codes
             $httpOK = 200; //Request Successful, OK.
             $httpCreated = 201; //Create Successful.
-
             //should be null if any other library used for http calls
             $httpCode = CurlRequest::$lastHttpCode;
-
             if ($httpCode != null && $httpCode != $httpOK && $httpCode != $httpCreated) {
                 throw new Exception\CurlException("Request failed with HTTP Code $httpCode.");
             }
         }
-
         if (isset($responseArray['errors'])) {
             $message = $this->castString($responseArray['errors']);
-
             throw new ApiException($message);
         }
-
+        self::$httpResponseHeaders = $response->getHeaders();
         if ($dataKey && isset($responseArray[$dataKey])) {
             return $responseArray[$dataKey];
         } else {
             return $responseArray;
         }
+    }
+    /**
+     * Checks response headers for existence of next page info
+     *
+     * @return boolean
+     */
+    static public function lastResourceContainsNextPageInfo()
+    {
+        $headers = self::$httpResponseHeaders;
+        if (isset($headers["Link"])) {
+            $matchData = array();
+            if (preg_match("/<([^>]*)>; rel=\"next\"/", $headers["Link"], $matchData)) {
+                // found rel="next"
+                return true;
+            }
+        }
+        return false;
+    }
+    /**
+     * Checks response headers for existence of previous page info
+     *
+     * @return boolean
+     */
+    static public function lastResourceContainsPrevPageInfo()
+    {
+        $headers = self::$httpResponseHeaders;
+        if (isset($headers["Link"])) {
+            $matchData = array();
+            if (preg_match("/<([^>]*)>; rel=\"previous\"/", $headers["Link"], $matchData)) {
+                // found rel="prev"
+                return true;
+            }
+        }
+        return false;
+    }
+    /**
+     * Gets next page info string for use in pagination
+     *
+     * @return string
+     */
+    static public function getNextPageInfo()
+    {
+        $headers = self::$httpResponseHeaders;
+        if (isset($headers["Link"])) {
+            $matchData = array();
+            if (preg_match("/<([^>]*)>; rel=\"next\"/", $headers["Link"], $matchData)) {
+                // found rel="next"
+                $query = parse_url($matchData[1], PHP_URL_QUERY);
+                $pairs = explode( "&", $query );
+                foreach( $pairs as $p ) {
+                    list( $key, $value) = explode( "=", $p );
+                    if( $key == "page_info" ) {
+                        return $value;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    /**
+     * Gets previous page info string for use in pagination
+     *
+     * @return string
+     */
+    static public function getPrevPageInfo()
+    {
+        $headers = self::$httpResponseHeaders;
+        if (isset($headers["Link"])) {
+            $matchData = array();
+            if (preg_match("/<([^>]*)>; rel=\"previous\"/", $headers["Link"], $matchData)) {
+                // found rel="prev"
+                $query = parse_url($matchData[1], PHP_URL_QUERY);
+                $pairs = explode( "&", $query );
+                foreach( $pairs as $p ) {
+                    list( $key, $value) = explode( "=", $p );
+                    if( $key == "page_info" ) {
+                        return $value;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

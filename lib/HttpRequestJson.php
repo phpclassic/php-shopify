@@ -131,12 +131,12 @@ class HttpRequestJson
      *
      * @param string $response
      *
-     * @return array
+     * @return string
      */
     protected static function processResponse($response)
     {
 
-        return json_decode($response, true);
+        return $response;
     }
 
 }

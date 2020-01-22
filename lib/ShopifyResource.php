@@ -492,8 +492,8 @@ abstract class ShopifyResource
 
         if (isset($responseArray['errors'])) {
             $message = $this->castString($responseArray['errors']);
-
-            throw new ApiException($message);
+z
+            throw new ApiException($message, CurlRequest::$lastHttpCode);
         }
 
         if ($dataKey && isset($responseArray[$dataKey])) {

@@ -169,8 +169,10 @@ class AuthHelper
             );
 
             $response = HttpRequestJson::post($config['AdminUrl'] . 'oauth/access_token', $data);
+            $body     = json_decode($response->getBody(), true);
 
-            return isset($response['access_token']) ? $response['access_token'] : null;
+            return isset($body['access_token']) ? $body['access_token'] : null;
+            
         } else {
             throw new SdkException("This request is not initiated from a valid shopify shop!");
         }

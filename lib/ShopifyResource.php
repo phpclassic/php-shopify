@@ -12,6 +12,7 @@ namespace PHPShopify;
 use PHPShopify\Exception\ApiException;
 use PHPShopify\Exception\SdkException;
 use PHPShopify\Exception\CurlException;
+use Psr\Http\Message\ResponseInterface;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,6 +114,21 @@ abstract class ShopifyResource
      *
      * @throws SdkException if Either AccessToken or ApiKey+Password Combination is not found in configuration
      */
+
+    /**
+     * Response Header Link, used for pagination
+     * @see: https://help.shopify.com/en/api/guides/paginated-rest-results?utm_source=exacttarget&utm_medium=email&utm_campaign=api_deprecation_notice_1908
+     * @var string $nextLink
+     */
+    private $nextLink = null;
+
+    /**
+     * Response Header Link, used for pagination
+     * @see: https://help.shopify.com/en/api/guides/paginated-rest-results?utm_source=exacttarget&utm_medium=email&utm_campaign=api_deprecation_notice_1908
+     * @var string $prevLink
+     */
+    private $prevLink = null;
+
     public function __construct($id = null, $parentResourceUrl = '')
     {
         $this->id = $id;
@@ -490,6 +506,9 @@ abstract class ShopifyResource
             }
         }
 
+        $lastResponseHeaders = CurlRequest::$lastResponseHeaders;
+        $this->getLinks($lastResponseHeaders);
+
         if (isset($responseArray['errors'])) {
             $message = $this->castString($responseArray['errors']);
 
@@ -501,5 +520,57 @@ abstract class ShopifyResource
         } else {
             return $responseArray;
         }
+    }
+
+    public function getLinks($responseHeaders){
+        $this->nextLink = $this->getLink($responseHeaders,'next');
+        $this->prevLink = $this->getLink($responseHeaders,'prev');
+    }
+
+    public function getLink($responseHeaders, $type='next'){
+        $responseHeaders = json_decode($responseHeaders);
+
+        if(property_exists($responseHeaders,'x-shopify-api-version')
+            && $responseHeaders->{'x-shopify-api-version'} < '2019-07'){
+            return null;
+        }
+
+        if(!empty($responseHeaders->link)) {
+            if (stristr($responseHeaders->link[0], '; rel="'.$type.'"') > -1) {
+                $headerLinks = explode(',', $responseHeaders->link[0]);
+                foreach ($headerLinks as $headerLink) {
+                    if (stristr($headerLink, '; rel="'.$type.'"') === -1) {
+                        continue;
+                    }
+
+                    $pattern = '#<(.*?)>; rel="'.$type.'"#m';
+                    preg_match($pattern, $headerLink, $linkResponseHeaders);
+                    if ($linkResponseHeaders) {
+                        return $linkResponseHeaders[1];
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public function getPrevLink(){
+        return $this->prevLink;
+    }
+
+    public function getNextLink(){
+        return $this->nextLink;
+    }
+
+    public function getNextPageParams(){
+        $nextPageParams = [];
+        parse_str($this->getNextLink(), $nextPageParams);
+        return $nextPageParams;
+    }
+
+    public function getPrevPageParams(){
+        $nextPageParams = [];
+        parse_str($this->getPrevLink(), $nextPageParams);
+        return $nextPageParams;
     }
 }

@@ -302,6 +302,9 @@ abstract class ShopifyResource
      *
      * @uses HttpRequestJson::get() to send the HTTP request
      *
+     * @throws ApiException if the response has an error specified
+     * @throws CurlException if response received with unexpected HTTP code.
+     *
      * @return array
      */
     public function get($urlParams = array(), $url = null, $dataKey = null)
@@ -320,6 +323,10 @@ abstract class ShopifyResource
      * Get count for the number of resources available
      *
      * @param array $urlParams Check Shopify API reference of the specific resource for the list of URL parameters
+     *
+     * @throws SdkException
+     * @throws ApiException if the response has an error specified
+     * @throws CurlException if response received with unexpected HTTP code.
      *
      * @return integer
      */
@@ -340,6 +347,8 @@ abstract class ShopifyResource
      * @param mixed $query
      *
      * @throws SdkException if search is not enabled for the resouce
+     * @throws ApiException if the response has an error specified
+     * @throws CurlException if response received with unexpected HTTP code.
      *
      * @return array
      */
@@ -365,6 +374,9 @@ abstract class ShopifyResource
      *
      * @uses HttpRequestJson::post() to send the HTTP request
      *
+     * @throws ApiException if the response has an error specified
+     * @throws CurlException if response received with unexpected HTTP code.
+     *
      * @return array
      */
     public function post($dataArray, $url = null, $wrapData = true)
@@ -387,6 +399,9 @@ abstract class ShopifyResource
      *
      * @uses HttpRequestJson::put() to send the HTTP request
      *
+     * @throws ApiException if the response has an error specified
+     * @throws CurlException if response received with unexpected HTTP code.
+     *
      * @return array
      */
     public function put($dataArray, $url = null, $wrapData = true)
@@ -408,6 +423,9 @@ abstract class ShopifyResource
      * @param string $url
      *
      * @uses HttpRequestJson::delete() to send the HTTP request
+     *
+     * @throws ApiException if the response has an error specified
+     * @throws CurlException if response received with unexpected HTTP code.
      *
      * @return array an empty array will be returned if the request is successfully completed
      */

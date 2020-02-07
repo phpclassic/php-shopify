@@ -31,6 +31,13 @@ abstract class ShopifyResource
     protected $httpHeaders = array();
 
     /**
+     * HTTP response headers of last executed request
+     *
+     * @var array
+     */
+    public static $lastHttpResponseHeaders = array();
+
+    /**
      * The base URL of the API Resource (excluding the '.json' extension).
      *
      * Example : https://myshop.myshopify.com/admin/products
@@ -477,6 +484,8 @@ abstract class ShopifyResource
      */
     public function processResponse($responseArray, $dataKey = null)
     {
+        self::$lastHttpResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
+
         if ($responseArray === null) {
             //Something went wrong, Checking HTTP Codes
             $httpOK = 200; //Request Successful, OK.
@@ -501,5 +510,108 @@ abstract class ShopifyResource
         } else {
             return $responseArray;
         }
+    }
+
+    /**
+     * Checks response headers for existence of next page info
+     *
+     * @return boolean
+     */
+    static public function lastResourceContainsNextPageInfo()
+    {
+        $headers = self::$lastHttpResponseHeaders;
+
+        if (isset($headers["Link"])) {
+            $matchData = array();
+
+            if (preg_match("/<([^>]*)>; rel=\"next\"/", $headers["Link"], $matchData)) {
+                // found rel="next"
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks response headers for existence of previous page info
+     *
+     * @return boolean
+     */
+
+    static public function lastResourceContainsPrevPageInfo()
+    {
+        $headers = self::$lastHttpResponseHeaders;
+
+        if (isset($headers["Link"])) {
+            $matchData = array();
+
+            if (preg_match("/<([^>]*)>; rel=\"previous\"/", $headers["Link"], $matchData)) {
+                // found rel="prev"
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Gets next page info string for use in pagination
+     *
+     * @return string
+     */
+    static public function getNextPageInfo()
+    {
+        $headers = self::$lastHttpResponseHeaders;
+
+        if (isset($headers["Link"])) {
+            $matchData = array();
+
+            if (preg_match("/<([^>]*)>; rel=\"next\"/", $headers["Link"], $matchData)) {
+                // found rel="next"
+                $query = parse_url($matchData[1], PHP_URL_QUERY);
+
+                $pairs = explode( "&", $query );
+                foreach( $pairs as $p ) {
+                    list( $key, $value) = explode( "=", $p );
+
+                    if( $key == "page_info" ) {
+                        return $value;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Gets previous page info string for use in pagination
+     *
+     * @return string
+     */
+    static public function getPrevPageInfo()
+    {
+        $headers = self::$lastHttpResponseHeaders;
+
+        if (isset($headers["Link"])) {
+            $matchData = array();
+
+            if (preg_match("/<([^>]*)>; rel=\"previous\"/", $headers["Link"], $matchData)) {
+                // found rel="prev"
+                $query = parse_url($matchData[1], PHP_URL_QUERY);
+
+                $pairs = explode( "&", $query );
+                foreach( $pairs as $p ) {
+                    list( $key, $value) = explode( "=", $p );
+
+                    if( $key == "page_info" ) {
+                        return $value;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }

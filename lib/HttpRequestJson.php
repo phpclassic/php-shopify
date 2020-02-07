@@ -38,8 +38,8 @@ class HttpRequestJson
     /**
      * Prepare the data and request headers before making the call
      *
-     * @param array $dataArray
      * @param array $httpHeaders
+     * @param array $dataArray
      *
      * @return void
      */

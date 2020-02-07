@@ -6,7 +6,8 @@
     "type": "library",
     "require": {
         "php": ">=5.6",
-        "ext-curl": "*"
+        "ext-curl": "*",
+        "ext-json": "*"
     },
     "license": "Apache-2.0",
     "authors": [

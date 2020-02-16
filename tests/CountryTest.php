@@ -14,7 +14,7 @@ class CountryTest extends TestSimpleResource
      * @inheritDoc
      */
     public $postArray = array(
-        "code" => "FR",
+        "code" => "BD",
         "tax" => 0.25,
     );
 

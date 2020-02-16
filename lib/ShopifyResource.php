@@ -32,6 +32,13 @@ abstract class ShopifyResource
     protected $httpHeaders = array();
 
     /**
+     * HTTP response headers of last executed request
+     *
+     * @var array
+     */
+    public static $lastHttpResponseHeaders = array();
+
+    /**
      * The base URL of the API Resource (excluding the '.json' extension).
      *
      * Example : https://myshop.myshopify.com/admin/products
@@ -511,6 +518,8 @@ abstract class ShopifyResource
      */
     public function processResponse($responseArray, $dataKey = null)
     {
+        self::$lastHttpResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
+
         if ($responseArray === null) {
             //Something went wrong, Checking HTTP Codes
             $httpOK = 200; //Request Successful, OK.
@@ -569,6 +578,7 @@ abstract class ShopifyResource
                 }
             }
         }
+
         return null;
     }
 

@@ -555,16 +555,15 @@ abstract class ShopifyResource
     }
 
     public function getLink($responseHeaders, $type='next'){
-        $responseHeaders = json_decode($responseHeaders);
 
-        if(property_exists($responseHeaders,'x-shopify-api-version')
-            && $responseHeaders->{'x-shopify-api-version'} < '2019-07'){
+        if(array_key_exists('x-shopify-api-version', $responseHeaders)
+            && $responseHeaders['x-shopify-api-version'] < '2019-07'){
             return null;
         }
 
-        if(!empty($responseHeaders->link)) {
-            if (stristr($responseHeaders->link[0], '; rel="'.$type.'"') > -1) {
-                $headerLinks = explode(',', $responseHeaders->link[0]);
+        if(!empty($responseHeaders['link'])) {
+            if (stristr($responseHeaders['link'][0], '; rel="'.$type.'"') > -1) {
+                $headerLinks = explode(',', $responseHeaders['link'][0]);
                 foreach ($headerLinks as $headerLink) {
                     if (stristr($headerLink, '; rel="'.$type.'"') === -1) {
                         continue;

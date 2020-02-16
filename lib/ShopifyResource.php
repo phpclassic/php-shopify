@@ -12,6 +12,7 @@ namespace PHPShopify;
 use PHPShopify\Exception\ApiException;
 use PHPShopify\Exception\SdkException;
 use PHPShopify\Exception\CurlException;
+use Psr\Http\Message\ResponseInterface;
 
 /*
 |--------------------------------------------------------------------------
@@ -120,6 +121,21 @@ abstract class ShopifyResource
      *
      * @throws SdkException if Either AccessToken or ApiKey+Password Combination is not found in configuration
      */
+
+    /**
+     * Response Header Link, used for pagination
+     * @see: https://help.shopify.com/en/api/guides/paginated-rest-results?utm_source=exacttarget&utm_medium=email&utm_campaign=api_deprecation_notice_1908
+     * @var string $nextLink
+     */
+    private $nextLink = null;
+
+    /**
+     * Response Header Link, used for pagination
+     * @see: https://help.shopify.com/en/api/guides/paginated-rest-results?utm_source=exacttarget&utm_medium=email&utm_campaign=api_deprecation_notice_1908
+     * @var string $prevLink
+     */
+    private $prevLink = null;
+
     public function __construct($id = null, $parentResourceUrl = '')
     {
         $this->id = $id;
@@ -309,6 +325,9 @@ abstract class ShopifyResource
      *
      * @uses HttpRequestJson::get() to send the HTTP request
      *
+     * @throws ApiException if the response has an error specified
+     * @throws CurlException if response received with unexpected HTTP code.
+     *
      * @return array
      */
     public function get($urlParams = array(), $url = null, $dataKey = null)
@@ -327,6 +346,10 @@ abstract class ShopifyResource
      * Get count for the number of resources available
      *
      * @param array $urlParams Check Shopify API reference of the specific resource for the list of URL parameters
+     *
+     * @throws SdkException
+     * @throws ApiException if the response has an error specified
+     * @throws CurlException if response received with unexpected HTTP code.
      *
      * @return integer
      */
@@ -347,6 +370,8 @@ abstract class ShopifyResource
      * @param mixed $query
      *
      * @throws SdkException if search is not enabled for the resouce
+     * @throws ApiException if the response has an error specified
+     * @throws CurlException if response received with unexpected HTTP code.
      *
      * @return array
      */
@@ -372,6 +397,9 @@ abstract class ShopifyResource
      *
      * @uses HttpRequestJson::post() to send the HTTP request
      *
+     * @throws ApiException if the response has an error specified
+     * @throws CurlException if response received with unexpected HTTP code.
+     *
      * @return array
      */
     public function post($dataArray, $url = null, $wrapData = true)
@@ -394,6 +422,9 @@ abstract class ShopifyResource
      *
      * @uses HttpRequestJson::put() to send the HTTP request
      *
+     * @throws ApiException if the response has an error specified
+     * @throws CurlException if response received with unexpected HTTP code.
+     *
      * @return array
      */
     public function put($dataArray, $url = null, $wrapData = true)
@@ -415,6 +446,9 @@ abstract class ShopifyResource
      * @param string $url
      *
      * @uses HttpRequestJson::delete() to send the HTTP request
+     *
+     * @throws ApiException if the response has an error specified
+     * @throws CurlException if response received with unexpected HTTP code.
      *
      * @return array an empty array will be returned if the request is successfully completed
      */
@@ -499,10 +533,13 @@ abstract class ShopifyResource
             }
         }
 
+        $lastResponseHeaders = CurlRequest::$lastResponseHeaders;
+        $this->getLinks($lastResponseHeaders);
+
         if (isset($responseArray['errors'])) {
             $message = $this->castString($responseArray['errors']);
 
-            throw new ApiException($message);
+            throw new ApiException($message, CurlRequest::$lastHttpCode);
         }
 
         if ($dataKey && isset($responseArray[$dataKey])) {
@@ -512,106 +549,56 @@ abstract class ShopifyResource
         }
     }
 
-    /**
-     * Checks response headers for existence of next page info
-     *
-     * @return boolean
-     */
-    static public function lastResourceContainsNextPageInfo()
-    {
-        $headers = self::$lastHttpResponseHeaders;
-
-        if (isset($headers["Link"])) {
-            $matchData = array();
-
-            if (preg_match("/<([^>]*)>; rel=\"next\"/", $headers["Link"], $matchData)) {
-                // found rel="next"
-                return true;
-            }
-        }
-
-        return false;
+    public function getLinks($responseHeaders){
+        $this->nextLink = $this->getLink($responseHeaders,'next');
+        $this->prevLink = $this->getLink($responseHeaders,'prev');
     }
 
-    /**
-     * Checks response headers for existence of previous page info
-     *
-     * @return boolean
-     */
+    public function getLink($responseHeaders, $type='next'){
+        $responseHeaders = json_decode($responseHeaders);
 
-    static public function lastResourceContainsPrevPageInfo()
-    {
-        $headers = self::$lastHttpResponseHeaders;
-
-        if (isset($headers["Link"])) {
-            $matchData = array();
-
-            if (preg_match("/<([^>]*)>; rel=\"previous\"/", $headers["Link"], $matchData)) {
-                // found rel="prev"
-                return true;
-            }
+        if(property_exists($responseHeaders,'x-shopify-api-version')
+            && $responseHeaders->{'x-shopify-api-version'} < '2019-07'){
+            return null;
         }
 
-        return false;
-    }
+        if(!empty($responseHeaders->link)) {
+            if (stristr($responseHeaders->link[0], '; rel="'.$type.'"') > -1) {
+                $headerLinks = explode(',', $responseHeaders->link[0]);
+                foreach ($headerLinks as $headerLink) {
+                    if (stristr($headerLink, '; rel="'.$type.'"') === -1) {
+                        continue;
+                    }
 
-    /**
-     * Gets next page info string for use in pagination
-     *
-     * @return string
-     */
-    static public function getNextPageInfo()
-    {
-        $headers = self::$lastHttpResponseHeaders;
-
-        if (isset($headers["Link"])) {
-            $matchData = array();
-
-            if (preg_match("/<([^>]*)>; rel=\"next\"/", $headers["Link"], $matchData)) {
-                // found rel="next"
-                $query = parse_url($matchData[1], PHP_URL_QUERY);
-
-                $pairs = explode( "&", $query );
-                foreach( $pairs as $p ) {
-                    list( $key, $value) = explode( "=", $p );
-
-                    if( $key == "page_info" ) {
-                        return $value;
+                    $pattern = '#<(.*?)>; rel="'.$type.'"#m';
+                    preg_match($pattern, $headerLink, $linkResponseHeaders);
+                    if ($linkResponseHeaders) {
+                        return $linkResponseHeaders[1];
                     }
                 }
             }
         }
 
-        return false;
+        return null;
     }
 
-    /**
-     * Gets previous page info string for use in pagination
-     *
-     * @return string
-     */
-    static public function getPrevPageInfo()
-    {
-        $headers = self::$lastHttpResponseHeaders;
+    public function getPrevLink(){
+        return $this->prevLink;
+    }
 
-        if (isset($headers["Link"])) {
-            $matchData = array();
+    public function getNextLink(){
+        return $this->nextLink;
+    }
 
-            if (preg_match("/<([^>]*)>; rel=\"previous\"/", $headers["Link"], $matchData)) {
-                // found rel="prev"
-                $query = parse_url($matchData[1], PHP_URL_QUERY);
+    public function getNextPageParams(){
+        $nextPageParams = [];
+        parse_str($this->getNextLink(), $nextPageParams);
+        return $nextPageParams;
+    }
 
-                $pairs = explode( "&", $query );
-                foreach( $pairs as $p ) {
-                    list( $key, $value) = explode( "=", $p );
-
-                    if( $key == "page_info" ) {
-                        return $value;
-                    }
-                }
-            }
-        }
-
-        return false;
+    public function getPrevPageParams(){
+        $nextPageParams = [];
+        parse_str($this->getPrevLink(), $nextPageParams);
+        return $nextPageParams;
     }
 }

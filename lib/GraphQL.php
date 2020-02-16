@@ -11,6 +11,8 @@
 namespace PHPShopify;
 
 
+use PHPShopify\Exception\ApiException;
+use PHPShopify\Exception\CurlException;
 use PHPShopify\Exception\SdkException;
 
 class GraphQL extends ShopifyResource
@@ -33,6 +35,8 @@ class GraphQL extends ShopifyResource
      * @param array|null $variables
      *
      * @uses HttpRequestGraphQL::post() to send the HTTP request
+     * @throws ApiException if the response has an error specified
+     * @throws CurlException if response received with unexpected HTTP code.
      *
      * @return array
      */
@@ -47,6 +51,7 @@ class GraphQL extends ShopifyResource
 
     /**
      * @inheritdoc
+     * @throws SdkException
      */
     public function get($urlParams = array(), $url = null, $dataKey = null)
     {
@@ -55,6 +60,7 @@ class GraphQL extends ShopifyResource
 
     /**
      * @inheritdoc
+     * @throws SdkException
      */
     public function put($dataArray, $url = null, $wrapData = true)
     {
@@ -63,6 +69,7 @@ class GraphQL extends ShopifyResource
 
     /**
      * @inheritdoc
+     * @throws SdkException
      */
     public function delete($urlParams = array(), $url = null)
     {

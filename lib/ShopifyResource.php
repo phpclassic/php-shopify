@@ -562,8 +562,9 @@ abstract class ShopifyResource
         }
 
         if(!empty($responseHeaders['link'])) {
-            if (stristr($responseHeaders['link'][0], '; rel="'.$type.'"') > -1) {
-                $headerLinks = explode(',', $responseHeaders['link'][0]);
+            var_dump($responseHeaders['link']);
+            if (stristr($responseHeaders['link'], '; rel="'.$type.'"') > -1) {
+                $headerLinks = explode(',', $responseHeaders['link']);
                 foreach ($headerLinks as $headerLink) {
                     if (stristr($headerLink, '; rel="'.$type.'"') === -1) {
                         continue;
@@ -589,15 +590,25 @@ abstract class ShopifyResource
         return $this->nextLink;
     }
 
+    public function getUrlParams($url) {
+        if ($url) {
+            $parts = parse_url($url);
+            return $parts['query'];
+        }
+        return '';
+    }
+
     public function getNextPageParams(){
         $nextPageParams = [];
-        parse_str($this->getNextLink(), $nextPageParams);
+        $nextPageLink =
+
+        parse_str($this->getUrlParams($this->getNextLink()), $nextPageParams);
         return $nextPageParams;
     }
 
     public function getPrevPageParams(){
         $nextPageParams = [];
-        parse_str($this->getPrevLink(), $nextPageParams);
+        parse_str($this->getUrlParams($this->getPrevLink()), $nextPageParams);
         return $nextPageParams;
     }
 }

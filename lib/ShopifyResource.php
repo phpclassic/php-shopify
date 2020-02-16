@@ -533,7 +533,7 @@ abstract class ShopifyResource
             }
         }
 
-        $lastResponseHeaders = CurlRequest::$lastResponseHeaders;
+        $lastResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
         $this->getLinks($lastResponseHeaders);
 
         if (isset($responseArray['errors'])) {

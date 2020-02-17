@@ -551,7 +551,7 @@ abstract class ShopifyResource
 
     public function getLinks($responseHeaders){
         $this->nextLink = $this->getLink($responseHeaders,'next');
-        $this->prevLink = $this->getLink($responseHeaders,'prev');
+        $this->prevLink = $this->getLink($responseHeaders,'previous');
     }
 
     public function getLink($responseHeaders, $type='next'){
@@ -562,7 +562,6 @@ abstract class ShopifyResource
         }
 
         if(!empty($responseHeaders['link'])) {
-            var_dump($responseHeaders['link']);
             if (stristr($responseHeaders['link'], '; rel="'.$type.'"') > -1) {
                 $headerLinks = explode(',', $responseHeaders['link']);
                 foreach ($headerLinks as $headerLink) {

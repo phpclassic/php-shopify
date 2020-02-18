@@ -206,12 +206,16 @@ class ShopifySDK
     public static $timeAllowedForEachApiCall = .5;
 
     /**
+     * @var string Default Shopify API version
+     */
+    public static $defaultApiVersion = '2020-01';
+
+    /**
      * Shop / API configurations
      *
      * @var array
      */
     public static $config = array(
-        'ApiVersion' => '2019-10'
     );
 
     /**
@@ -310,7 +314,7 @@ class ShopifySDK
          * Reset config to it's initial values
          */
         self::$config = array(
-            'ApiVersion' => '2019-04'
+            'ApiVersion' => self::$defaultApiVersion
         );
 
         foreach ($config as $key => $value) {

@@ -71,6 +71,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read Blog $Blog
  * @property-read CarrierService $CarrierService
  * @property-read Collect $Collect
+ * @property-read Collection $Collection
  * @property-read Comment $Comment
  * @property-read Country $Country
  * @property-read Currency $Currency
@@ -110,6 +111,7 @@ use PHPShopify\Exception\SdkException;
  * @method Blog Blog(integer $id = null)
  * @method CarrierService CarrierService(integer $id = null)
  * @method Collect Collect(integer $id = null)
+ * @method Collection Collection(integer $id = null)
  * @method Comment Comment(integer $id = null)
  * @method Country Country(integer $id = null)
  * @method Currency Currency(integer $id = null)
@@ -158,6 +160,7 @@ class ShopifySDK
         'Blog',
         'CarrierService',
         'Collect',
+        'Collection',
         'Comment',
         'Country',
         'Currency',

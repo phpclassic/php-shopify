@@ -11,14 +11,6 @@ use PHPShopify\Exception\CurlException;
 use PHPShopify\Http\HttpRequestJson;
 use PHPShopify\Http\CurlResponse;
 
-/*
-|--------------------------------------------------------------------------
-| Shopify API SDK Base Class
-|--------------------------------------------------------------------------
-|
-| This class handles get, post, put, delete and any other custom actions for the API
-|
-*/
 abstract class ShopifyResource
 {
     /**
@@ -126,11 +118,13 @@ abstract class ShopifyResource
      */
     private $prevLink = null;
 
-    public function __construct($id = null, $parentResourceUrl = '')
+    /** @var ShopifySDK */
+    protected $sdk;
+
+    public function __construct(ShopifySdk $sdk, $id = null, $parentResourceUrl = '')
     {
         $this->id = $id;
-
-        $config = ShopifySDK::$config;
+        $this->sdk = $sdk;
 
         $this->resourceUrl = ($parentResourceUrl ? $parentResourceUrl . '/' :  $config['ApiUrl']) . $this->getResourcePath() . ($this->id ? '/' . $this->id : '');
 
@@ -194,7 +188,7 @@ abstract class ShopifyResource
             $resourceID = !empty($arguments) ? $arguments[0] : null;
 
 
-            $api = new $childClass($resourceID, $this->resourceUrl);
+            $api = new $childClass($this->sdk, $resourceID, $this->resourceUrl);
 
             return $api;
         } else {

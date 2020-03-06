@@ -232,28 +232,34 @@ class ShopifySDK
         'UsageCharge'       => 'RecurringApplicationCharge',
     ];
 
-    /*
-     * ShopifySDK constructor
-     *
-     * @param array $config
-     *
-     * @return void
-     */
     public function __construct(array $config = [])
     {
-        $this->config = $config + ['ApiVersion' => self::$defaultApiVersion];
+        $config += ['ApiVersion' => self::$defaultApiVersion];
 
-        //Re-set the admin url if shop url is changed
-        if(isset($config['ShopUrl'])) {
-            self::setAdminUrl();
+        $shopUrl = $config['ShopUrl'];
+        $shopUrl = preg_replace('#^https?://|/$#', '', $shopUrl);
+        $apiVersion = $config['ApiVersion'];
+
+        if (isset($config['ApiKey']) && isset($config['Password'])) {
+            $apiKey = $config['ApiKey'];
+            $apiPassword = $config['Password'];
+            $adminUrl = "https://{$apiKey}:{$apiPassword}@{$shopUrl}/admin/";
+        } else {
+            $adminUrl = "https://{$shopUrl}/admin/";
         }
 
-        //If want to keep more wait time than .5 seconds for each call
+        $config['AdminUrl'] = $adminUrl;
+        $config['ApiUrl'] = "{$adminUrl}api/{$apiVersion}/";
+        $this->config = $config;
+
         if (isset($config['AllowedTimePerCall'])) {
             static::$timeAllowedForEachApiCall = $config['AllowedTimePerCall'];
         }
+    }
 
-        return new ShopifySDK;
+    public function getConfig(): array
+    {
+        return $this->config;
     }
 
     /**
@@ -289,6 +295,7 @@ class ShopifySDK
             } else {
                 $message = "Invalid resource name $resourceName. Pls check the API Reference to get the appropriate resource name.";
             }
+
             throw new SdkException($message);
         }
 
@@ -298,48 +305,9 @@ class ShopifySDK
         $resourceID = !empty($arguments) ? $arguments[0] : null;
 
         //Initiate the resource object
-        $resource = new $resourceClassName($resourceID);
+        $resource = new $resourceClassName($this, $resourceID);
 
         return $resource;
-    }
-
-    /**
-     * Configure the SDK client
-     *
-     * @param array $config
-     *
-     * @return ShopifySDK
-     */
-    private function config(array $config)
-    {
-
-    }
-
-    /**
-     * Set the admin url, based on the configured shop url
-     *
-     * @return string
-     */
-    public static function setAdminUrl()
-    {
-        $shopUrl = self::$config['ShopUrl'];
-
-        //Remove https:// and trailing slash (if provided)
-        $shopUrl = preg_replace('#^https?://|/$#', '', $shopUrl);
-        $apiVersion = self::$config['ApiVersion'];
-
-        if(isset(self::$config['ApiKey']) && isset(self::$config['Password'])) {
-            $apiKey = self::$config['ApiKey'];
-            $apiPassword = self::$config['Password'];
-            $adminUrl = "https://$apiKey:$apiPassword@$shopUrl/admin/";
-        } else {
-            $adminUrl = "https://$shopUrl/admin/";
-        }
-
-        self::$config['AdminUrl'] = $adminUrl;
-        self::$config['ApiUrl'] = $adminUrl . "api/$apiVersion/";
-
-        return $adminUrl;
     }
 
     /**

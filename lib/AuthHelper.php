@@ -44,15 +44,15 @@ class AuthHelper
      * @inheritDoc
      * @throws SdkException if SharedSecret is not provided or hmac is not found in the url parameters
      */
-    public static function verifyShopifyRequest(): bool
+    public static function verifyShopifyRequest(array $config): bool
     {
         $data = $_GET;
 
-        if(!isset(ShopifySDK::$config['SharedSecret'])) {
+        if(!isset($config['SharedSecret'])) {
             throw new SdkException("Please provide SharedSecret while configuring the SDK client.");
         }
 
-        $sharedSecret = ShopifySDK::$config['SharedSecret'];
+        $sharedSecret = $config['SharedSecret'];
 
         if (isset($data['hmac'])) {
             $hmac = $data['hmac'];
@@ -82,10 +82,15 @@ class AuthHelper
      * @param string[] $options
      * @throws SdkException if required configuration is not provided in $config
      */
-    public static function createAuthRequest($scopes, ?string $redirectUrl = null, ?string $state = null, ?array $options = null, bool $return = false): ?string
+    public static function createAuthRequest(
+        array $config, $scopes,
+        ?string $redirectUrl = null,
+        ?string $state = null,
+        ?array $options = null,
+        bool $return = false
+    ): ?string
     {
         assert(is_string($scopes) || is_array($scopes));
-        $config = ShopifySDK::$config;
 
         if(!isset($config['ShopUrl']) || !isset($config['ApiKey'])) {
             throw new SdkException("ShopUrl and ApiKey are required for authentication request. Please check SDK configuration!");
@@ -136,15 +141,13 @@ class AuthHelper
      * @inheritDoc
      * @throws SdkException if SharedSecret or ApiKey is missing in SDK configuration or request is not valid
      */
-    public static function getAccessToken(?array $config): string
+    public static function getAccessToken(array $config): string
     {
-        $config = $config ?? ShopifySDK::$config;
-
         if(!isset($config['SharedSecret']) || !isset($config['ApiKey'])) {
             throw new SdkException("SharedSecret and ApiKey are required for getting access token. Please check SDK configuration!");
         }
 
-        if(self::verifyShopifyRequest()) {
+        if(self::verifyShopifyRequest($config)) {
             $data = [
                 'client_id' => $config['ApiKey'],
                 'client_secret' => $config['SharedSecret'],

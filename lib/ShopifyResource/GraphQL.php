@@ -10,6 +10,7 @@
 
 namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\HttpRequestJson;
 use PHPShopify\ShopifyResource;
 use PHPShopify\Exception\ApiException;
 use PHPShopify\Exception\CurlException;
@@ -30,22 +31,33 @@ class GraphQL extends ShopifyResource
      *
      * @param string $graphQL A valid GraphQL String. @see https://help.shopify.com/en/api/graphql-admin-api/graphiql-builder GraphiQL builder - you can build your graphql string from here.
      * @param string $url
-     * @param bool $wrapData
      * @param array|null $variables
-     *
-     * @uses HttpRequestGraphQL::post() to send the HTTP request
      * @throws ApiException if the response has an error specified
      * @throws CurlException if response received with unexpected HTTP code.
      *
      * @return array
      */
-    public function post($graphQL, $url = null, $wrapData = false, $variables = null)
+    public function query(string $graphQL, ?string $url = null, ?array $variables = null)
     {
-        if (!$url) $url = $this->generateUrl();
+        if ($url === null) {
+            $url = $this->generateUrl();
+        }
 
-        $response = HttpRequestGraphQL::post($url, $graphQL, $this->httpHeaders, $variables);
+        $httpHeaders = $this->httpHeaders;
 
-        return $this->processResponse($response);
+        if (!isset($httpHeaders['X-Shopify-Access-Token'])) {
+            throw new SdkException("The GraphQL Admin API requires an access token for making authenticated requests!");
+        }
+
+        if (is_array($variables)) {
+            $httpHeaders['Content-type'] = 'application/json';
+            $data = json_encode(['query' => $graphQL, 'variables' => $variables]);
+        } else {
+            $httpHeaders['Content-type'] = 'application/graphql';
+            $data = $graphQL;
+        }
+
+        return $this->processResponse(HttpRequestJson::post($url, $data, $this->httpHeaders));
     }
 
     /**

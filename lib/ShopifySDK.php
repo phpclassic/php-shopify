@@ -1,9 +1,5 @@
 <?php
 /**
- * Created by PhpStorm.
- * @author Tareq Mahmood <tareqtms@yahoo.com>
- * Created at 8/16/16 10:42 AM UTC+06:00
- *
  * @see https://help.shopify.com/api/reference/ Shopify API Reference
  */
 
@@ -66,83 +62,83 @@ namespace PHPShopify;
 use PHPShopify\Exception\SdkException;
 
 /**
- * @property-read AbandonedCheckout $AbandonedCheckout
- * @property-read Blog $Blog
- * @property-read CarrierService $CarrierService
- * @property-read Collect $Collect
- * @property-read Comment $Comment
- * @property-read Country $Country
- * @property-read Currency $Currency
- * @property-read CustomCollection $CustomCollection
- * @property-read Customer $Customer
- * @property-read CustomerSavedSearch $CustomerSavedSearch
- * @property-read Discount $Discount
- * @property-read DiscountCode $DiscountCode
- * @property-read DraftOrder $DraftOrder
- * @property-read PriceRule $PriceRule
- * @property-read Event $Event
- * @property-read FulfillmentService $FulfillmentService
- * @property-read GiftCard $GiftCard
- * @property-read InventoryItem $InventoryItem
- * @property-read InventoryLevel $InventoryLevel
- * @property-read Location $Location
- * @property-read Metafield $Metafield
- * @property-read Multipass $Multipass
- * @property-read Order $Order
- * @property-read Page $Page
- * @property-read Policy $Policy
- * @property-read Product $Product
- * @property-read ProductListing $ProductListing
- * @property-read ProductVariant $ProductVariant
- * @property-read RecurringApplicationCharge $RecurringApplicationCharge
- * @property-read Redirect $Redirect
- * @property-read ScriptTag $ScriptTag
- * @property-read ShippingZone $ShippingZone
- * @property-read Shop $Shop
- * @property-read SmartCollection $SmartCollection
- * @property-read Theme $Theme
- * @property-read User $User
- * @property-read Webhook $Webhook
- * @property-read GraphQL $GraphQL
+ * @property-read ShopifyResource\AbandonedCheckout $AbandonedCheckout
+ * @property-read ShopifyResource\Blog $Blog
+ * @property-read ShopifyResource\CarrierService $CarrierService
+ * @property-read ShopifyResource\Collect $Collect
+ * @property-read ShopifyResource\Comment $Comment
+ * @property-read ShopifyResource\Country $Country
+ * @property-read ShopifyResource\Currency $Currency
+ * @property-read ShopifyResource\CustomCollection $CustomCollection
+ * @property-read ShopifyResource\Customer $Customer
+ * @property-read ShopifyResource\CustomerSavedSearch $CustomerSavedSearch
+ * @property-read ShopifyResource\Discount $Discount
+ * @property-read ShopifyResource\DiscountCode $DiscountCode
+ * @property-read ShopifyResource\DraftOrder $DraftOrder
+ * @property-read ShopifyResource\PriceRule $PriceRule
+ * @property-read ShopifyResource\Event $Event
+ * @property-read ShopifyResource\FulfillmentService $FulfillmentService
+ * @property-read ShopifyResource\GiftCard $GiftCard
+ * @property-read ShopifyResource\InventoryItem $InventoryItem
+ * @property-read ShopifyResource\InventoryLevel $InventoryLevel
+ * @property-read ShopifyResource\Location $Location
+ * @property-read ShopifyResource\Metafield $Metafield
+ * @property-read ShopifyResource\Multipass $Multipass
+ * @property-read ShopifyResource\Order $Order
+ * @property-read ShopifyResource\Page $Page
+ * @property-read ShopifyResource\Policy $Policy
+ * @property-read ShopifyResource\Product $Product
+ * @property-read ShopifyResource\ProductListing $ProductListing
+ * @property-read ShopifyResource\ProductVariant $ProductVariant
+ * @property-read ShopifyResource\RecurringApplicationCharge $RecurringApplicationCharge
+ * @property-read ShopifyResource\Redirect $Redirect
+ * @property-read ShopifyResource\ScriptTag $ScriptTag
+ * @property-read ShopifyResource\ShippingZone $ShippingZone
+ * @property-read ShopifyResource\Shop $Shop
+ * @property-read ShopifyResource\SmartCollection $SmartCollection
+ * @property-read ShopifyResource\Theme $Theme
+ * @property-read ShopifyResource\User $User
+ * @property-read ShopifyResource\Webhook $Webhook
+ * @property-read ShopifyResource\GraphQL $GraphQL
  *
- * @method AbandonedCheckout AbandonedCheckout(integer $id = null)
- * @method Blog Blog(integer $id = null)
- * @method CarrierService CarrierService(integer $id = null)
- * @method Collect Collect(integer $id = null)
- * @method Comment Comment(integer $id = null)
- * @method Country Country(integer $id = null)
- * @method Currency Currency(integer $id = null)
- * @method CustomCollection CustomCollection(integer $id = null)
- * @method Customer Customer(integer $id = null)
- * @method CustomerSavedSearch CustomerSavedSearch(integer $id = null)
- * @method Discount Discount(integer $id = null)
- * @method DraftOrder DraftOrder(integer $id = null)
- * @method DiscountCode DiscountCode(integer $id = null)
- * @method PriceRule PriceRule(integer $id = null)
- * @method Event Event(integer $id = null)
- * @method FulfillmentService FulfillmentService(integer $id = null)
- * @method GiftCard GiftCard(integer $id = null)
- * @method InventoryItem InventoryItem(integer $id = null)
- * @method InventoryLevel InventoryLevel(integer $id = null)
- * @method Location Location(integer $id = null)
- * @method Metafield Metafield(integer $id = null)
- * @method Multipass Multipass(integer $id = null)
- * @method Order Order(integer $id = null)
- * @method Page Page(integer $id = null)
- * @method Policy Policy(integer $id = null)
- * @method Product Product(integer $id = null)
- * @method ProductListing ProductListing(integer $id = null)
- * @method ProductVariant ProductVariant(integer $id = null)
- * @method RecurringApplicationCharge RecurringApplicationCharge(integer $id = null)
- * @method Redirect Redirect(integer $id = null)
- * @method ScriptTag ScriptTag(integer $id = null)
- * @method ShippingZone ShippingZone(integer $id = null)
- * @method Shop Shop(integer $id = null)
- * @method SmartCollection SmartCollection(integer $id = null)
- * @method Theme Theme(int $id = null)
- * @method User User(integer $id = null)
- * @method Webhook Webhook(integer $id = null)
- * @method GraphQL GraphQL()
+ * @method ShopifyResource\AbandonedCheckout AbandonedCheckout(integer $id = null)
+ * @method ShopifyResource\Blog Blog(integer $id = null)
+ * @method ShopifyResource\CarrierService CarrierService(integer $id = null)
+ * @method ShopifyResource\Collect Collect(integer $id = null)
+ * @method ShopifyResource\Comment Comment(integer $id = null)
+ * @method ShopifyResource\Country Country(integer $id = null)
+ * @method ShopifyResource\Currency Currency(integer $id = null)
+ * @method ShopifyResource\CustomCollection CustomCollection(integer $id = null)
+ * @method ShopifyResource\Customer Customer(integer $id = null)
+ * @method ShopifyResource\CustomerSavedSearch CustomerSavedSearch(integer $id = null)
+ * @method ShopifyResource\Discount Discount(integer $id = null)
+ * @method ShopifyResource\DraftOrder DraftOrder(integer $id = null)
+ * @method ShopifyResource\DiscountCode DiscountCode(integer $id = null)
+ * @method ShopifyResource\PriceRule PriceRule(integer $id = null)
+ * @method ShopifyResource\Event Event(integer $id = null)
+ * @method ShopifyResource\FulfillmentService FulfillmentService(integer $id = null)
+ * @method ShopifyResource\GiftCard GiftCard(integer $id = null)
+ * @method ShopifyResource\InventoryItem InventoryItem(integer $id = null)
+ * @method ShopifyResource\InventoryLevel InventoryLevel(integer $id = null)
+ * @method ShopifyResource\Location Location(integer $id = null)
+ * @method ShopifyResource\Metafield Metafield(integer $id = null)
+ * @method ShopifyResource\Multipass Multipass(integer $id = null)
+ * @method ShopifyResource\Order Order(integer $id = null)
+ * @method ShopifyResource\Page Page(integer $id = null)
+ * @method ShopifyResource\Policy Policy(integer $id = null)
+ * @method ShopifyResource\Product Product(integer $id = null)
+ * @method ShopifyResource\ProductListing ProductListing(integer $id = null)
+ * @method ShopifyResource\ProductVariant ProductVariant(integer $id = null)
+ * @method ShopifyResource\RecurringApplicationCharge RecurringApplicationCharge(integer $id = null)
+ * @method ShopifyResource\Redirect Redirect(integer $id = null)
+ * @method ShopifyResource\ScriptTag ScriptTag(integer $id = null)
+ * @method ShopifyResource\ShippingZone ShippingZone(integer $id = null)
+ * @method ShopifyResource\Shop Shop(integer $id = null)
+ * @method ShopifyResource\SmartCollection SmartCollection(integer $id = null)
+ * @method ShopifyResource\Theme Theme(int $id = null)
+ * @method ShopifyResource\User User(integer $id = null)
+ * @method ShopifyResource\Webhook Webhook(integer $id = null)
+ * @method ShopifyResource\GraphQL GraphQL()
  */
 class ShopifySDK
 {
@@ -151,7 +147,7 @@ class ShopifySDK
      *
      * @var string[]
      */
-    protected $resources = array(
+    protected $resources = [
         'AbandonedCheckout',
         'ApplicationCharge',
         'Blog',
@@ -192,7 +188,7 @@ class ShopifySDK
         'User',
         'Webhook',
         'GraphQL'
-    );
+    ];
 
     /**
      * @var float microtime of last api call
@@ -222,7 +218,7 @@ class ShopifySDK
      *
      * @var array Array key is the child resource name and array value is the parent resource name
      */
-    protected $childResources = array(
+    protected $childResources = [
         'Article'           => 'Blog',
         'Asset'             => 'Theme',
         'CustomerAddress'   => 'Customer',
@@ -236,7 +232,7 @@ class ShopifySDK
         'Refund'            => 'Order',
         'Transaction'       => 'Order',
         'UsageCharge'       => 'RecurringApplicationCharge',
-    );
+    ];
 
     /*
      * ShopifySDK constructor
@@ -245,7 +241,7 @@ class ShopifySDK
      *
      * @return void
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         if(!empty($config)) {
             ShopifySDK::config($config);

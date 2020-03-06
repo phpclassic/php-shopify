@@ -13,8 +13,5 @@ use PHPShopify\ShopifyResource;
 
 class AbandonedCheckout extends ShopifyResource
 {
-    /**
-     * @inheritDoc
-     */
     protected $resourceKey = 'checkout';
 }

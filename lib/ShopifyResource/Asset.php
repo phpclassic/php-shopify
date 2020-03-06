@@ -13,8 +13,5 @@ use PHPShopify\ShopifyResource;
 
 class Asset extends ShopifyResource
 {
-    /**
-     * @inheritDoc
-     */
     protected $resourceKey = 'asset';
 }

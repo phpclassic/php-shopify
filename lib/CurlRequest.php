@@ -1,9 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * @author Tareq Mahmood <tareqtms@yahoo.com>
- * Created at 8/17/16 2:50 PM UTC+06:00
- */
 
 namespace PHPShopify;
 
@@ -13,137 +8,108 @@ use PHPShopify\Exception\ResourceRateLimitException;
 class CurlRequest
 {
     /**
-     * HTTP Code of the last executed request
-     *
-     * @var integer
+     * The time wait before retrying when the request was rate limited in microseconds.
      */
-    public static $lastHttpCode;
+    const RATE_LIMIT_RETRY_DELAY = 500000;
 
     /**
-     * HTTP response headers of last executed request
-     *
-     * @var array
+     * This allows use of keepalive.
+     * @var resource
      */
-    public static $lastHttpResponseHeaders = array();
+    private static $ch;
 
     /**
-     * Initialize the curl resource
-     *
-     * @param string $url
-     * @param array $httpHeaders
-     *
+     * @inheritDoc
+     * @param string|string[]|null $data
      * @return resource
      */
-    protected static function init($url, $httpHeaders = array())
+    protected static function init(string $method, string $url, array $httpHeaders = [], $data = null)
     {
-        // Create Curl resource
-        $ch = curl_init();
+        if (self::$ch === null) {
+            self::$ch = curl_init();
 
-        // Set URL
-        curl_setopt($ch, CURLOPT_URL, $url);
-
-        //Return the transfer as a string
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-        curl_setopt($ch, CURLOPT_HEADER, true);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'PHPClassic/PHPShopify');
-
-        $headers = array();
-        foreach ($httpHeaders as $key => $value) {
-            $headers[] = "$key: $value";
+            curl_setopt(self::$ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt(self::$ch, CURLOPT_HEADER, true);
+            curl_setopt(self::$ch, CURLOPT_USERAGENT, 'PHPClassic/PHPShopify');
         }
-        //Set HTTP Headers
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-        return $ch;
+        curl_setopt(self::$ch, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt(self::$ch, CURLOPT_URL, $url);
 
+        if ($data !== null) {
+            $headers['Content-Length'] = strlen($data);
+            curl_setopt(self::$ch, CURLOPT_POSTFIELDS, $data);
+        } else {
+            curl_setopt(self::$ch, CURLOPT_POSTFIELDS, $data);
+        }
+
+        $headers = [];
+
+        foreach ($httpHeaders as $key => $value) {
+            $headers[] = "{$key}: {$value}";
+        }
+
+        curl_setopt(self::$ch, CURLOPT_HTTPHEADER, $headers);
+
+        return self::$ch;
     }
 
-    /**
-     * Implement a GET request and return output
-     *
-     * @param string $url
-     * @param array $httpHeaders
-     *
-     * @return CurlResponse
-     */
-    public static function get($url, $httpHeaders = array())
+    public static function destroy(): void
     {
-        $ch = self::init($url, $httpHeaders);
-
-        return self::processRequest($ch);
+        if (self::$ch !== null) {
+            $ch = self::$ch;
+            self::$ch = null;
+            curl_close($ch);
+        }
     }
 
-    /**
-     * Implement a POST request and return output
-     *
-     * @param string $url
-     * @param array $data
-     * @param array $httpHeaders
-     *
-     * @return CurlResponse
-     */
-    public static function post($url, $data, $httpHeaders = array())
+    public static function get(string $url, array $httpHeaders = []): CurlResponse
     {
-        $ch = self::init($url, $httpHeaders);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-
-        return self::processRequest($ch);
+        return self::processRequest(self::init('GET', $url, $httpHeaders));
     }
 
     /**
-     * Implement a PUT request and return output
-     *
-     * @param string $url
-     * @param array $data
-     * @param array $httpHeaders
-     *
-     * @return CurlResponse
+     * @inheritDoc
+     * @param string|array $data
      */
-    public static function put($url, $data, $httpHeaders = array())
+    public static function post(string $url, $data, array $httpHeaders = []): CurlResponse
     {
-        $ch = self::init($url, $httpHeaders);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        return self::processRequest(self::init('POST', $url, $httpHeaders, $data));
+    }
 
-        return self::processRequest($ch);
+    public static function put($url, $data, array $httpHeaders = []): CurlResponse
+    {
+        return self::processRequest(self::init('PUT', $url, $httpHeaders, $data));
+    }
+
+    public static function delete(string $url, array $httpHeaders = []): CurlResponse
+    {
+        return self::processRequest(self::init('DELETE', $url, $httpHeaders));
     }
 
     /**
-     * Implement a DELETE request and return output
-     *
-     * @param string $url
-     * @param array $httpHeaders
-     *
-     * @return CurlResponse
-     */
-    public static function delete($url, $httpHeaders = array())
-    {
-        $ch = self::init($url, $httpHeaders);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
-
-        return self::processRequest($ch);
-    }
-
-    /**
-     * Execute a request, release the resource and return output
-     *
+     * @inheritDoc
      * @param resource $ch
-     *
      * @throws CurlException if curl request is failed with error
-     *
-     * @return CurlResponse
      */
-    protected static function processRequest($ch)
+    protected static function processRequest($ch): CurlResponse
     {
         # Check for 429 leaky bucket error
-        while (1) {
-            $output   = curl_exec($ch);
-            $response = new CurlResponse($output);
+        while (true) {
+            $output = curl_exec($ch);
 
-            self::$lastHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            if (self::$lastHttpCode != 429) {
+            if (curl_errno($ch)) {
+                throw new CurlException(curl_errno($ch) . ' : ' . curl_error($ch));
+            }
+
+            assert(is_string($output));
+
+            $parsedResponse = self::parseResponse($output);
+            // Note: Missing error handling here.
+            $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $response = new CurlResponse($status, $parsedResponse['headers'], $parsedResponse['body']);
+
+            if ($response->getStatus() != 429) {
                 break;
             }
 
@@ -153,16 +119,37 @@ class CurlRequest
                 throw new ResourceRateLimitException($response->getBody());
             }
 
-            usleep(500000);
+            usleep(self::RATE_LIMIT_RETRY_DELAY);
         }
-
-        if (curl_errno($ch)) {
-            throw new Exception\CurlException(curl_errno($ch) . ' : ' . curl_error($ch));
-        }
-
-        // close curl resource to free up system resources
-        curl_close($ch);
 
         return $response;
+    }
+
+    private static function parseResponse(string $response): array
+    {
+        $response = explode("\r\n\r\n", $response, 2);
+        $headers = [];
+
+        assert(count($response) === 2);
+        [$headers, $body] = $response;
+
+        foreach (explode("\r\n", $headers) as $header) {
+            $pair = explode(': ', $header, 2);
+
+            if (isset($pair[1])) {
+                $headerKey = strtolower($pair[0]);
+                $headers[$headerKey] = $pair[1];
+            }
+        }
+
+        // Gimme yur body.
+        $body = self::parseBody($body);
+
+        return compact('headers', 'body');
+    }
+
+    protected static function parseBody(string $body)
+    {
+        return $body;
     }
 }

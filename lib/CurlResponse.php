@@ -4,64 +4,33 @@ namespace PHPShopify;
 
 class CurlResponse
 {
+    /** @var int */
+    private $status;
     /** @var array */
     private $headers = [];
     /** @var string */
     private $body;
 
-    public function __construct($response)
+    public function __construct(int $status, array $headers, $body)
     {
-        $this->parse($response);
-    }
-
-    /**
-     * @param string $response
-     */
-    private function parse($response)
-    {
-        $response = \explode("\r\n\r\n", $response);
-        if (\count($response) > 1) {
-            // We want the last two parts
-            $response = \array_slice($response, -2, 2);
-            list($headers, $body) = $response;
-            foreach (\explode("\r\n", $headers) as $header) {
-                $pair = \explode(': ', $header, 2);
-                if (isset($pair[1])) {
-                    $headerKey = strtolower($pair[0]);
-                    $this->headers[$headerKey] = $pair[1];
-                }
-            }
-        } else {
-            $body = $response[0];
-        }
-
+        $this->status = $status;
+        $this->headers = $headers;
         $this->body = $body;
     }
 
-    /**
-     * @return array
-     */
-    public function getHeaders()
+    public function getHeader(string $key): ?string
     {
-        return $this->headers;
+        return $this->headers[$key] ?? null;
     }
 
-    /**
-     * @param string $key
-     *
-     * @return string
-     */
-    public function getHeader($key)
-    {
-        return isset($this->headers[$key]) ? $this->headers[$key] : null;
-    }
-
-    /**
-     * @return string
-     */
     public function getBody()
     {
         return $this->body;
+    }
+
+    public function getStatus(): int
+    {
+        return $this->status;
     }
 
     public function __toString()

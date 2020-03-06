@@ -20,20 +20,13 @@ use PHPShopify\ShopifyResource;
  *
  * @method Event Event(integer $id = null)
  * @method Metafield Metafield(integer $id = null)
- *
  */
 class Article extends ShopifyResource
 {
-    /**
-     * @inheritDoc
-     */
     protected $resourceKey = 'article';
 
-    /**
-     * @inheritDoc
-     */
-    protected $childResource = array(
+    protected $childResource = [
         'Event',
         'Metafield',
-    );
+    ];
 }

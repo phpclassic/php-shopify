@@ -1,9 +1,5 @@
 <?php
 /**
- * Created by PhpStorm.
- * @author Tareq Mahmood <tareqtms@yahoo.com>
- * Created at 8/17/16 3:14 PM UTC+06:00
- *
  * @see https://help.shopify.com/api/reference Shopify API Reference
  */
 
@@ -12,7 +8,6 @@ namespace PHPShopify;
 use PHPShopify\Exception\ApiException;
 use PHPShopify\Exception\SdkException;
 use PHPShopify\Exception\CurlException;
-use Psr\Http\Message\ResponseInterface;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,14 +24,7 @@ abstract class ShopifyResource
      *
      * @var array
      */
-    protected $httpHeaders = array();
-
-    /**
-     * HTTP response headers of last executed request
-     *
-     * @var array
-     */
-    public static $lastHttpResponseHeaders = array();
+    protected $httpHeaders = [];
 
     /**
      * The base URL of the API Resource (excluding the '.json' extension).
@@ -62,7 +50,7 @@ abstract class ShopifyResource
      *
      * @var array
      */
-    protected $childResource = array();
+    protected $childResource = [];
 
     /**
      * If search is enabled for the resource
@@ -99,10 +87,10 @@ abstract class ShopifyResource
      * @var array $customPutActions
      * @var array $customDeleteActions
      */
-    protected $customGetActions = array();
-    protected $customPostActions = array();
-    protected $customPutActions = array();
-    protected $customDeleteActions = array();
+    protected $customGetActions = [];
+    protected $customPostActions = [];
+    protected $customPutActions = [];
+    protected $customDeleteActions = [];
 
     /**
      * The ID of the resource
@@ -341,15 +329,27 @@ abstract class ShopifyResource
         return $this->processResponse($response, $dataKey);
     }
 
-    public function get($urlParams = array(), $url = null, $dataKey = null)
+    public function getPages($urlParams = array(), $url = null, $dataKey = null): \Generator
     {
-        if (!$url) $url  = $this->generateUrl($urlParams);
+        if (!$url) {
+            $url  = $this->generateUrl($urlParams);
+        }
 
-        $response = HttpRequestJson::get($url, $this->httpHeaders);
+        while ($url !== null) {
+            $response = HttpRequestJson::get($url, $this->httpHeaders);
 
-        if (!$dataKey) $dataKey = $this->id ? $this->resourceKey : $this->pluralizeKey();
+            if ($response === null || !count($response)) {
+                break;
+            }
 
-        return $this->processResponse($response, $dataKey);
+            if (!$dataKey) {
+                $dataKey = $this->id ? $this->resourceKey : $this->pluralizeKey();
+            }
+
+            yield $this->processResponse($response, $dataKey);
+
+            $url = self::getLinks($response)['next'] ?? null;
+        }
     }
 
     /**
@@ -526,98 +526,54 @@ abstract class ShopifyResource
      *
      * @return array
      */
-    public function processResponse($responseArray, $dataKey = null)
+    public function processResponse(CurlResponse $response, $dataKey = null)
     {
-        self::$lastHttpResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
+        $body = $response->getBody();
 
-        if ($responseArray === null) {
-            //Something went wrong, Checking HTTP Codes
-            $httpOK = 200; //Request Successful, OK.
-            $httpCreated = 201; //Create Successful.
+        if ($body === null) {
+            $httpOK = 200;
+            $httpCreated = 201;
+            $httpCode = $response->getStatus();
 
-            //should be null if any other library used for http calls
-            $httpCode = CurlRequest::$lastHttpCode;
-
-            if ($httpCode != null && $httpCode != $httpOK && $httpCode != $httpCreated) {
+            if ($httpCode !== $httpOK && $httpCode !== $httpCreated) {
                 throw new Exception\CurlException("Request failed with HTTP Code $httpCode.");
             }
         }
 
-        $lastResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
-        $this->getLinks($lastResponseHeaders);
+        if (isset($body['errors'])) {
+            $message = $this->castString($body['errors']);
 
-        if (isset($responseArray['errors'])) {
-            $message = $this->castString($responseArray['errors']);
-
-            throw new ApiException($message, CurlRequest::$lastHttpCode);
+            throw new ApiException($message, $response->getStatus());
         }
 
-        if ($dataKey && isset($responseArray[$dataKey])) {
-            return $responseArray[$dataKey];
-        } else {
-            return $responseArray;
+        if ($dataKey !== null && isset($body[$dataKey])) {
+            return $body[$dataKey];
         }
+
+        return $body;
     }
 
-    public function getLinks($responseHeaders){
-        $this->nextLink = $this->getLink($responseHeaders,'next');
-        $this->prevLink = $this->getLink($responseHeaders,'previous');
-    }
+    private static function getLinks(CurlResponse $response): ?array
+    {
+        $linkHeader = $response->getHeader('link');
 
-    public function getLink($responseHeaders, $type='next'){
-
-        if(array_key_exists('x-shopify-api-version', $responseHeaders)
-            && $responseHeaders['x-shopify-api-version'] < '2019-07'){
+        if($linkHeader === null) {
             return null;
         }
 
-        if(!empty($responseHeaders['link'])) {
-            if (stristr($responseHeaders['link'], '; rel="'.$type.'"') > -1) {
-                $headerLinks = explode(',', $responseHeaders['link']);
-                foreach ($headerLinks as $headerLink) {
-                    if (stristr($headerLink, '; rel="'.$type.'"') === -1) {
-                        continue;
-                    }
+        $links = [];
 
-                    $pattern = '#<(.*?)>; rel="'.$type.'"#m';
-                    preg_match($pattern, $headerLink, $linkResponseHeaders);
-                    if ($linkResponseHeaders) {
-                        return $linkResponseHeaders[1];
-                    }
-                }
+        foreach (explode(', ', $linkHeader) as $headerLink) {
+            if (preg_match('/^<(.*?)>; rel="([^"]+)"/D', $headerLink, $matches)) {
+                $type = $matches[2];
+                assert(in_array($type, ['next', 'previous'], true));
+                assert(!array_key_exists($type, $links[$type]));
+                $links[$type] = $matches[1];
             }
+
+            assert(false);
         }
 
-        return null;
-    }
-
-    public function getPrevLink(){
-        return $this->prevLink;
-    }
-
-    public function getNextLink(){
-        return $this->nextLink;
-    }
-
-    public function getUrlParams($url) {
-        if ($url) {
-            $parts = parse_url($url);
-            return $parts['query'];
-        }
-        return '';
-    }
-
-    public function getNextPageParams(){
-        $nextPageParams = [];
-        $nextPageLink =
-
-        parse_str($this->getUrlParams($this->getNextLink()), $nextPageParams);
-        return $nextPageParams;
-    }
-
-    public function getPrevPageParams(){
-        $nextPageParams = [];
-        parse_str($this->getUrlParams($this->getPrevLink()), $nextPageParams);
-        return $nextPageParams;
+        return count($links) ? $links : null;
     }
 }

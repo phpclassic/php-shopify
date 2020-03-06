@@ -7,7 +7,6 @@
 
 namespace PHPShopify;
 
-
 use PHPShopify\Exception\SdkException;
 
 class AuthHelper

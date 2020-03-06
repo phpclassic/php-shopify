@@ -8,7 +8,6 @@
 
 namespace PHPShopify;
 
-
 use PHPShopify\Exception\SdkException;
 
 class HttpRequestGraphQL extends HttpRequestJson

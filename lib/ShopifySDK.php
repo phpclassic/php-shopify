@@ -9,7 +9,6 @@
 
 namespace PHPShopify;
 
-
 /*
 |--------------------------------------------------------------------------
 | Shopify API SDK Client Class

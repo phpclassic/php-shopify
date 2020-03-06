@@ -207,11 +207,9 @@ class ShopifySDK
 
     /**
      * Shop / API configurations
-     *
      * @var array
      */
-    public static $config = array(
-    );
+    private $config = [];
 
     /**
      * List of resources which are only available through a parent resource
@@ -241,11 +239,21 @@ class ShopifySDK
      *
      * @return void
      */
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
-        if(!empty($config)) {
-            ShopifySDK::config($config);
+        $this->config = $config + ['ApiVersion' => self::$defaultApiVersion];
+
+        //Re-set the admin url if shop url is changed
+        if(isset($config['ShopUrl'])) {
+            self::setAdminUrl();
         }
+
+        //If want to keep more wait time than .5 seconds for each call
+        if (isset($config['AllowedTimePerCall'])) {
+            static::$timeAllowedForEachApiCall = $config['AllowedTimePerCall'];
+        }
+
+        return new ShopifySDK;
     }
 
     /**
@@ -254,7 +262,6 @@ class ShopifySDK
      * Called like an object properties (without parenthesis)
      *
      * @param string $resourceName
-     *
      * @return ShopifyResource
      */
     public function __get($resourceName)
@@ -303,30 +310,9 @@ class ShopifySDK
      *
      * @return ShopifySDK
      */
-    public static function config($config)
+    private function config(array $config)
     {
-        /**
-         * Reset config to it's initial values
-         */
-        self::$config = array(
-            'ApiVersion' => self::$defaultApiVersion
-        );
 
-        foreach ($config as $key => $value) {
-            self::$config[$key] = $value;
-        }
-
-        //Re-set the admin url if shop url is changed
-        if(isset($config['ShopUrl'])) {
-            self::setAdminUrl();
-        }
-
-        //If want to keep more wait time than .5 seconds for each call
-        if (isset($config['AllowedTimePerCall'])) {
-            static::$timeAllowedForEachApiCall = $config['AllowedTimePerCall'];
-        }
-
-        return new ShopifySDK;
     }
 
     /**
@@ -357,33 +343,15 @@ class ShopifySDK
     }
 
     /**
-     * Get the admin url of the configured shop
-     *
-     * @return string
-     */
-    public static function getAdminUrl() {
-        return self::$config['AdminUrl'];
-    }
-
-    /**
-     * Get the api url of the configured shop
-     *
-     * @return string
-     */
-    public static function getApiUrl() {
-        return self::$config['ApiUrl'];
-    }
-
-    /**
      * Maintain maximum 2 calls per second to the API
      *
      * @see https://help.shopify.com/api/guides/api-call-limit
-     *
      * @param bool $firstCallWait Whether to maintain the wait time even if it is the first API call
      */
-    public static function checkApiCallLimit($firstCallWait = false)
+    public static function checkApiCallLimit($firstCallWait = false): void
     {
         $timeToWait = 0;
+
         if (static::$microtimeOfLastApiCall == null) {
             if ($firstCallWait) {
                 $timeToWait = static::$timeAllowedForEachApiCall;

@@ -3,6 +3,7 @@
 namespace PHPShopify;
 
 use PHPShopify\Exception\SdkException;
+use PHPShopify\Http\HttpRequestJson;
 
 class AuthHelper
 {

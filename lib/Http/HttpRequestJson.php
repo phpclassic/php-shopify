@@ -1,11 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * @author Tareq Mahmood <tareqtms@yahoo.com>
- * Created at: 8/24/16 9:03 AM UTC+06:00
- */
 
-namespace PHPShopify;
+namespace PHPShopify\Http;
 
 class HttpRequestJson extends CurlRequest
 {

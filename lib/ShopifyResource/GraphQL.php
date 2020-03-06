@@ -5,7 +5,7 @@
 
 namespace PHPShopify\ShopifyResource;
 
-use PHPShopify\HttpRequestJson;
+use PHPShopify\Http\HttpRequestJson;
 use PHPShopify\ShopifyResource;
 use PHPShopify\Exception\ApiException;
 use PHPShopify\Exception\CurlException;

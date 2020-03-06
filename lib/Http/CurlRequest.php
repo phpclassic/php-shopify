@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPShopify;
+namespace PHPShopify\Http;
 
 use PHPShopify\Exception\CurlException;
 use PHPShopify\Exception\ResourceRateLimitException;

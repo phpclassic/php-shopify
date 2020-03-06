@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPShopify;
+namespace PHPShopify\Http;
 
 class CurlResponse
 {

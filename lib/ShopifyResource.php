@@ -8,6 +8,8 @@ namespace PHPShopify;
 use PHPShopify\Exception\ApiException;
 use PHPShopify\Exception\SdkException;
 use PHPShopify\Exception\CurlException;
+use PHPShopify\Http\HttpRequestJson;
+use PHPShopify\Http\CurlResponse;
 
 /*
 |--------------------------------------------------------------------------

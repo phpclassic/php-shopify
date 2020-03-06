@@ -8,7 +8,6 @@ class CurlResponse
     private $status;
     /** @var array */
     private $headers = [];
-    /** @var string */
     private $body;
 
     public function __construct(int $status, array $headers, $body)

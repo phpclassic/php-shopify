@@ -104,20 +104,6 @@ abstract class ShopifyResource
      * @throws SdkException if Either AccessToken or ApiKey+Password Combination is not found in configuration
      */
 
-    /**
-     * Response Header Link, used for pagination
-     * @see: https://help.shopify.com/en/api/guides/paginated-rest-results?utm_source=exacttarget&utm_medium=email&utm_campaign=api_deprecation_notice_1908
-     * @var string $nextLink
-     */
-    private $nextLink = null;
-
-    /**
-     * Response Header Link, used for pagination
-     * @see: https://help.shopify.com/en/api/guides/paginated-rest-results?utm_source=exacttarget&utm_medium=email&utm_campaign=api_deprecation_notice_1908
-     * @var string $prevLink
-     */
-    private $prevLink = null;
-
     /** @var ShopifySDK */
     protected $sdk;
 
@@ -331,15 +317,17 @@ abstract class ShopifyResource
             $url  = $this->generateUrl($urlParams);
         }
 
+        if (!$dataKey) {
+            $dataKey = $this->id ? $this->resourceKey : $this->pluralizeKey();
+        }
+
         while ($url !== null) {
             $response = HttpRequestJson::get($url, $this->httpHeaders);
 
-            if ($response === null || !count($response)) {
-                break;
-            }
+            $data = $response->getBody();
 
-            if (!$dataKey) {
-                $dataKey = $this->id ? $this->resourceKey : $this->pluralizeKey();
+            if ($data === null || !count($data)) {
+                break;
             }
 
             yield $this->processResponse($response, $dataKey);
@@ -512,17 +500,11 @@ abstract class ShopifyResource
     }
 
     /**
-     * Process the request response
-     *
-     * @param array $responseArray Request response in array format
-     * @param string $dataKey Keyname to fetch data from response array
-     *
+     * @inheritDoc
      * @throws ApiException if the response has an error specified
      * @throws CurlException if response received with unexpected HTTP code.
-     *
-     * @return array
      */
-    public function processResponse(CurlResponse $response, $dataKey = null)
+    public function processResponse(CurlResponse $response, $dataKey = null): array
     {
         $body = $response->getBody();
 

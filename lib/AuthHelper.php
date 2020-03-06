@@ -44,14 +44,8 @@ class AuthHelper
      * @inheritDoc
      * @throws SdkException if SharedSecret is not provided or hmac is not found in the url parameters
      */
-    public static function verifyShopifyRequest(array $config): bool
+    public static function verifyShopifyRequest(array $config, array $data): bool
     {
-        $data = $_GET;
-
-        if(!isset($config['SharedSecret'])) {
-            throw new SdkException("Please provide SharedSecret while configuring the SDK client.");
-        }
-
         $sharedSecret = $config['SharedSecret'];
 
         if (isset($data['hmac'])) {
@@ -80,78 +74,45 @@ class AuthHelper
      * @inheritDoc
      * @param string|string[] $scopes Scopes required by app
      * @param string[] $options
-     * @throws SdkException if required configuration is not provided in $config
      */
     public static function createAuthRequest(
-        array $config, $scopes,
-        ?string $redirectUrl = null,
+        array $config,
+        ?array $scopes,
+        string $redirectUrl,
         ?string $state = null,
-        ?array $options = null,
-        bool $return = false
+        ?array $options = null
     ): ?string
     {
         assert(is_string($scopes) || is_array($scopes));
 
-        if(!isset($config['ShopUrl']) || !isset($config['ApiKey'])) {
-            throw new SdkException("ShopUrl and ApiKey are required for authentication request. Please check SDK configuration!");
-        }
-
-        if (!$redirectUrl) {
-            if(!isset($config['SharedSecret'])) {
-                throw new SdkException("SharedSecret is required for getting access token. Please check SDK configuration!");
-            }
-
-            //If redirect url is the same as this url, then need to check for access token when redirected back from shopify
-            if(isset($_GET['code'])) {
-                return self::getAccessToken($config);
-            } else {
-                $redirectUrl = self::getCurrentUrl();
-            }
-        }
-
-        if (is_array($scopes)) {
+        if ($scopes !== null) {
             $scopes = join(',', $scopes);
         }
 
-        if(!is_string($state)) {
+        if ($state !== null) {
             $state = '&state=' . $state;
         }
 
-        if(!is_array($options)) {
+        if ($options !== null) {
             $options = '&grant_options[]=' . implode(',', $options);
         }
 
         // Official call structure
         // https://{shop}.myshopify.com/admin/oauth/authorize?client_id={api_key}&scope={scopes}&redirect_uri={redirect_uri}&state={nonce}&grant_options[]={option}
-        $authUrl = "{$config['AdminUrl']}oauth/authorize?client_id={$config['ApiKey']}&redirect_uri={$redirectUrl}&scope={$scopes}{$state}{$options}";
-
-        if ($return) {
-            return $authUrl;
-        }
-
-        header("Location: $authUrl");
-
-        return null;
+        return "{$config['AdminUrl']}oauth/authorize?client_id={$config['ApiKey']}&redirect_uri={$redirectUrl}&scope={$scopes}{$state}{$options}";
     }
 
     /**
      * Get Access token for the API
      * Call this when being redirected from shopify page ( to the $redirectUrl) after authentication
-     *
-     * @inheritDoc
-     * @throws SdkException if SharedSecret or ApiKey is missing in SDK configuration or request is not valid
      */
-    public static function getAccessToken(array $config): string
+    public static function getAccessToken(array $config, array $data): string
     {
-        if(!isset($config['SharedSecret']) || !isset($config['ApiKey'])) {
-            throw new SdkException("SharedSecret and ApiKey are required for getting access token. Please check SDK configuration!");
-        }
-
         if(self::verifyShopifyRequest($config)) {
             $data = [
                 'client_id' => $config['ApiKey'],
                 'client_secret' => $config['SharedSecret'],
-                'code' => $_GET['code'],
+                'code' => $data['code'],
             ];
 
             $response = HttpRequestJson::post("{$config['AdminUrl']}oauth/access_token", $data);

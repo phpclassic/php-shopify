@@ -8,16 +8,12 @@ namespace PHPShopify\ShopifyResource;
 use PHPShopify\ShopifyResource;
 
 /**
- * --------------------------------------------------------------------------
- * User -> Custom actions
- * --------------------------------------------------------------------------
- * @method array current()      Get the current logged-in user
+ * @method array current() Get the current logged-in user
  */
 class User extends ShopifyResource
 {
     protected $resourceKey = 'user';
     public $readOnly = true;
-
     protected $customGetActions = [
       'current',
     ];

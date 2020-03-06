@@ -7,7 +7,9 @@
  * @see https://help.shopify.com/api/reference/product_variant Shopify API Reference for Product Variant
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
+
+use PHPShopify\ShopifyResource;
 
 
 /**

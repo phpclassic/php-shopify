@@ -7,8 +7,9 @@
  * @see https://help.shopify.com/api/reference/sales_channels/productlisting Shopify API Reference for Shipping Zone
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 class ProductListing extends ShopifyResource
 {

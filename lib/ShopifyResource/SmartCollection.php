@@ -7,8 +7,9 @@
  * @see https://help.shopify.com/api/reference/smartcollection Shopify API Reference for SmartCollection
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 /**
  * --------------------------------------------------------------------------

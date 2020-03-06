@@ -7,8 +7,9 @@
  * @see https://help.shopify.com/api/reference/fulfillment Shopify API Reference for Fulfillment
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 /**
  * --------------------------------------------------------------------------

@@ -7,9 +7,9 @@
  * @see https://help.shopify.com/api/reference/draftorder Shopify API Reference for DraftOrder
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
-
+use PHPShopify\ShopifyResource;
 
 /**
  * --------------------------------------------------------------------------

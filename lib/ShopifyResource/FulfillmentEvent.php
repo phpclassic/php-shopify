@@ -7,8 +7,9 @@
  * @see https://help.shopify.com/api/reference/fulfillmentevent Shopify API Reference for FulfillmentEvent
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 class FulfillmentEvent extends ShopifyResource
 {

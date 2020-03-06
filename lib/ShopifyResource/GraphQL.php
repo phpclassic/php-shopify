@@ -8,16 +8,15 @@
  * @see https://help.shopify.com/en/api/graphql-admin-api GraphQL Admin API
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
-
+use PHPShopify\ShopifyResource;
 use PHPShopify\Exception\ApiException;
 use PHPShopify\Exception\CurlException;
 use PHPShopify\Exception\SdkException;
 
 class GraphQL extends ShopifyResource
 {
-
     /**
      * @inheritdoc
      */

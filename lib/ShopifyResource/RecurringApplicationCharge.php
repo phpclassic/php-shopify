@@ -7,8 +7,9 @@
  * @see https://help.shopify.com/api/reference/recurringapplicationcharge Shopify API Reference for RecurringApplicationCharge
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 /**
  * --------------------------------------------------------------------------

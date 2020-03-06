@@ -7,8 +7,9 @@
  * @see https://help.shopify.com/api/reference/collect Shopify API Reference for Collect
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 class Collect extends ShopifyResource
 {

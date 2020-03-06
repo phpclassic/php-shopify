@@ -7,8 +7,9 @@
  * @see https://help.shopify.com/api/reference/customer Shopify API Reference for Customer
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 /**
  * --------------------------------------------------------------------------

@@ -7,8 +7,9 @@
  * @see https://help.shopify.com/api/reference/refund Shopify API Reference for Refund
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 /**
  * --------------------------------------------------------------------------

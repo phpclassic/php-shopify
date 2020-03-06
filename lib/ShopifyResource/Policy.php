@@ -7,8 +7,9 @@
  * @see https://help.shopify.com/api/reference/policy Shopify API Reference for Policy
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 class Policy extends ShopifyResource
 {

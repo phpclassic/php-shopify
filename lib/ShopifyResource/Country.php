@@ -7,8 +7,9 @@
  * @see https://help.shopify.com/api/reference/country Shopify API Reference for Country
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 /**
  * --------------------------------------------------------------------------

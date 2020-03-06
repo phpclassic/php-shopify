@@ -8,8 +8,9 @@
  * @see https://help.shopify.com/en/api/reference/store-properties/currency Shopify API Reference for Currency
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 class Currency extends ShopifyResource
 {

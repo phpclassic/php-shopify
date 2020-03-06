@@ -7,8 +7,9 @@
  * @see https://help.shopify.com/api/reference/customersavedsearch Shopify API Reference for CustomerSavedSearch
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 /**
  * --------------------------------------------------------------------------

@@ -7,7 +7,9 @@
  * @see https://help.shopify.com/api/reference/blog Shopify API Reference for Blog
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
+
+use PHPShopify\ShopifyResource;
 
 /**
  * --------------------------------------------------------------------------

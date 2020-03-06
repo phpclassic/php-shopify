@@ -7,8 +7,9 @@
  * @see https://help.shopify.com/api/reference/customeraddress Shopify API Reference for CustomerAddress
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 /**
  * --------------------------------------------------------------------------

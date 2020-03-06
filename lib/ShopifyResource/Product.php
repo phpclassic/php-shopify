@@ -7,8 +7,9 @@
  * @see https://help.shopify.com/api/reference/product Shopify API Reference for Product
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 /**
  * --------------------------------------------------------------------------

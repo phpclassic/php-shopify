@@ -7,8 +7,9 @@
  * @see https://help.shopify.com/api/reference/discount Shopify API Reference for Discount
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 /**
  * --------------------------------------------------------------------------

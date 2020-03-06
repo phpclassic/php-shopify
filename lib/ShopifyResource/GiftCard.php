@@ -7,8 +7,9 @@
  * @see https://help.shopify.com/api/reference/gift_card Shopify API Reference for GiftCard
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 /**
  * --------------------------------------------------------------------------

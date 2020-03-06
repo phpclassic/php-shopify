@@ -6,7 +6,9 @@
  * @see https://help.shopify.com/api/reference/inventoryitem
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
+
+use PHPShopify\ShopifyResource;
 
 class InventoryItem extends ShopifyResource
 {

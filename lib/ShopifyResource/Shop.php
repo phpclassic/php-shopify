@@ -7,8 +7,9 @@
  * @see https://help.shopify.com/api/reference/shop Shopify API Reference for Shop
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 class Shop extends ShopifyResource
 {

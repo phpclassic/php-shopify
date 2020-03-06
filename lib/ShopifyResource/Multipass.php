@@ -7,9 +7,9 @@
  * @see https://help.shopify.com/api/reference/multipass Shopify API Reference for Multipass
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
-
+use PHPShopify\ShopifyResource;
 use PHPShopify\Exception\ApiException;
 
 class Multipass extends ShopifyResource

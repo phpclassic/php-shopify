@@ -7,9 +7,9 @@
  * @see https://help.shopify.com/api/reference/order Shopify API Reference for Order
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
-
+use PHPShopify\ShopifyResource;
 
 /**
  * --------------------------------------------------------------------------

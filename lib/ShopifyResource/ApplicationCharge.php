@@ -7,8 +7,9 @@
  * @see https://help.shopify.com/api/reference/applicationcharge Shopify API Reference for ApplicationCharge
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 class ApplicationCharge extends ShopifyResource
 {

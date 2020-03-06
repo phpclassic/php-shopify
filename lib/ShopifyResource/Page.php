@@ -7,8 +7,9 @@
  * @see https://help.shopify.com/api/reference/page Shopify API Reference for Page
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 /**
  * --------------------------------------------------------------------------

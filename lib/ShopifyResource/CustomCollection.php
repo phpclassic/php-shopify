@@ -7,8 +7,9 @@
  * @see https://help.shopify.com/api/reference/customcollection Shopify API Reference for CustomCollection
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 /**
  * --------------------------------------------------------------------------

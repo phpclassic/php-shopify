@@ -7,8 +7,9 @@
  * @see https://help.shopify.com/api/reference/comment Shopify API Reference for Comment
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
 
+use PHPShopify\ShopifyResource;
 
 /**
  *

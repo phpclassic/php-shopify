@@ -6,7 +6,9 @@
  * @see https://help.shopify.com/api/reference/inventorylevel
  */
 
-namespace PHPShopify;
+namespace PHPShopify\ShopifyResource;
+
+use PHPShopify\ShopifyResource;
 
 /**
  * Class InventoryLevel

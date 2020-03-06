@@ -198,7 +198,7 @@ abstract class ShopifyResource
             //otherwise the childname will be the class name
             $childClassName = !is_numeric($childKey) ? $childKey : $name;
 
-            $childClass = __NAMESPACE__ . "\\" . $childClassName;
+            $childClass = self::class . "\\" . $childClassName;
 
             //If first argument is provided, it will be considered as the ID of the resource.
             $resourceID = !empty($arguments) ? $arguments[0] : null;
@@ -339,7 +339,17 @@ abstract class ShopifyResource
         if (!$dataKey) $dataKey = $this->id ? $this->resourceKey : $this->pluralizeKey();
 
         return $this->processResponse($response, $dataKey);
+    }
 
+    public function get($urlParams = array(), $url = null, $dataKey = null)
+    {
+        if (!$url) $url  = $this->generateUrl($urlParams);
+
+        $response = HttpRequestJson::get($url, $this->httpHeaders);
+
+        if (!$dataKey) $dataKey = $this->id ? $this->resourceKey : $this->pluralizeKey();
+
+        return $this->processResponse($response, $dataKey);
     }
 
     /**

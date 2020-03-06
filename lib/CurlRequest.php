@@ -10,14 +10,6 @@ namespace PHPShopify;
 use PHPShopify\Exception\CurlException;
 use PHPShopify\Exception\ResourceRateLimitException;
 
-/*
-|--------------------------------------------------------------------------
-| CurlRequest
-|--------------------------------------------------------------------------
-|
-| This class handles get, post, put, delete HTTP requests
-|
-*/
 class CurlRequest
 {
     /**
@@ -73,11 +65,10 @@ class CurlRequest
      * @param string $url
      * @param array $httpHeaders
      *
-     * @return string
+     * @return CurlResponse
      */
     public static function get($url, $httpHeaders = array())
     {
-        //Initialize the Curl resource
         $ch = self::init($url, $httpHeaders);
 
         return self::processRequest($ch);
@@ -90,12 +81,11 @@ class CurlRequest
      * @param array $data
      * @param array $httpHeaders
      *
-     * @return string
+     * @return CurlResponse
      */
     public static function post($url, $data, $httpHeaders = array())
     {
         $ch = self::init($url, $httpHeaders);
-        //Set the request type
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
@@ -109,12 +99,11 @@ class CurlRequest
      * @param array $data
      * @param array $httpHeaders
      *
-     * @return string
+     * @return CurlResponse
      */
     public static function put($url, $data, $httpHeaders = array())
     {
         $ch = self::init($url, $httpHeaders);
-        //set the request type
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
@@ -127,12 +116,11 @@ class CurlRequest
      * @param string $url
      * @param array $httpHeaders
      *
-     * @return string
+     * @return CurlResponse
      */
     public static function delete($url, $httpHeaders = array())
     {
         $ch = self::init($url, $httpHeaders);
-        //set the request type
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
 
         return self::processRequest($ch);
@@ -145,7 +133,7 @@ class CurlRequest
      *
      * @throws CurlException if curl request is failed with error
      *
-     * @return string
+     * @return CurlResponse
      */
     protected static function processRequest($ch)
     {
@@ -175,9 +163,6 @@ class CurlRequest
         // close curl resource to free up system resources
         curl_close($ch);
 
-        self::$lastHttpResponseHeaders = $response->getHeaders();
-
-        return $response->getBody();
+        return $response;
     }
-
 }

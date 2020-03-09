@@ -294,7 +294,7 @@ class ShopifySDK {
             throw new SdkException($message);
         }
 
-        $resourceClassName = __NAMESPACE__ . "\\$resourceName";
+        $resourceClassName = ShopifyResource::class . "\\{$resourceName}";
 
         //If first argument is provided, it will be considered as the ID of the resource.
         $resourceID = !empty($arguments) ? $arguments[0] : null;

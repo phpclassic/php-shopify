@@ -54,6 +54,7 @@ $config = [
 ];
 
 $shopifyClient = new PHPShopify\ShopifySDK($config);
+$shopifyClient = new PHPShopify\ShopifySDK($config);
 ```
 
 2) Create the authentication request 

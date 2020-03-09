@@ -16,7 +16,7 @@ class CustomerAddress extends ShopifyResource {
         'default' => 'makeDefault'
     ];
 
-    protected function pluralizeKey() {
+    protected function pluralizeKey(): string {
         return 'addresses';
     }
 

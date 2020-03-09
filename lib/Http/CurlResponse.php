@@ -16,7 +16,7 @@ class CurlResponse {
     }
 
     public function getHeader(string $key): ?string {
-        return $this->headers[$key] ?? null;
+        return $this->headers[$key][0] ?? null;
     }
 
     public function getBody() {

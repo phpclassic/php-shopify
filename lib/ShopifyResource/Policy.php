@@ -12,7 +12,7 @@ class Policy extends ShopifyResource {
     public $countEnabled = false;
     public $readOnly = true;
 
-    public function pluralizeKey() {
+    public function pluralizeKey(): string {
         return 'policies';
     }
 }

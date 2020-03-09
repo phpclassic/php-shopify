@@ -15,7 +15,7 @@ class CurlRequest {
      * This allows use of keepalive.
      * @var resource
      */
-    private static $ch;
+    protected static $ch;
 
     /**
      * @inheritDoc
@@ -34,13 +34,11 @@ class CurlRequest {
         curl_setopt(self::$ch, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt(self::$ch, CURLOPT_URL, $url);
 
-        if ($data !== null) {
-            $headers['Content-Length'] = strlen($data);
-            curl_setopt(self::$ch, CURLOPT_POSTFIELDS, $data);
-        } else {
-            curl_setopt(self::$ch, CURLOPT_POSTFIELDS, $data);
+        if ($data !== null && !is_string($data)) {
+            $data = static::serializeData($data);
         }
 
+        curl_setopt(self::$ch, CURLOPT_POSTFIELDS, $data);
         $headers = [];
 
         foreach ($httpHeaders as $key => $value) {
@@ -61,7 +59,7 @@ class CurlRequest {
     }
 
     public static function get(string $url, array $httpHeaders = []): CurlResponse {
-        return self::processRequest(self::init('GET', $url, $httpHeaders));
+        return static::processRequest(static::init('GET', $url, $httpHeaders));
     }
 
     /**
@@ -69,15 +67,15 @@ class CurlRequest {
      * @param string|array $data
      */
     public static function post(string $url, $data, array $httpHeaders = []): CurlResponse {
-        return self::processRequest(self::init('POST', $url, $httpHeaders, $data));
+        return static::processRequest(static::init('POST', $url, $httpHeaders, $data));
     }
 
     public static function put($url, $data, array $httpHeaders = []): CurlResponse {
-        return self::processRequest(self::init('PUT', $url, $httpHeaders, $data));
+        return static::processRequest(static::init('PUT', $url, $httpHeaders, $data));
     }
 
     public static function delete(string $url, array $httpHeaders = []): CurlResponse {
-        return self::processRequest(self::init('DELETE', $url, $httpHeaders));
+        return static::processRequest(static::init('DELETE', $url, $httpHeaders));
     }
 
     /**
@@ -96,7 +94,7 @@ class CurlRequest {
 
             assert(is_string($output));
 
-            $parsedResponse = self::parseResponse($output);
+            $parsedResponse = static::parseResponse($output);
             // Note: Missing error handling here.
             $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
             $response = new CurlResponse($status, $parsedResponse['headers'], $parsedResponse['body']);
@@ -111,7 +109,7 @@ class CurlRequest {
                 throw new ResourceRateLimitException($response->getBody());
             }
 
-            usleep(self::RATE_LIMIT_RETRY_DELAY);
+            usleep(static::RATE_LIMIT_RETRY_DELAY);
         }
 
         return $response;
@@ -121,21 +119,28 @@ class CurlRequest {
         $response = explode("\r\n\r\n", $response, 2);
 
         assert(count($response) === 2);
-        [$headers, $body] = $response;
+        $headers = [];
+        [$headerString, $bodyString] = $response;
 
-        foreach (explode("\r\n", $headers) as $header) {
+        foreach (explode("\r\n", $headerString) as $header) {
             $pair = explode(': ', $header, 2);
+            [$key, $value] = $pair + [1 => null];
+            $key = strtolower($key);
 
-            if (isset($pair[1])) {
-                $headerKey = strtolower($pair[0]);
-                $headers[$headerKey] = $pair[1];
+            if (!array_key_exists($key, $headers)) {
+                $headers[$key] = [];
             }
+
+            $headers[$key][] = $value;
         }
 
-        // Gimme yur body.
-        $body = self::parseBody($body);
+        $body = static::parseBody($bodyString);
 
         return compact('headers', 'body');
+    }
+
+    protected static function serializeData($data): string {
+        return http_build_query($data);
     }
 
     protected static function parseBody(string $body) {

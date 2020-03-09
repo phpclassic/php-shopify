@@ -17,7 +17,7 @@ class CustomerSavedSearch extends ShopifyResource {
         'Customer'
     ];
 
-    protected function pluralizeKey() {
+    protected function pluralizeKey(): string {
         return 'customer_saved_searches';
     }
 }

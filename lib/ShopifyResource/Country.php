@@ -8,13 +8,8 @@ namespace PHPShopify\ShopifyResource;
 use PHPShopify\ShopifyResource;
 
 /**
- * --------------------------------------------------------------------------
- * Country -> Child Resources
- * --------------------------------------------------------------------------
  * @property-read Province $Province
- *
  * @method Province Province(integer $id = null)
- *
  */
 class Country extends ShopifyResource {
     protected $resourceKey = 'country';
@@ -22,7 +17,7 @@ class Country extends ShopifyResource {
         'Province'
     ];
 
-    protected function pluralizeKey() {
+    protected function pluralizeKey(): string {
         return 'countries';
     }
 }

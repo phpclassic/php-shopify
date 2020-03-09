@@ -6,9 +6,9 @@ use PHPShopify\TestSimpleResource;
 
 class BlogTest extends TestSimpleResource {
     public $postArray = [
-        "title" => "PHPShopify Test Blog"
+        "title" => "Mega Test Blog"
     ];
     public $putArray = [
-        "title" => "PHPShopify Test Blog Modified"
+        "title" => "Mega Test Blog Modified"
     ];
 }

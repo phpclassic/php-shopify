@@ -7,7 +7,6 @@ class HttpRequestJson extends CurlRequest {
         // Note: Is null valid for any shopify calls?
         if ($data !== null) {
             $httpHeaders['Content-type'] = 'application/json';
-            $data = self::encode($data);
         }
 
         return parent::init($method, $url, $httpHeaders, $data);
@@ -15,6 +14,10 @@ class HttpRequestJson extends CurlRequest {
 
     protected static function parseBody(string $body) {
         return json_decode($body, true);
+    }
+
+    public static function serializeData($data): string {
+        return self::encode($data);
     }
 
     public static function encode($data): string {

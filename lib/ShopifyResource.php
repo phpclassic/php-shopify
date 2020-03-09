@@ -377,10 +377,10 @@ abstract class ShopifyResource
         return [$dataKey => $dataArray];
     }
 
-    protected static function castString(array $array): string
+    protected static function castString($array): string
     {
         if (!is_array($array)) {
-            return (string) $array;
+            return (string)$array;
         }
 
         $string = '';

@@ -396,7 +396,7 @@ abstract class ShopifyResource {
         if (isset($body['errors'])) {
             $message = self::castString($body['errors']);
 
-            throw new ApiException($message, $response->getStatus());
+            ApiException::factory($message, $response->getStatus());
         }
 
         return $body;

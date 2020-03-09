@@ -2,5 +2,5 @@
 
 namespace PHPShopify\Exception;
 
-class CurlException extends \Exception {
+class CurlException extends SdkException {
 }

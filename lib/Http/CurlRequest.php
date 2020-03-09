@@ -12,7 +12,27 @@ class CurlRequest {
     const RATE_LIMIT_RETRY_DELAY = 500000;
 
     /**
+     * Number of times to retry on rate limit.
+     */
+    const RATE_LIMIT_RETRIES = 10;
+    /**
+     * Amount of time to retry for (not exact) in seconds.
+     */
+    const RATE_LIMIT_TIMEOUT = 10;
+
+    /**
+     * Response timeout in seconds.
+     */
+    const TIMEOUT = 10;
+    /**
+     * Connect timeout in seconds.
+     */
+    const CONNECT_TIMEOUT = 5;
+
+    /**
      * This allows use of keepalive.
+     *
+     * There is some risk in this that settings might carry over
      * @var resource
      */
     protected static $ch;
@@ -28,9 +48,12 @@ class CurlRequest {
 
             curl_setopt(self::$ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt(self::$ch, CURLOPT_HEADER, true);
-            curl_setopt(self::$ch, CURLOPT_USERAGENT, 'PHPClassic/PHPShopify');
+            curl_setopt(self::$ch, CURLOPT_USERAGENT, 'PHPClassic/PHPShopify (v2)');
+            curl_setopt(self::$ch, CURLOPT_TIMEOUT, static::TIMEOUT);
+            curl_setopt(self::$ch, CURLOPT_CONNECTTIMEOUT, static::CONNECT_TIMEOUT);
+            curl_setopt(self::$ch, CURLOPT_ENCODING, 'gzip,deflate');
         }
-vaR_dump($url);
+
         curl_setopt(self::$ch, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt(self::$ch, CURLOPT_URL, $url);
 
@@ -84,6 +107,8 @@ vaR_dump($url);
      * @throws CurlException if curl request is failed with error
      */
     protected function processRequest($ch): CurlResponse {
+        $start = microtime(true);
+        $tries = 0;
         # Check for 429 leaky bucket error
         while (true) {
             $output = curl_exec($ch);
@@ -104,8 +129,15 @@ vaR_dump($url);
             }
 
             $limitHeader = explode('/', $response->getHeader('X-Shopify-Shop-Api-Call-Limit'), 2);
+            $tries++;
+            $took = (microtime(true) - $start) + (static::RATE_LIMIT_RETRY_DELAY / 1000000);
 
-            if (isset($limitHeader[1]) && $limitHeader[0] < $limitHeader[1]) {
+            /**
+             * This makes no sense. It can likely ignore this header and use Retry-After if set otherwise through an
+             * exception.
+             */
+            if ((isset($limitHeader[1]) && $limitHeader[0] < $limitHeader[1]) ||
+                $tries > static::RATE_LIMIT_RETRIES || $took > static::RATE_LIMIT_TIMEOUT) {
                 throw new ResourceRateLimitException($response->getBody());
             }
 

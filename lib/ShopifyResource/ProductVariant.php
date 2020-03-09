@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/product_variant Shopify API Reference for Product Variant
+ * @see https://help.shopify.com/api/reference/product_variant
  */
 
 namespace PHPShopify\ShopifyResource;

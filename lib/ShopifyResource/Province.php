@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/province Shopify API Reference for Province
+ * @see https://help.shopify.com/api/reference/province
  */
 
 namespace PHPShopify\ShopifyResource;

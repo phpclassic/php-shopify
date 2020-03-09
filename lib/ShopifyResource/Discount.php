@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/discount Shopify API Reference for Discount
+ * @see https://help.shopify.com/api/reference/discount
  */
 
 namespace PHPShopify\ShopifyResource;

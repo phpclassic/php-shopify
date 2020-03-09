@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/shop Shopify API Reference for Shop
+ * @see https://help.shopify.com/api/reference/shop
  */
 
 namespace PHPShopify\ShopifyResource;

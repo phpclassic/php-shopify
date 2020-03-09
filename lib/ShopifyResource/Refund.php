@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/refund Shopify API Reference for Refund
+ * @see https://help.shopify.com/api/reference/refund
  */
 
 namespace PHPShopify\ShopifyResource;

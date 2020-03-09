@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/redirect Shopify API Reference for Redirect
+ * @see https://help.shopify.com/api/reference/redirect
  */
 
 namespace PHPShopify\ShopifyResource;

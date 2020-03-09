@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/en/api/reference/store-properties/currency Shopify API Reference for Currency
+ * @see https://help.shopify.com/en/api/reference/store-properties/currency
  */
 
 namespace PHPShopify\ShopifyResource;

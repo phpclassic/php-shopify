@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/order_risks Shopify API Reference for Order Risks
+ * @see https://help.shopify.com/api/reference/order_risks
  */
 
 namespace PHPShopify\ShopifyResource;

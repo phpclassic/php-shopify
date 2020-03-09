@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/draftorder Shopify API Reference for DraftOrder
+ * @see https://help.shopify.com/api/reference/draftorder
  */
 
 namespace PHPShopify\ShopifyResource;

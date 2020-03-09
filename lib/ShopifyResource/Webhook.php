@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/webhook Shopify API Reference for Webhook
+ * @see https://help.shopify.com/api/reference/webhook
  */
 
 namespace PHPShopify\ShopifyResource;

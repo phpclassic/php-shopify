@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/smartcollection Shopify API Reference for SmartCollection
+ * @see https://help.shopify.com/api/reference/smartcollection
  */
 
 namespace PHPShopify\ShopifyResource;

@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/transaction Shopify API Reference for Transaction
+ * @see https://help.shopify.com/api/reference/transaction
  */
 
 namespace PHPShopify\ShopifyResource;

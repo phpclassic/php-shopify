@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/gift_card Shopify API Reference for GiftCard
+ * @see https://help.shopify.com/api/reference/gift_card
  */
 
 namespace PHPShopify\ShopifyResource;

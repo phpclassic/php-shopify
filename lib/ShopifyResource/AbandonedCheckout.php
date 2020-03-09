@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/abandoned_checkouts Shopify API Reference for Abandoned checkouts
+ * @see https://help.shopify.com/api/reference/abandoned_checkouts
  */
 
 namespace PHPShopify\ShopifyResource;

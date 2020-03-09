@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/discounts/pricerule Shopify API Reference for PriceRule
+ * @see https://help.shopify.com/api/reference/discounts/pricerule
  */
 
 namespace PHPShopify\ShopifyResource;

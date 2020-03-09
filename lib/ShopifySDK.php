@@ -66,6 +66,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read ShopifyResource\Blog $Blog
  * @property-read ShopifyResource\CarrierService $CarrierService
  * @property-read ShopifyResource\Collect $Collect
+ * @property-read ShopifyResource\Collection $Collection
  * @property-read ShopifyResource\Comment $Comment
  * @property-read ShopifyResource\Country $Country
  * @property-read ShopifyResource\Currency $Currency
@@ -100,11 +101,11 @@ use PHPShopify\Exception\SdkException;
  * @property-read ShopifyResource\User $User
  * @property-read ShopifyResource\Webhook $Webhook
  * @property-read ShopifyResource\GraphQL $GraphQL
- *
  * @method ShopifyResource\AbandonedCheckout AbandonedCheckout(integer $id = null)
  * @method ShopifyResource\Blog Blog(integer $id = null)
  * @method ShopifyResource\CarrierService CarrierService(integer $id = null)
  * @method ShopifyResource\Collect Collect(integer $id = null)
+ * @method ShopifyResource\Collection Collection(integer $id = null)
  * @method ShopifyResource\Comment Comment(integer $id = null)
  * @method ShopifyResource\Country Country(integer $id = null)
  * @method ShopifyResource\Currency Currency(integer $id = null)
@@ -152,6 +153,7 @@ class ShopifySDK {
         'Blog',
         'CarrierService',
         'Collect',
+        'Collection',
         'Comment',
         'Country',
         'Currency',

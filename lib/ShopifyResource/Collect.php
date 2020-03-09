@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/collect Shopify API Reference for Collect
+ * @see https://help.shopify.com/api/reference/collect
  */
 
 namespace PHPShopify\ShopifyResource;

@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/metafield Shopify API Reference for Metafield
+ * @see https://help.shopify.com/api/reference/metafield
  */
 
 namespace PHPShopify\ShopifyResource;

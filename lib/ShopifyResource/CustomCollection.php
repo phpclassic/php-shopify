@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/customcollection Shopify API Reference for CustomCollection
+ * @see https://help.shopify.com/api/reference/customcollection
  */
 
 namespace PHPShopify\ShopifyResource;

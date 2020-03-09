@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/applicationcharge Shopify API Reference for ApplicationCharge
+ * @see https://help.shopify.com/api/reference/applicationcharge
  */
 
 namespace PHPShopify\ShopifyResource;

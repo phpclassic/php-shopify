@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/fulfillmentevent Shopify API Reference for FulfillmentEvent
+ * @see https://help.shopify.com/api/reference/fulfillmentevent
  */
 
 namespace PHPShopify\ShopifyResource;

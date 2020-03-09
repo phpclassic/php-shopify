@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/customersavedsearch Shopify API Reference for CustomerSavedSearch
+ * @see https://help.shopify.com/api/reference/customersavedsearch
  */
 
 namespace PHPShopify\ShopifyResource;

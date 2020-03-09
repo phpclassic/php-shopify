@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/scripttag Shopify API Reference for ScriptTag
+ * @see https://help.shopify.com/api/reference/scripttag
  */
 
 namespace PHPShopify\ShopifyResource;

@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/comment Shopify API Reference for Comment
+ * @see https://help.shopify.com/api/reference/comment
  */
 
 namespace PHPShopify\ShopifyResource;

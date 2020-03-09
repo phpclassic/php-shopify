@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/recurringapplicationcharge Shopify API Reference for RecurringApplicationCharge
+ * @see https://help.shopify.com/api/reference/recurringapplicationcharge
  */
 
 namespace PHPShopify\ShopifyResource;

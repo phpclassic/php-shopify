@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/product_image Shopify API Reference for Product Image
+ * @see https://help.shopify.com/api/reference/product_image
  */
 
 namespace PHPShopify\ShopifyResource;

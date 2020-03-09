@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/multipass Shopify API Reference for Multipass
+ * @see https://help.shopify.com/api/reference/multipass
  */
 
 namespace PHPShopify\ShopifyResource;

@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/carrierservice Shopify API Reference for CarrierService
+ * @see https://help.shopify.com/api/reference/carrierservice
  */
 
 namespace PHPShopify\ShopifyResource;

@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/event/ Shopify API Reference for Event
+ * @see https://help.shopify.com/api/reference/event/
  */
 
 namespace PHPShopify\ShopifyResource;

@@ -1,6 +1,6 @@
 <?php
 /**
- * @see https://help.shopify.com/api/reference/shipping_zone Shopify API Reference for Shipping Zone
+ * @see https://help.shopify.com/api/reference/shipping_zone
  */
 
 namespace PHPShopify\ShopifyResource;

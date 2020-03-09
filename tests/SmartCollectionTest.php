@@ -1,34 +1,25 @@
 <?php
-/**
- * Created by PhpStorm.
- * @author Tareq Mahmood <tareqtms@yahoo.com>
- * Created at: 9/10/16 10:52 AM UTC+06:00
- */
 
 namespace PHPShopify;
 
-
 class SmartCollectionTest extends TestSimpleResource
 {
-    /**
-     * @inheritDoc
-     */
-    public $postArray = array(
-        "title" => "Macbooks",
+    public $postArray = [
+        "title" => "McBooks",
         "published" => false,
         "rules"=> [
             [
                 "column" => "vendor",
                 "relation" => "equals",
-                "condition" => "Apple"
+                "condition" => "Coconut",
             ]
         ],
-    );
+    ];
 
     /**
      * @inheritDoc
      */
-    public $putArray = array(
-        "body_html" => "<p>The best selling Macbooks ever</p>",
-    );
+    public $putArray = [
+        "body_html" => "<p>The most expensive McBook ever.</p>",
+    ];
 }

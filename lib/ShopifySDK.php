@@ -140,8 +140,7 @@ use PHPShopify\Exception\SdkException;
  * @method ShopifyResource\Webhook Webhook(integer $id = null)
  * @method ShopifyResource\GraphQL GraphQL()
  */
-class ShopifySDK
-{
+class ShopifySDK {
     /**
      * List of available resources which can be called from this client
      *
@@ -229,11 +228,10 @@ class ShopifySDK
         'Province'          => 'Country',
         'Refund'            => 'Order',
         'Transaction'       => 'Order',
-        'UsageCharge'       => 'RecurringApplicationCharge',
+        'UsageCharge'       => 'RecurringApplicationCharge'
     ];
 
-    public function __construct(array $config = [])
-    {
+    public function __construct(array $config = []) {
         $config += ['ApiVersion' => self::$defaultApiVersion];
 
         $shopUrl = $config['ShopUrl'];
@@ -257,8 +255,7 @@ class ShopifySDK
         }
     }
 
-    public function getConfig(): array
-    {
+    public function getConfig(): array {
         return $this->config;
     }
 
@@ -270,8 +267,7 @@ class ShopifySDK
      * @param string $resourceName
      * @return ShopifyResource
      */
-    public function __get($resourceName)
-    {
+    public function __get($resourceName) {
         return $this->$resourceName();
     }
 
@@ -287,8 +283,7 @@ class ShopifySDK
      *
      * @return ShopifyResource
      */
-    public function __call($resourceName, $arguments)
-    {
+    public function __call($resourceName, $arguments) {
         if (!in_array($resourceName, $this->resources)) {
             if (isset($this->childResources[$resourceName])) {
                 $message = "$resourceName is a child resource of " . $this->childResources[$resourceName] . ". Cannot be accessed directly.";
@@ -316,8 +311,7 @@ class ShopifySDK
      * @see https://help.shopify.com/api/guides/api-call-limit
      * @param bool $firstCallWait Whether to maintain the wait time even if it is the first API call
      */
-    public static function checkApiCallLimit($firstCallWait = false): void
-    {
+    public static function checkApiCallLimit($firstCallWait = false): void {
         $timeToWait = 0;
 
         if (static::$microtimeOfLastApiCall == null) {

@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/phpclassic/php-shopify.svg?branch=master)](https://travis-ci.org/phpclassic/php-shopify) [![Monthly Downloads](https://poser.pugx.org/phpclassic/php-shopify/d/monthly)](https://packagist.org/packages/phpclassic/php-shopify) [![Total Downloads](https://poser.pugx.org/phpclassic/php-shopify/downloads)](https://packagist.org/packages/phpclassic/php-shopify) [![Latest Stable Version](https://poser.pugx.org/phpclassic/php-shopify/v/stable)](https://packagist.org/packages/phpclassic/php-shopify) [![Latest Unstable Version](https://poser.pugx.org/phpclassic/php-shopify/v/unstable)](https://packagist.org/packages/phpclassic/php-shopify) [![License](https://poser.pugx.org/phpclassic/php-shopify/license)](https://packagist.org/packages/phpclassic/php-shopify) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ME9N6M2B87XT4&currency_code=USD&source=url)
 
-PHPShopify is a simple SDK implementation of Shopify API. It helps accessing the API in an object oriented way. 
+PHPShopify is a minimal SDK for using the Shopify API. 
 
 ## Installation
 Install with Composer
@@ -11,8 +11,8 @@ composer require phpclassic/php-shopify
 ```
 
 ### Requirements
-PHPShopify uses curl extension for handling http calls. So you need to have the curl extension installed and enabled with PHP.
->However if you prefer to use any other available package library for handling HTTP calls, you can easily do so by modifying 1 line in each of the `get()`, `post()`, `put()`, `delete()` methods in `PHPShopify\HttpRequestJson` class.
+
+PHPShopify uses curl extension for handling http calls. So you need to have the PHP curl extension installed and enabled.
 
 ## Usage
 
@@ -22,24 +22,24 @@ You can use PHPShopify in a pretty simple object oriented way.
 If you are using your own private API, provide the ApiKey and Password. 
 
 ```php
-$config = array(
+$config = [
     'ShopUrl' => 'yourshop.myshopify.com',
     'ApiKey' => '***YOUR-PRIVATE-API-KEY***',
-    'Password' => '***YOUR-PRIVATE-API-PASSWORD***',
-);
+    'Password' => '***YOUR-PRIVATE-API-PASSWORD***'
+];
 
-PHPShopify\ShopifySDK::config($config);
+$shopifyClient = new PHPShopify\ShopifySDK($config);
 ```
 
 For Third party apps, use the permanent access token.
 
 ```php
-$config = array(
+$config = [
     'ShopUrl' => 'yourshop.myshopify.com',
-    'AccessToken' => '***ACCESS-TOKEN-FOR-THIRD-PARTY-APP***',
-);
+    'AccessToken' => '***ACCESS-TOKEN-FOR-THIRD-PARTY-APP***'
+];
 
-PHPShopify\ShopifySDK::config($config);
+$shopifyClient = new PHPShopify\ShopifySDK($config);
 ```
 ##### How to get the permanent access token for a shop?
 There is a AuthHelper class to help you getting the permanent access token from the shop using oAuth. 
@@ -47,13 +47,13 @@ There is a AuthHelper class to help you getting the permanent access token from 
 1) First, you need to configure the SDK with additional parameter SharedSecret
 
 ```php
-$config = array(
+$config = [
     'ShopUrl' => 'yourshop.myshopify.com',
     'ApiKey' => '***YOUR-PRIVATE-API-KEY***',
-    'SharedSecret' => '***YOUR-SHARED-SECRET***',
-);
+    'SharedSecret' => '***YOUR-SHARED-SECRET***'
+];
 
-PHPShopify\ShopifySDK::config($config);
+$shopifyClient = new PHPShopify\ShopifySDK($config);
 ```
 
 2) Create the authentication request 

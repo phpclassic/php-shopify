@@ -111,6 +111,7 @@ abstract class ShopifyResource
     {
         $this->id = $id;
         $this->sdk = $sdk;
+        $config = $sdk->getConfig();
 
         $this->resourceUrl = ($parentResourceUrl ? $parentResourceUrl . '/' :  $config['ApiUrl']) . $this->getResourcePath() . ($this->id ? '/' . $this->id : '');
 
@@ -386,7 +387,7 @@ abstract class ShopifyResource
         $i = 0;
 
         foreach ($array as $key => $val) {
-            $string .= ($i === $key ? '' : "$key - ") . $this->castString($val) . ', ';
+            $string .= ($i === $key ? '' : "$key - ") . self::castString($val) . ', ';
             $i++;
         }
 

@@ -599,8 +599,6 @@ abstract class ShopifyResource
 
     public function getNextPageParams(){
         $nextPageParams = [];
-        $nextPageLink =
-
         parse_str($this->getUrlParams($this->getNextLink()), $nextPageParams);
         return $nextPageParams;
     }

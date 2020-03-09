@@ -71,38 +71,44 @@ class AuthHelper
     }
 
     /**
-     * Redirect the user to the authorization page to allow the app access to the shop
+     * Get the URL to redirected the user to authorize app access to the shop.
      *
      * @see https://help.shopify.com/api/guides/authentication/oauth#scopes For allowed scopes
      * @inheritDoc
-     * @param string|string[] $scopes Scopes required by app
-     * @param string[] $options
+     * @param string|string[] $scope Scopes required by app
+     * @param string[] $grantOptions
      */
-    public function createAuthRequest(
-        ?array $scopes,
+    public function createAuthUrl(
+        ?array $scope,
         ?string $redirectUrl,
         ?string $state = null,
-        ?array $options = null
+        ?array $grantOptions = null
     ): ?string {
-        assert(is_string($scopes) || is_array($scopes));
+        assert(is_string($scope) || is_array($scope));
 
         if ($redirectUrl === null) {
             $redirectUrl = static::getCurrentUrl();
         }
 
-        if ($scopes !== null) {
-            $scopes = join(',', $scopes);
+        $parameters = [
+            'client_id' => $this->config['ApiKey'],
+            'redirect_uri' => $redirectUrl
+        ];
+
+        if ($scope !== null) {
+            $parameters['scope'] = join(',', $scope);
         }
 
         if ($state !== null) {
-            $state = '&state=' . $state;
+            $parameters['state'] = $state;
         }
 
-        if ($options !== null) {
-            $options = '&grant_options[]=' . implode(',', $options);
+        if ($grantOptions !== null) {
+            $parameters['grant_options'] = [implode(',', $grantOptions)];
         }
 
-        return "{$this->config['AdminUrl']}oauth/authorize?client_id={$this->config['ApiKey']}&redirect_uri={$redirectUrl}&scope={$scopes}{$state}{$options}";
+        $parameters = http_build_query($parameters);
+        return "{$this->config['AdminUrl']}oauth/authorize?{$parameters}";
     }
 
     /**
@@ -112,12 +118,12 @@ class AuthHelper
     public function getAccessToken(array $data): ?string {
         if($this->verifyShopifyRequest($data)) {
             $data = [
-                'client_id' => $config['ApiKey'],
-                'client_secret' => $config['SharedSecret'],
+                'client_id' => $this->config['ApiKey'],
+                'client_secret' => $this->config['SharedSecret'],
                 'code' => $data['code'],
             ];
 
-            $response = $this->httpRequestJson->post("{$config['AdminUrl']}oauth/access_token", $data);
+            $response = $this->httpRequestJson->post("{$this->config['AdminUrl']}oauth/access_token", $data);
 
             return $response['access_token'] ?? null;
         }

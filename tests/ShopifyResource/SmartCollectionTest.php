@@ -12,7 +12,7 @@ class SmartCollectionTest extends TestSimpleResource {
             [
                 "column" => "vendor",
                 "relation" => "equals",
-                "condition" => "Coconut"
+                "condition" => "Pineapple"
             ]
         ]
     ];

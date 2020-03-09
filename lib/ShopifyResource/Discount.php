@@ -11,11 +11,10 @@ use PHPShopify\ShopifyResource;
  * @method array enable()       Enable a discount
  * @method array disable()      Disable a discount
  */
-class Discount extends ShopifyResource
-{
+class Discount extends ShopifyResource {
     protected $resourceKey = 'discount';
     protected $customPostActions = [
         'enable',
-        'disable',
+        'disable'
     ];
 }

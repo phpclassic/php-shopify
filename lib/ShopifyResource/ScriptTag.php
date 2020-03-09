@@ -7,7 +7,6 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\ShopifyResource;
 
-class ScriptTag extends ShopifyResource
-{
+class ScriptTag extends ShopifyResource {
     protected $resourceKey = 'script_tag';
 }

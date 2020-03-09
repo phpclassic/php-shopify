@@ -7,7 +7,6 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\ShopifyResource;
 
-class InventoryItem extends ShopifyResource
-{
+class InventoryItem extends ShopifyResource {
     protected $resourceKey = 'inventory_item';
 }

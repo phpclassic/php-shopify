@@ -7,14 +7,12 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\ShopifyResource;
 
-class Shop extends ShopifyResource
-{
+class Shop extends ShopifyResource {
     protected $resourceKey = 'shop';
     public $countEnabled = false;
     public $readOnly = true;
 
-    public function pluralizeKey(): string
-    {
+    public function pluralizeKey(): string {
         return 'shop';
     }
 }

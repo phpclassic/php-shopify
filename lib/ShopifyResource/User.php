@@ -10,11 +10,10 @@ use PHPShopify\ShopifyResource;
 /**
  * @method array current() Get the current logged-in user
  */
-class User extends ShopifyResource
-{
+class User extends ShopifyResource {
     protected $resourceKey = 'user';
     public $readOnly = true;
     protected $customGetActions = [
-      'current',
+      'current'
     ];
 }

@@ -7,10 +7,9 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\ShopifyResource;
 
-class ProductListing extends ShopifyResource
-{
+class ProductListing extends ShopifyResource {
     protected $resourceKey = 'product_listing';
     protected $customGetActions = [
-        'product_ids' => 'productIds',
+        'product_ids' => 'productIds'
     ];
 }

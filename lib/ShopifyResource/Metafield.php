@@ -7,7 +7,6 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\ShopifyResource;
 
-class Metafield extends ShopifyResource
-{
+class Metafield extends ShopifyResource {
     protected $resourceKey = 'metafield';
 }

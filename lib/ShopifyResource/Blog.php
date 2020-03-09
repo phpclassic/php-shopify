@@ -15,12 +15,11 @@ use PHPShopify\ShopifyResource;
  * @method Event Event(integer $id = null)
  * @method Metafield Metafield(integer $id = null)
  */
-class Blog extends ShopifyResource
-{
+class Blog extends ShopifyResource {
     public $resourceKey = 'blog';
     protected $childResource = [
         'Article',
         'Event',
-        'Metafield',
+        'Metafield'
     ];
 }

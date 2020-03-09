@@ -7,7 +7,6 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\ShopifyResource;
 
-class AbandonedCheckout extends ShopifyResource
-{
+class AbandonedCheckout extends ShopifyResource {
     protected $resourceKey = 'checkout';
 }

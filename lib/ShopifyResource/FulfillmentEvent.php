@@ -7,16 +7,13 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\ShopifyResource;
 
-class FulfillmentEvent extends ShopifyResource
-{
+class FulfillmentEvent extends ShopifyResource {
     protected $resourceKey = 'fulfillment_event';
-    public function getResourcePath()
-    {
+    public function getResourcePath() {
         return 'events';
     }
 
-    public function getResourcePostKey()
-    {
+    public function getResourcePostKey() {
         return 'event';
     }
 }

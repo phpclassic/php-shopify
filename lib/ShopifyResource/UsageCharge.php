@@ -7,7 +7,6 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\ShopifyResource;
 
-class UsageCharge extends ShopifyResource
-{
+class UsageCharge extends ShopifyResource {
     protected $resourceKey = 'usage_charge';
 }

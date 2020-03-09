@@ -7,7 +7,6 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\ShopifyResource;
 
-class OrderRisk extends ShopifyResource
-{
+class OrderRisk extends ShopifyResource {
     protected $resourceKey = 'risk';
 }

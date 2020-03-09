@@ -7,7 +7,6 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\ShopifyResource;
 
-class Redirect extends ShopifyResource
-{
+class Redirect extends ShopifyResource {
     protected $resourceKey = 'redirect';
 }

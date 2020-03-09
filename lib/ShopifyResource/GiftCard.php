@@ -10,8 +10,7 @@ use PHPShopify\ShopifyResource;
 /**
  * @method array search()       Search for gift cards matching supplied query
  */
-class GiftCard extends ShopifyResource
-{
+class GiftCard extends ShopifyResource {
     protected $resourceKey = 'gift_card';
     public $searchEnabled = true;
 
@@ -19,12 +18,11 @@ class GiftCard extends ShopifyResource
      * Disable a gift card.
      * Disabling a gift card is permanent and cannot be undone.
      */
-    public function disable(): array
-    {
+    public function disable(): array {
         $url = $this->generateUrl([], 'disable');
 
         $dataArray = [
-            'id' => $this->id,
+            'id' => $this->id
         ];
 
         return $this->post($dataArray, $url);

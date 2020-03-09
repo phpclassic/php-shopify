@@ -14,15 +14,14 @@ use PHPShopify\ShopifyResource;
  * @method array open()         Open a pending fulfillment
  * @method array cancel()       Cancel a fulfillment
  */
-class Fulfillment extends ShopifyResource
-{
+class Fulfillment extends ShopifyResource {
     protected $resourceKey = 'fulfillment';
     protected $childResource = [
-        'FulfillmentEvent' => 'Event',
+        'FulfillmentEvent' => 'Event'
     ];
     protected $customPostActions = [
         'complete',
         'open',
-        'cancel',
+        'cancel'
     ];
 }

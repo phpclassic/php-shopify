@@ -16,15 +16,13 @@ use PHPShopify\ShopifyResource;
  * @method Province Province(integer $id = null)
  *
  */
-class Country extends ShopifyResource
-{
+class Country extends ShopifyResource {
     protected $resourceKey = 'country';
     protected $childResource = [
-        'Province',
+        'Province'
     ];
 
-    protected function pluralizeKey()
-    {
+    protected function pluralizeKey() {
         return 'countries';
     }
 }

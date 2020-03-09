@@ -11,19 +11,17 @@ use PHPShopify\ShopifyResource;
  * @property-read Event $Event
  * @method Event Event(integer $id = null)
  */
-class SmartCollection extends ShopifyResource
-{
+class SmartCollection extends ShopifyResource {
     protected $resourceKey = 'smart_collection';
     protected $childResource = [
         'Event',
-        'Metafield',
+        'Metafield'
     ];
 
     /**
      * Set the ordering type and/or the manual order of products in a smart collection
      */
-    public function sortOrder(array $params): array
-    {
+    public function sortOrder(array $params): array {
         $url = $this->generateUrl($params, 'order');
 
         return $this->put([], $url);

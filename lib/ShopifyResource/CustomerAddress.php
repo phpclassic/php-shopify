@@ -10,15 +10,13 @@ use PHPShopify\ShopifyResource;
 /**
  * @method array makeDefault()      Sets the address as default for the customer
  */
-class CustomerAddress extends ShopifyResource
-{
+class CustomerAddress extends ShopifyResource {
     protected $resourceKey = 'address';
     protected $customPutActions = [
-        'default' => 'makeDefault',
+        'default' => 'makeDefault'
     ];
 
-    protected function pluralizeKey()
-    {
+    protected function pluralizeKey() {
         return 'addresses';
     }
 
@@ -28,8 +26,7 @@ class CustomerAddress extends ShopifyResource
      * @param array $params
      * @return array
      */
-    public function set(array $params): array
-    {
+    public function set(array $params): array {
         $url = $this->generateUrl($params, 'set');
 
         return $this->put([], $url);

@@ -11,11 +11,10 @@ use PHPShopify\ShopifyResource;
  * @property-read ShopifyResource $DiscountCode
  * @method ShopifyResource DiscountCode(integer $id = null)
  */
-class PriceRule extends ShopifyResource
-{
+class PriceRule extends ShopifyResource {
     public $resourceKey = 'price_rule';
     public $countEnabled = false;
     protected $childResource = [
-        'DiscountCode',
+        'DiscountCode'
     ];
 }

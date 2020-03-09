@@ -7,11 +7,10 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\ShopifyResource;
 
-class ApplicationCharge extends ShopifyResource
-{
+class ApplicationCharge extends ShopifyResource {
     protected $resourceKey = 'application_charge';
     public $countEnabled = false;
     protected $customPostActions = [
-       'activate',
+       'activate'
     ];
 }

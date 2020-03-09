@@ -11,15 +11,13 @@ use PHPShopify\ShopifyResource;
  * @property-read Customer $Customer
  * @method Customer Customer(integer $id = null)
  */
-class CustomerSavedSearch extends ShopifyResource
-{
+class CustomerSavedSearch extends ShopifyResource {
     protected $resourceKey = 'customer_saved_search';
     protected $childResource = [
-        'Customer',
+        'Customer'
     ];
 
-    protected function pluralizeKey()
-    {
+    protected function pluralizeKey() {
         return 'customer_saved_searches';
     }
 }

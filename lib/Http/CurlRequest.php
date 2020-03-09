@@ -5,8 +5,7 @@ namespace PHPShopify\Http;
 use PHPShopify\Exception\CurlException;
 use PHPShopify\Exception\ResourceRateLimitException;
 
-class CurlRequest
-{
+class CurlRequest {
     /**
      * The time wait before retrying when the request was rate limited in microseconds.
      */
@@ -23,8 +22,7 @@ class CurlRequest
      * @param string|string[]|null $data
      * @return resource
      */
-    protected static function init(string $method, string $url, array $httpHeaders = [], $data = null)
-    {
+    protected static function init(string $method, string $url, array $httpHeaders = [], $data = null) {
         if (self::$ch === null) {
             self::$ch = curl_init();
 
@@ -54,8 +52,7 @@ class CurlRequest
         return self::$ch;
     }
 
-    public static function destroy(): void
-    {
+    public static function destroy(): void {
         if (self::$ch !== null) {
             $ch = self::$ch;
             self::$ch = null;
@@ -63,8 +60,7 @@ class CurlRequest
         }
     }
 
-    public static function get(string $url, array $httpHeaders = []): CurlResponse
-    {
+    public static function get(string $url, array $httpHeaders = []): CurlResponse {
         return self::processRequest(self::init('GET', $url, $httpHeaders));
     }
 
@@ -72,18 +68,15 @@ class CurlRequest
      * @inheritDoc
      * @param string|array $data
      */
-    public static function post(string $url, $data, array $httpHeaders = []): CurlResponse
-    {
+    public static function post(string $url, $data, array $httpHeaders = []): CurlResponse {
         return self::processRequest(self::init('POST', $url, $httpHeaders, $data));
     }
 
-    public static function put($url, $data, array $httpHeaders = []): CurlResponse
-    {
+    public static function put($url, $data, array $httpHeaders = []): CurlResponse {
         return self::processRequest(self::init('PUT', $url, $httpHeaders, $data));
     }
 
-    public static function delete(string $url, array $httpHeaders = []): CurlResponse
-    {
+    public static function delete(string $url, array $httpHeaders = []): CurlResponse {
         return self::processRequest(self::init('DELETE', $url, $httpHeaders));
     }
 
@@ -92,8 +85,7 @@ class CurlRequest
      * @param resource $ch
      * @throws CurlException if curl request is failed with error
      */
-    protected static function processRequest($ch): CurlResponse
-    {
+    protected static function processRequest($ch): CurlResponse {
         # Check for 429 leaky bucket error
         while (true) {
             $output = curl_exec($ch);
@@ -125,8 +117,7 @@ class CurlRequest
         return $response;
     }
 
-    private static function parseResponse(string $response): array
-    {
+    private static function parseResponse(string $response): array {
         $response = explode("\r\n\r\n", $response, 2);
         $headers = [];
 
@@ -148,8 +139,7 @@ class CurlRequest
         return compact('headers', 'body');
     }
 
-    protected static function parseBody(string $body)
-    {
+    protected static function parseBody(string $body) {
         return $body;
     }
 }

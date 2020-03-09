@@ -16,11 +16,10 @@ use PHPShopify\ShopifyResource;
  * @method array remove() Remove a Comment
  * @method array restore() Restore a Comment
  */
-class Comment extends ShopifyResource
-{
+class Comment extends ShopifyResource {
     protected $resourceKey = 'comment';
     protected $childResource = [
-        'Event',
+        'Event'
     ];
 
     protected $customPostActions = [
@@ -28,6 +27,6 @@ class Comment extends ShopifyResource
         'not_spam'  =>  'markNotSpam',
                         'approve',
                         'remove',
-                        'restore',
+                        'restore'
     ];
 }

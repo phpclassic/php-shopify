@@ -24,8 +24,7 @@ use PHPShopify\ShopifyResource;
  * @method array open()
  * @method array cancel(array $data)
  */
-class Order extends ShopifyResource
-{
+class Order extends ShopifyResource {
     protected $resourceKey = 'order';
     protected $childResource = [
         'Fulfillment',
@@ -33,11 +32,11 @@ class Order extends ShopifyResource
         'Refund',
         'Transaction',
         'Event',
-        'Metafield',
+        'Metafield'
     ];
     protected $customPostActions = [
         'close',
         'open',
-        'cancel',
+        'cancel'
     ];
 }

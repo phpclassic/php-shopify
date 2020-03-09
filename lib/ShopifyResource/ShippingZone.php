@@ -7,8 +7,7 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\ShopifyResource;
 
-class ShippingZone extends ShopifyResource
-{
+class ShippingZone extends ShopifyResource {
     protected $resourceKey = 'shipping_zone';
     public $countEnabled = false;
     public $readOnly = true;

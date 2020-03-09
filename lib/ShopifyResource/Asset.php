@@ -7,7 +7,6 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\ShopifyResource;
 
-class Asset extends ShopifyResource
-{
+class Asset extends ShopifyResource {
     protected $resourceKey = 'asset';
 }

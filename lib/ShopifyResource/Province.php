@@ -7,7 +7,6 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\ShopifyResource;
 
-class Province extends ShopifyResource
-{
+class Province extends ShopifyResource {
     protected $resourceKey = 'province';
 }

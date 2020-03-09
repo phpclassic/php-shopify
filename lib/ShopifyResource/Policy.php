@@ -7,14 +7,12 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\ShopifyResource;
 
-class Policy extends ShopifyResource
-{
+class Policy extends ShopifyResource {
     protected $resourceKey = 'policy';
     public $countEnabled = false;
     public $readOnly = true;
 
-    public function pluralizeKey()
-    {
+    public function pluralizeKey() {
         return 'policies';
     }
 }

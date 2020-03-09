@@ -32,7 +32,7 @@ class AuthHelper
         $paramStrings = [];
 
         foreach ($data as $key => $value) {
-            $paramStrings[] = "$key=$value";
+            $paramStrings[] = "{$key}={$value}";
         }
 
         return implode('&', $paramStrings);
@@ -64,7 +64,7 @@ class AuthHelper
 
         $realHmac = hash_hmac('sha256', $dataString, $sharedSecret);
 
-        return md5($realHmac) === md5($hmac);
+        return $realHmac === $hmac;
     }
 
     /**

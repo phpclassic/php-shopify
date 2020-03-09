@@ -327,16 +327,14 @@ class ShopifySDK
         } else {
             $now = microtime(true);
             $timeSinceLastCall = $now - static::$microtimeOfLastApiCall;
-            //Ensure 2 API calls per second
+
             if($timeSinceLastCall < static::$timeAllowedForEachApiCall) {
                 $timeToWait = static::$timeAllowedForEachApiCall - $timeSinceLastCall;
             }
         }
 
         if ($timeToWait) {
-            //convert time to microseconds
             $microSecondsToWait = $timeToWait * 1000000;
-            //Wait to maintain the API call difference of .5 seconds
             usleep($microSecondsToWait);
         }
 

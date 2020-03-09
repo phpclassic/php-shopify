@@ -7,8 +7,7 @@ use PHPShopify\Http\HttpRequestJson;
 
 class AuthHelper
 {
-    public static function getCurrentUrl(): string
-    {
+    public static function getCurrentUrl(): string {
         if (
             in_array($_SERVER['HTTPS'] ?? null, ['on', 1])
             &&
@@ -23,48 +22,37 @@ class AuthHelper
     }
 
     /**
-     * Build a query string from a data array
-     * Note: Strings should be URL encoded though?
-     * This is a replacement for http_build_query because that returns an url-encoded string.
-     */
-    public static function buildQueryString(array $data): string
-    {
-        $paramStrings = [];
-
-        foreach ($data as $key => $value) {
-            $paramStrings[] = "{$key}={$value}";
-        }
-
-        return implode('&', $paramStrings);
-    }
-
-    /**
      * Verify if the request is made from shopify using hmac hash value
      *
      * @inheritDoc
+     * @see https://ecommerce.shopify.com/c/shopify-apis-and-technology/t/hmac-calculation-vs-ids-arrays-320575
      * @throws SdkException if SharedSecret is not provided or hmac is not found in the url parameters
      */
-    public static function verifyShopifyRequest(array $config, array $data): bool
-    {
+    public static function verifyShopifyRequest(array $config, array $data): bool {
         $sharedSecret = $config['SharedSecret'];
 
-        if (isset($data['hmac'])) {
-            $hmac = $data['hmac'];
-            unset($data['hmac']);
-        } else {
+        if (!isset($data['hmac']) || !is_string($data['hmac'])) {
             throw new SdkException("HMAC value not found in url parameters.");
         }
 
-        // signature validation is deprecated
-        if (isset($data['signature'])) {
-            unset($data['signature']);
+        $hashItems = [];
+
+        foreach ($data as $key => $value) {
+            if (in_array($key, ['hmac', 'signature'], true)) {
+                continue;
+            }
+
+            if (is_array($value)) {
+                $value = '["' . implode('", "', $value) . '"]';
+            }
+
+            $hashItems[$key] = "{$key}={$value}";
         }
 
-        $dataString = self::buildQueryString($data);
+        ksort($hashItems);
+        $hashString = implode('&', $hashItems);
 
-        $realHmac = hash_hmac('sha256', $dataString, $sharedSecret);
-
-        return $realHmac === $hmac;
+        return hash_hmac('sha256', $hashString, $sharedSecret) === $data['hmac'];
     }
 
     /**
@@ -81,8 +69,7 @@ class AuthHelper
         string $redirectUrl,
         ?string $state = null,
         ?array $options = null
-    ): ?string
-    {
+    ): ?string {
         assert(is_string($scopes) || is_array($scopes));
 
         if ($scopes !== null) {
@@ -106,9 +93,8 @@ class AuthHelper
      * Get Access token for the API
      * Call this when being redirected from shopify page ( to the $redirectUrl) after authentication
      */
-    public static function getAccessToken(array $config, array $data): string
-    {
-        if(self::verifyShopifyRequest($config)) {
+    public static function getAccessToken(array $config, array $data): string {
+        if(self::verifyShopifyRequest($config, $data)) {
             $data = [
                 'client_id' => $config['ApiKey'],
                 'client_secret' => $config['SharedSecret'],
@@ -118,8 +104,8 @@ class AuthHelper
             $response = HttpRequestJson::post("{$config['AdminUrl']}oauth/access_token", $data);
 
             return $response['access_token'] ?? null;
-        } else {
-            throw new SdkException("This request is not initiated from a valid shopify shop!");
         }
+
+        throw new SdkException("This request is not initiated from a valid shopify shop!");
     }
 }

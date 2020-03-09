@@ -59,7 +59,9 @@ namespace PHPShopify;
 | $data = $shopify->GraphQL->post($graphQL);
 |
 */
+
 use PHPShopify\Exception\SdkException;
+use PHPShopify\Http\HttpRequestJson;
 
 /**
  * @property-read ShopifyResource\AbandonedCheckout $AbandonedCheckout
@@ -212,6 +214,9 @@ class ShopifySDK {
      */
     private $config = [];
 
+    /** @var HttpRequestJson */
+    private $httpRequestJson;
+
     /**
      * List of resources which are only available through a parent resource
      *
@@ -233,7 +238,7 @@ class ShopifySDK {
         'UsageCharge'       => 'RecurringApplicationCharge'
     ];
 
-    public function __construct(array $config = []) {
+    public function __construct(array $config = [], ?HttpRequestJson $httpRequestJson = null) {
         $config += ['ApiVersion' => self::$defaultApiVersion];
 
         $shopUrl = $config['ShopUrl'];
@@ -252,13 +257,23 @@ class ShopifySDK {
         $config['ApiUrl'] = "{$adminUrl}api/{$apiVersion}/";
         $this->config = $config;
 
-        if (isset($config['AllowedTimePerCall'])) {
-            static::$timeAllowedForEachApiCall = $config['AllowedTimePerCall'];
+        if ($httpRequestJson === null) {
+            $httpRequestJson = new HttpRequestJson();
         }
+
+        $this->httpRequestJson = $httpRequestJson;
     }
 
     public function getConfig(): array {
         return $this->config;
+    }
+
+    public function getHttpRequestJson(): HttpRequestJson {
+        return $this->httpRequestJson;
+    }
+
+    public function createAuthHelper(): AuthHelper {
+        return new AuthHelper($this->config, $this->httpRequestJson);
     }
 
     /**
@@ -296,15 +311,30 @@ class ShopifySDK {
             throw new SdkException($message);
         }
 
-        $resourceClassName = ShopifyResource::class . "\\{$resourceName}";
+        return $this->createResource($resourceName, $arguments);
+    }
 
-        //If first argument is provided, it will be considered as the ID of the resource.
-        $resourceID = !empty($arguments) ? $arguments[0] : null;
+    public function createResource(string $name, array $arguments, string $resourceUrl = '') {
+        $namespaces = [ShopifyResource::class];
 
-        //Initiate the resource object
-        $resource = new $resourceClassName($this, $resourceID);
+        if (isset($this->config['ResourceNamespaces'])) {
+            $namespaces = array_merge($this->config['ResourceNamespaces'], $namespaces);
+        }
 
-        return $resource;
+        foreach ($namespaces as $namespace) {
+            $resourceClassName = "{$namespace}\\{$name}";
+
+            if (!class_exists($resourceClassName)) {
+                continue;
+            }
+
+            //If first argument is provided, it will be considered as the ID of the resource.
+            $resourceId = $arguments[0] ?? null;
+
+            return new $resourceClassName($this, $resourceId, $resourceUrl);
+        }
+
+        throw new SdkException("ShopifyResource class {$name} not found.");
     }
 
     /**

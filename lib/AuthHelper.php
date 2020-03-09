@@ -7,6 +7,21 @@ use PHPShopify\Http\HttpRequestJson;
 
 class AuthHelper
 {
+    /** @var array */
+    protected $config;
+    /** @var HttpRequestJson */
+    protected $httpRequestJson;
+
+    public function __construct(array $config, ?HttpRequestJson $httpRequestJson = null) {
+        $this->config = $config;
+
+        if ($httpRequestJson === null) {
+            $httpRequestJson = new HttpRequestJson();
+        }
+
+        $this->httpRequestJson = $httpRequestJson;
+    }
+
     public static function getCurrentUrl(): string {
         if (
             in_array($_SERVER['HTTPS'] ?? null, ['on', 1])
@@ -28,8 +43,8 @@ class AuthHelper
      * @see https://ecommerce.shopify.com/c/shopify-apis-and-technology/t/hmac-calculation-vs-ids-arrays-320575
      * @throws SdkException if SharedSecret is not provided or hmac is not found in the url parameters
      */
-    public static function verifyShopifyRequest(array $config, array $data): bool {
-        $sharedSecret = $config['SharedSecret'];
+    public function verifyShopifyRequest(array $data): bool {
+        $sharedSecret = $this->config['SharedSecret'];
 
         if (!isset($data['hmac']) || !is_string($data['hmac'])) {
             throw new SdkException("HMAC value not found in url parameters.");
@@ -63,14 +78,17 @@ class AuthHelper
      * @param string|string[] $scopes Scopes required by app
      * @param string[] $options
      */
-    public static function createAuthRequest(
-        array $config,
+    public function createAuthRequest(
         ?array $scopes,
-        string $redirectUrl,
+        ?string $redirectUrl,
         ?string $state = null,
         ?array $options = null
     ): ?string {
         assert(is_string($scopes) || is_array($scopes));
+
+        if ($redirectUrl === null) {
+            $redirectUrl = static::getCurrentUrl();
+        }
 
         if ($scopes !== null) {
             $scopes = join(',', $scopes);
@@ -84,24 +102,22 @@ class AuthHelper
             $options = '&grant_options[]=' . implode(',', $options);
         }
 
-        // Official call structure
-        // https://{shop}.myshopify.com/admin/oauth/authorize?client_id={api_key}&scope={scopes}&redirect_uri={redirect_uri}&state={nonce}&grant_options[]={option}
-        return "{$config['AdminUrl']}oauth/authorize?client_id={$config['ApiKey']}&redirect_uri={$redirectUrl}&scope={$scopes}{$state}{$options}";
+        return "{$this->config['AdminUrl']}oauth/authorize?client_id={$this->config['ApiKey']}&redirect_uri={$redirectUrl}&scope={$scopes}{$state}{$options}";
     }
 
     /**
      * Get Access token for the API
      * Call this when being redirected from shopify page ( to the $redirectUrl) after authentication
      */
-    public static function getAccessToken(array $config, array $data): string {
-        if(self::verifyShopifyRequest($config, $data)) {
+    public function getAccessToken(array $data): ?string {
+        if($this->verifyShopifyRequest($data)) {
             $data = [
                 'client_id' => $config['ApiKey'],
                 'client_secret' => $config['SharedSecret'],
                 'code' => $data['code'],
             ];
 
-            $response = HttpRequestJson::post("{$config['AdminUrl']}oauth/access_token", $data);
+            $response = $this->httpRequestJson->post("{$config['AdminUrl']}oauth/access_token", $data);
 
             return $response['access_token'] ?? null;
         }

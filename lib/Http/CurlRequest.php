@@ -22,7 +22,7 @@ class CurlRequest {
      * @param string|string[]|null $data
      * @return resource
      */
-    protected static function init(string $method, string $url, array $httpHeaders = [], $data = null) {
+    protected function init(string $method, string $url, array $httpHeaders = [], $data = null) {
         if (self::$ch === null) {
             self::$ch = curl_init();
 
@@ -30,7 +30,7 @@ class CurlRequest {
             curl_setopt(self::$ch, CURLOPT_HEADER, true);
             curl_setopt(self::$ch, CURLOPT_USERAGENT, 'PHPClassic/PHPShopify');
         }
-
+vaR_dump($url);
         curl_setopt(self::$ch, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt(self::$ch, CURLOPT_URL, $url);
 
@@ -50,7 +50,7 @@ class CurlRequest {
         return self::$ch;
     }
 
-    public static function destroy(): void {
+    public function destroy(): void {
         if (self::$ch !== null) {
             $ch = self::$ch;
             self::$ch = null;
@@ -58,7 +58,7 @@ class CurlRequest {
         }
     }
 
-    public static function get(string $url, array $httpHeaders = []): CurlResponse {
+    public function get(string $url, array $httpHeaders = []): CurlResponse {
         return static::processRequest(static::init('GET', $url, $httpHeaders));
     }
 
@@ -66,15 +66,15 @@ class CurlRequest {
      * @inheritDoc
      * @param string|array $data
      */
-    public static function post(string $url, $data, array $httpHeaders = []): CurlResponse {
+    public function post(string $url, $data, array $httpHeaders = []): CurlResponse {
         return static::processRequest(static::init('POST', $url, $httpHeaders, $data));
     }
 
-    public static function put($url, $data, array $httpHeaders = []): CurlResponse {
+    public function put($url, $data, array $httpHeaders = []): CurlResponse {
         return static::processRequest(static::init('PUT', $url, $httpHeaders, $data));
     }
 
-    public static function delete(string $url, array $httpHeaders = []): CurlResponse {
+    public function delete(string $url, array $httpHeaders = []): CurlResponse {
         return static::processRequest(static::init('DELETE', $url, $httpHeaders));
     }
 
@@ -83,7 +83,7 @@ class CurlRequest {
      * @param resource $ch
      * @throws CurlException if curl request is failed with error
      */
-    protected static function processRequest($ch): CurlResponse {
+    protected function processRequest($ch): CurlResponse {
         # Check for 429 leaky bucket error
         while (true) {
             $output = curl_exec($ch);
@@ -115,7 +115,7 @@ class CurlRequest {
         return $response;
     }
 
-    private static function parseResponse(string $response): array {
+    protected function parseResponse(string $response): array {
         $response = explode("\r\n\r\n", $response, 2);
 
         assert(count($response) === 2);
@@ -139,11 +139,11 @@ class CurlRequest {
         return compact('headers', 'body');
     }
 
-    protected static function serializeData($data): string {
+    protected function serializeData($data): string {
         return http_build_query($data);
     }
 
-    protected static function parseBody(string $body) {
+    protected function parseBody(string $body) {
         return $body;
     }
 }

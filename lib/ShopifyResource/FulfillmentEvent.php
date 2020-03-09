@@ -9,11 +9,11 @@ use PHPShopify\ShopifyResource;
 
 class FulfillmentEvent extends ShopifyResource {
     protected $resourceKey = 'fulfillment_event';
-    public function getResourcePath() {
+    public function getResourcePath(): string {
         return 'events';
     }
 
-    public function getResourcePostKey() {
+    public function getResourcePostKey(): string {
         return 'event';
     }
 }

@@ -5,14 +5,13 @@
 
 namespace PHPShopify\ShopifyResource;
 
-use PHPShopify\Http\HttpRequestJson;
 use PHPShopify\ShopifyResource;
 use PHPShopify\Exception\ApiException;
 use PHPShopify\Exception\CurlException;
 use PHPShopify\Exception\SdkException;
 
 class GraphQL extends ShopifyResource {
-    protected function getResourcePath() {
+    protected function getResourcePath(): string {
         return 'graphql';
     }
 
@@ -45,14 +44,14 @@ class GraphQL extends ShopifyResource {
             $data = $graphQL;
         }
 
-        return $this->processResponse(HttpRequestJson::post($url, $data, $this->httpHeaders));
+        return $this->processResponse($this->sdk->getHttpRequestJson()->post($url, $data, $this->httpHeaders));
     }
 
     /**
      * @inheritdoc
      * @throws SdkException
      */
-    public function get($urlParams = [], $url = null, $dataKey = null) {
+    public function get(array $urlParams = [], ?string $url = null, $dataKey = null) {
         throw new SdkException("Only POST method is allowed for GraphQL!");
     }
 
@@ -60,7 +59,7 @@ class GraphQL extends ShopifyResource {
      * @inheritdoc
      * @throws SdkException
      */
-    public function put($dataArray, $url = null, $wrapData = true) {
+    public function put(array $dataArray, ?string $url = null, bool $wrapData = true): array {
         throw new SdkException("Only POST method is allowed for GraphQL!");
     }
 
@@ -68,7 +67,7 @@ class GraphQL extends ShopifyResource {
      * @inheritdoc
      * @throws SdkException
      */
-    public function delete($urlParams = [], $url = null) {
+    public function delete(array $urlParams = [], ?string $url = null): void {
         throw new SdkException("Only POST method is allowed for GraphQL!");
     }
 }

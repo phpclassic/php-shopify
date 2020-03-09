@@ -133,7 +133,7 @@ class CurlRequest {
             $took = (microtime(true) - $start) + (static::RATE_LIMIT_RETRY_DELAY / 1000000);
 
             /**
-             * This makes no sense. It can likely ignore this header and use Retry-After if set otherwise through an
+             * This makes no sense. It can likely ignore this header and use Retry-After if set otherwise throw an
              * exception.
              */
             if ((isset($limitHeader[1]) && $limitHeader[0] < $limitHeader[1]) ||

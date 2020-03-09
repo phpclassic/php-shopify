@@ -4,6 +4,5 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\TestSimpleResource;
 
-class LocationTest extends TestSimpleResource
-{
+class LocationTest extends TestSimpleResource {
 }

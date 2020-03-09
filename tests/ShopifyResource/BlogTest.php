@@ -4,12 +4,11 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\TestSimpleResource;
 
-class BlogTest extends TestSimpleResource
-{
+class BlogTest extends TestSimpleResource {
     public $postArray = [
-        "title" => "PHPShopify Test Blog",
+        "title" => "PHPShopify Test Blog"
     ];
     public $putArray = [
-        "title" => "PHPShopify Test Blog Modified",
+        "title" => "PHPShopify Test Blog Modified"
     ];
 }

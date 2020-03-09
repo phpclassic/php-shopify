@@ -4,8 +4,7 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\TestSimpleResource;
 
-class ProductTest extends TestSimpleResource
-{
+class ProductTest extends TestSimpleResource {
     public $postArray = [
         "title" => "Burton Custom Freestlye 151",
         "body_html" => "<strong>Good snowboard!</strong>",
@@ -21,8 +20,8 @@ class ProductTest extends TestSimpleResource
                 "option1" => "Second",
                 "price" => "20.00",
                 "sku" => "123"
-            ],
-        ],
+            ]
+        ]
     ];
     public $errorPostArray = ["description" => "A mystery!"];
     public $putArray = ["title" => "New product title"];

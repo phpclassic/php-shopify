@@ -4,6 +4,5 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\TestSimpleResource;
 
-class RecurringApplicationChargeTest extends TestSimpleResource
-{
+class RecurringApplicationChargeTest extends TestSimpleResource {
 }

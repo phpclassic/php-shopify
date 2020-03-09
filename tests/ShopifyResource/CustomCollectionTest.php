@@ -4,13 +4,12 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\TestSimpleResource;
 
-class CustomCollectionTest extends TestSimpleResource
-{
+class CustomCollectionTest extends TestSimpleResource {
     public $postArray = [
-        "title" => "Macbooks",
+        "title" => "Macbooks"
     ];
     public $putArray = [
         "title" => "Updated - Macbooks",
-        "body_html" => "<p>The best selling Macbooks ever</p>",
+        "body_html" => "<p>The best selling Macbooks ever</p>"
     ];
 }

@@ -4,8 +4,7 @@ namespace PHPShopify\ShopifyResource;
 
 use PHPShopify\TestSimpleResource;
 
-class SmartCollectionTest extends TestSimpleResource
-{
+class SmartCollectionTest extends TestSimpleResource {
     public $postArray = [
         "title" => "McBooks",
         "published" => false,
@@ -13,15 +12,11 @@ class SmartCollectionTest extends TestSimpleResource
             [
                 "column" => "vendor",
                 "relation" => "equals",
-                "condition" => "Coconut",
+                "condition" => "Coconut"
             ]
-        ],
+        ]
     ];
-
-    /**
-     * @inheritDoc
-     */
     public $putArray = [
-        "body_html" => "<p>The most expensive McBook ever.</p>",
+        "body_html" => "<p>The most expensive McBook ever.</p>"
     ];
 }

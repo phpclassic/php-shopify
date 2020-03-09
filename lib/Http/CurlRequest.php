@@ -119,7 +119,6 @@ class CurlRequest {
 
     private static function parseResponse(string $response): array {
         $response = explode("\r\n\r\n", $response, 2);
-        $headers = [];
 
         assert(count($response) === 2);
         [$headers, $body] = $response;

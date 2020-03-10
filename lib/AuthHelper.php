@@ -96,7 +96,7 @@ class AuthHelper
         ];
 
         if ($scope !== null) {
-            $parameters['scope'] = join(',', $scope);
+            $parameters['scope'] = implode(',', $scope);
         }
 
         if ($state !== null) {
@@ -104,7 +104,7 @@ class AuthHelper
         }
 
         if ($grantOptions !== null) {
-            $parameters['grant_options'] = [implode(',', $grantOptions)];
+            $parameters['grant_options[]'] = implode(',', $grantOptions);
         }
 
         $parameters = http_build_query($parameters);

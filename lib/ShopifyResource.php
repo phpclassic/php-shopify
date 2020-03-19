@@ -344,7 +344,7 @@ abstract class ShopifyResource {
         $response = $this->sdk->getHttpRequestJson()->delete($url, $this->httpHeaders);
         $response = $this->processResponse($response);
 
-        if (!is_array($response) || count($response) !== 0) {
+        if ($response !== null) {
             throw new SdkException('Unexpected API response on delete: ' . HttpRequestJson::encode($response));
         }
     }
@@ -380,7 +380,7 @@ abstract class ShopifyResource {
      * @throws ApiException if the response has an error specified
      * @throws CurlException if response received with unexpected HTTP code.
      */
-    protected static function validateResponse(CurlResponse $response, $dataKey = null) {
+    protected static function validateResponse(CurlResponse $response) {
         $body = $response->getBody();
 
         if ($body === null) {
@@ -405,8 +405,8 @@ abstract class ShopifyResource {
     protected function processResponse(CurlResponse $response, $dataKey = null) {
         $body = self::validateResponse($response);
 
-        if ($dataKey !== null && isset($body[$dataKey])) {
-            return $body[$dataKey];
+        if ($dataKey !== null) {
+            return $body[$dataKey] ?? null;
         }
 
         return $body;

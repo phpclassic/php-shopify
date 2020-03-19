@@ -1,178 +1,133 @@
 <?php
-/**
- * Created by PhpStorm.
- * @author Tareq Mahmood <tareqtms@yahoo.com>
- * Created at: 8/27/16 10:58 AM UTC+06:00
- */
 
 namespace PHPShopify;
 
-
 use PHPShopify\Exception\SdkException;
+use PHPShopify\Http\HttpRequestJson;
 
 class AuthHelper
 {
-    /**
-     * Get the url of the current page
-     *
-     * @return string
-     */
-    public static function getCurrentUrl()
-    {
-        if (isset($_SERVER['HTTPS']) &&
-            ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
-            isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-            $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
-            $protocol = 'https';
+    /** @var array */
+    protected $config;
+    /** @var HttpRequestJson */
+    protected $httpRequestJson;
+
+    public function __construct(array $config, ?HttpRequestJson $httpRequestJson = null) {
+        $this->config = $config;
+
+        if ($httpRequestJson === null) {
+            $httpRequestJson = new HttpRequestJson();
         }
-        else {
+
+        $this->httpRequestJson = $httpRequestJson;
+    }
+
+    public static function getCurrentUrl(): string {
+        if (
+            in_array($_SERVER['HTTPS'] ?? null, ['on', 1])
+            &&
+            ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null) === 'https'
+        ) {
+            $protocol = 'https';
+        } else {
             $protocol = 'http';
         }
 
-        return "$protocol://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-    }
-
-    /**
-     * Build a query string from a data array
-     * This is a replacement for http_build_query because that returns an url-encoded string.
-     *
-     * @param array $data Data array
-     *
-     * @return array
-     */
-    public static function buildQueryString($data)
-    {
-        $paramStrings = [];
-        foreach ($data as $key => $value) {
-            $paramStrings[] = "$key=$value";
-        }
-        return join('&', $paramStrings);
+        return "{$protocol}://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
     }
 
     /**
      * Verify if the request is made from shopify using hmac hash value
      *
+     * @inheritDoc
+     * @see https://ecommerce.shopify.com/c/shopify-apis-and-technology/t/hmac-calculation-vs-ids-arrays-320575
      * @throws SdkException if SharedSecret is not provided or hmac is not found in the url parameters
-     *
-     * @return bool
      */
-    public static function verifyShopifyRequest()
-    {
-        $data = $_GET;
+    public function verifyShopifyRequest(array $data): bool {
+        $sharedSecret = $this->config['SharedSecret'];
 
-        if(!isset(ShopifySDK::$config['SharedSecret'])) {
-            throw new SdkException("Please provide SharedSecret while configuring the SDK client.");
-        }
-
-        $sharedSecret = ShopifySDK::$config['SharedSecret'];
-
-        //Get the hmac and remove it from array
-        if (isset($data['hmac'])) {
-            $hmac = $data['hmac'];
-            unset($data['hmac']);
-        } else {
+        if (!isset($data['hmac']) || !is_string($data['hmac'])) {
             throw new SdkException("HMAC value not found in url parameters.");
         }
-        //signature validation is deprecated
-        if (isset($data['signature'])) {
-            unset($data['signature']);
-        }
-        //Create data string for the remaining url parameters
-        $dataString = self::buildQueryString($data);
 
-        $realHmac = hash_hmac('sha256', $dataString, $sharedSecret);
+        $hashItems = [];
 
-        //hash the values before comparing (to prevent time attack)
-        if(md5($realHmac) === md5($hmac)) {
-            return true;
-        } else {
-            return false;
+        foreach ($data as $key => $value) {
+            if (in_array($key, ['hmac', 'signature'], true)) {
+                continue;
+            }
+
+            if (is_array($value)) {
+                $value = '["' . implode('", "', $value) . '"]';
+            }
+
+            $hashItems[$key] = "{$key}={$value}";
         }
+
+        ksort($hashItems);
+        $hashString = implode('&', $hashItems);
+
+        return hash_hmac('sha256', $hashString, $sharedSecret) === $data['hmac'];
     }
 
     /**
-     * Redirect the user to the authorization page to allow the app access to the shop
+     * Get the URL to redirected the user to authorize app access to the shop.
      *
      * @see https://help.shopify.com/api/guides/authentication/oauth#scopes For allowed scopes
-     *
-     * @param string|string[] $scopes Scopes required by app
-     * @param string $redirectUrl
-     * @param string $state
-     * @param string[] $options
-     * @param bool $return If true, will return the authentical url instead of auto-redirecting to the page.
-     * @throws SdkException if required configuration is not provided in $config
-     *
-     * @return void|string
+     * @inheritDoc
+     * @param string|string[] $scope Scopes required by app
+     * @param string[] $grantOptions
      */
-    public static function createAuthRequest($scopes, $redirectUrl = null, $state = null, $options = null, $return = false)
-    {
-        $config = ShopifySDK::$config;
+    public function createAuthUrl(
+        ?array $scope,
+        ?string $redirectUrl,
+        ?string $state = null,
+        ?array $grantOptions = null
+    ): ?string {
+        assert(is_string($scope) || is_array($scope));
 
-        if(!isset($config['ShopUrl']) || !isset($config['ApiKey'])) {
-            throw new SdkException("ShopUrl and ApiKey are required for authentication request. Please check SDK configuration!");
+        if ($redirectUrl === null) {
+            $redirectUrl = static::getCurrentUrl();
         }
 
-        if (!$redirectUrl) {
-            if(!isset($config['SharedSecret'])) {
-                throw new SdkException("SharedSecret is required for getting access token. Please check SDK configuration!");
-            }
+        $parameters = [
+            'client_id' => $this->config['ApiKey'],
+            'redirect_uri' => $redirectUrl
+        ];
 
-            //If redirect url is the same as this url, then need to check for access token when redirected back from shopify
-            if(isset($_GET['code'])) {
-                return self::getAccessToken($config);
-            } else {
-                $redirectUrl = self::getCurrentUrl();
-            }
+        if ($scope !== null) {
+            $parameters['scope'] = implode(',', $scope);
         }
 
-        if (is_array($scopes)) {
-            $scopes = join(',', $scopes);
-        }
-        if(!empty($state)) {
-            $state = '&state=' . $state;
-        }
-        if(!empty($options)) {
-            $options = '&grant_options[]=' . join(',', $options);
-        }
-        // Official call structure
-        // https://{shop}.myshopify.com/admin/oauth/authorize?client_id={api_key}&scope={scopes}&redirect_uri={redirect_uri}&state={nonce}&grant_options[]={option}
-        $authUrl = $config['AdminUrl'] . 'oauth/authorize?client_id=' . $config['ApiKey'] . '&redirect_uri=' . $redirectUrl . "&scope=$scopes" . $state . $options;
-
-        if ($return) {
-            return $authUrl;
+        if ($state !== null) {
+            $parameters['state'] = $state;
         }
 
-        header("Location: $authUrl");
+        if ($grantOptions !== null) {
+            $parameters['grant_options[]'] = implode(',', $grantOptions);
+        }
+
+        $parameters = http_build_query($parameters);
+        return "{$this->config['AdminUrl']}oauth/authorize?{$parameters}";
     }
 
     /**
      * Get Access token for the API
      * Call this when being redirected from shopify page ( to the $redirectUrl) after authentication
-     *
-     * @throws SdkException if SharedSecret or ApiKey is missing in SDK configuration or request is not valid
-     *
-     * @return string
      */
-    public static function getAccessToken()
-    {
-        $config = ShopifySDK::$config;
+    public function getAccessToken(array $data): ?string {
+        if($this->verifyShopifyRequest($data)) {
+            $data = [
+                'client_id' => $this->config['ApiKey'],
+                'client_secret' => $this->config['SharedSecret'],
+                'code' => $data['code'],
+            ];
 
-        if(!isset($config['SharedSecret']) || !isset($config['ApiKey'])) {
-            throw new SdkException("SharedSecret and ApiKey are required for getting access token. Please check SDK configuration!");
+            $response = $this->httpRequestJson->post("{$this->config['AdminUrl']}oauth/access_token", $data);
+
+            return $response['access_token'] ?? null;
         }
 
-        if(self::verifyShopifyRequest()) {
-            $data = array(
-                'client_id' => $config['ApiKey'],
-                'client_secret' => $config['SharedSecret'],
-                'code' => $_GET['code'],
-            );
-
-            $response = HttpRequestJson::post($config['AdminUrl'] . 'oauth/access_token', $data);
-
-            return isset($response['access_token']) ? $response['access_token'] : null;
-        } else {
-            throw new SdkException("This request is not initiated from a valid shopify shop!");
-        }
+        throw new SdkException("This request is not initiated from a valid shopify shop!");
     }
 }

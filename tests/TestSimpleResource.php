@@ -1,15 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * @author Tareq Mahmood <tareqtms@yahoo.com>
- * Created at: 9/9/16 12:38 PM UTC+06:00
- */
 
 namespace PHPShopify;
 
-class TestSimpleResource extends TestResource
-{
-
+class TestSimpleResource extends TestResource {
     /**
      * @var string Resource name
      */
@@ -30,48 +23,36 @@ class TestSimpleResource extends TestResource
      */
     public $errorPostArray;
 
-
-    /**
-     * TestSimpleResource constructor.
-     */
-    public function __construct()
-    {
+    public function __construct() {
         $this->resourceName = preg_replace('/.+\\\\(\w+)Test$/', '$1', get_called_class());
         parent::__construct();
     }
 
-    /**
-     * Test post resource
-     *
-     * @return int
-     */
-    public function testPost()
-    {
+    public function testPost(): ?int {
         if ($this->postArray) {
             $result = static::$shopify->{$this->resourceName}->post($this->postArray);
             $this->assertTrue(is_array($result));
             $this->assertNotEmpty($result);
             return $result['id'];
         }
+
+        return null;
     }
 
     /**
-     * Test get resource
-     *
      * @depends testPost
      */
-    public function testGet()
-    {
+    public function testGet() {
         $resource = static::$shopify->{$this->resourceName};
         $result = $resource->get();
 
         $this->assertTrue(is_array($result));
-        //Data posted, so cannot be empty
+
         if($this->postArray) {
             $this->assertNotEmpty($result);
         }
+
         if($resource->countEnabled) {
-            //Count should match the result array count
             $count = static::$shopify->{$this->resourceName}->count();
             $this->assertEquals($count, count($result));
         }
@@ -82,8 +63,7 @@ class TestSimpleResource extends TestResource
      *
      * @depends testPost
      */
-    public function testGetSelf($id)
-    {
+    public function testGetSelf($id) {
         if ($id) {
             $product = static::$shopify->{$this->resourceName}($id)->get();
 
@@ -98,8 +78,7 @@ class TestSimpleResource extends TestResource
      *
      * @depends testPost
      */
-    public function testPut($id)
-    {
+    public function testPut($id) {
         if ($this->putArray) {
             $result = static::$shopify->{$this->resourceName}($id)->put($this->putArray);
             $this->assertTrue(is_array($result));
@@ -111,12 +90,9 @@ class TestSimpleResource extends TestResource
     }
 
     /**
-     * Test delete resource
-     *
      * @depends testPost
      */
-    public function testDelete($id)
-    {
+    public function testDelete($id) {
         if ($id) {
             $result = static::$shopify->{$this->resourceName}($id)->delete();
             $this->assertEmpty($result);

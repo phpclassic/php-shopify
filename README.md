@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/phpclassic/php-shopify.svg?branch=master)](https://travis-ci.org/phpclassic/php-shopify) [![Monthly Downloads](https://poser.pugx.org/phpclassic/php-shopify/d/monthly)](https://packagist.org/packages/phpclassic/php-shopify) [![Total Downloads](https://poser.pugx.org/phpclassic/php-shopify/downloads)](https://packagist.org/packages/phpclassic/php-shopify) [![Latest Stable Version](https://poser.pugx.org/phpclassic/php-shopify/v/stable)](https://packagist.org/packages/phpclassic/php-shopify) [![Latest Unstable Version](https://poser.pugx.org/phpclassic/php-shopify/v/unstable)](https://packagist.org/packages/phpclassic/php-shopify) [![License](https://poser.pugx.org/phpclassic/php-shopify/license)](https://packagist.org/packages/phpclassic/php-shopify) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ME9N6M2B87XT4&currency_code=USD&source=url)
 
-PHPShopify is a simple SDK implementation of Shopify API. It helps accessing the API in an object oriented way. 
+PHPShopify is a minimal SDK for using the Shopify API. 
 
 ## Installation
 Install with Composer
@@ -11,8 +11,8 @@ composer require phpclassic/php-shopify
 ```
 
 ### Requirements
-PHPShopify uses curl extension for handling http calls. So you need to have the curl extension installed and enabled with PHP.
->However if you prefer to use any other available package library for handling HTTP calls, you can easily do so by modifying 1 line in each of the `get()`, `post()`, `put()`, `delete()` methods in `PHPShopify\HttpRequestJson` class.
+
+PHPShopify uses curl extension for handling http calls. So you need to have the PHP curl extension installed and enabled.
 
 ## Usage
 
@@ -22,24 +22,24 @@ You can use PHPShopify in a pretty simple object oriented way.
 If you are using your own private API, provide the ApiKey and Password. 
 
 ```php
-$config = array(
+$config = [
     'ShopUrl' => 'yourshop.myshopify.com',
     'ApiKey' => '***YOUR-PRIVATE-API-KEY***',
-    'Password' => '***YOUR-PRIVATE-API-PASSWORD***',
-);
+    'Password' => '***YOUR-PRIVATE-API-PASSWORD***'
+];
 
-PHPShopify\ShopifySDK::config($config);
+$shopify = new PHPShopify\ShopifySDK($config);
 ```
 
 For Third party apps, use the permanent access token.
 
 ```php
-$config = array(
+$config = [
     'ShopUrl' => 'yourshop.myshopify.com',
-    'AccessToken' => '***ACCESS-TOKEN-FOR-THIRD-PARTY-APP***',
-);
+    'AccessToken' => '***ACCESS-TOKEN-FOR-THIRD-PARTY-APP***'
+];
 
-PHPShopify\ShopifySDK::config($config);
+$shopify = new PHPShopify\ShopifySDK($config);
 ```
 ##### How to get the permanent access token for a shop?
 There is a AuthHelper class to help you getting the permanent access token from the shop using oAuth. 
@@ -47,13 +47,13 @@ There is a AuthHelper class to help you getting the permanent access token from 
 1) First, you need to configure the SDK with additional parameter SharedSecret
 
 ```php
-$config = array(
+$config = [
     'ShopUrl' => 'yourshop.myshopify.com',
     'ApiKey' => '***YOUR-PRIVATE-API-KEY***',
-    'SharedSecret' => '***YOUR-SHARED-SECRET***',
-);
+    'SharedSecret' => '***YOUR-SHARED-SECRET***'
+];
 
-PHPShopify\ShopifySDK::config($config);
+$shopify = new PHPShopify\ShopifySDK($config);
 ```
 
 2) Create the authentication request 
@@ -67,21 +67,15 @@ $scopes = 'read_products,write_products,read_script_tags,write_script_tags';
 //$scopes = array('read_products','write_products','read_script_tags', 'write_script_tags'); 
 $redirectUrl = 'https://yourappurl.com/your_redirect_url.php';
 
-\PHPShopify\AuthHelper::createAuthRequest($scopes, $redirectUrl);
-```
-
-> If you want the function to return the authentication url instead of auto-redirecting, you can set the argument `$return` (5th argument) to `true`.
-
-```php
-\PHPShopify\AuthHelper::createAuthRequest($scopes, $redirectUrl, null, null, true);
+$url = $shopify->createAuthHelper()->createAuthRequest($scopes, $redirectUrl);
 ```
 
 3) Get the access token when redirected back to the `$redirectUrl` after app authorization. 
 
 ```php
 //your_redirect_url.php
-PHPShopify\ShopifySDK::config($config);
-$accessToken = \PHPShopify\AuthHelper::getAccessToken();
+$shopify = new PHPShopify\ShopifySDK($config);
+$accessToken = $shopifyClient->createAuthHelper()->getAccessToken($_GET);
 //Now store it in database or somewhere else
 ```
 
@@ -95,12 +89,6 @@ $accessToken = \PHPShopify\AuthHelper::createAuthRequest($scopes);
 ```
 
 #### Get the ShopifySDK Object
-
-```php
-$shopify = new PHPShopify\ShopifySDK;
-```
-
-You can provide the configuration as a parameter while instantiating the object (if you didn't configure already by calling `config()` method)
 
 ```php
 $shopify = new PHPShopify\ShopifySDK($config);
@@ -118,8 +106,8 @@ $products = $shopify->Product->get();
 - Get any specific product with ID (GET request)
 
 ```php
-$productID = 23564666666;
-$product = $shopify->Product($productID)->get();
+$productId = 23564666666;
+$product = $shopify->Product($productId)->get();
 ```
 
 You can also filter the results by using the url parameters (as specified by Shopify API Reference for each specific resource). 
@@ -127,11 +115,11 @@ You can also filter the results by using the url parameters (as specified by Sho
 - For example get the list of cancelled orders after a specified date and time (and `fields` specifies the data columns for each row to be rendered) : 
 
 ```php
-$params = array(
+$params = [
     'status' => 'cancelled',
     'created_at_min' => '2016-06-25T16:15:47-04:00',
     'fields' => 'id,line_items,name,total_price'
-);
+];
 
 $orders = $shopify->Order->get($params);
 ```
@@ -139,7 +127,7 @@ $orders = $shopify->Order->get($params);
 - Create a new order (POST Request)
 
 ```php
-$order = array (
+$order = [
     "email" => "foo@example.com",
     "fulfillment_status" => "unfulfilled",
     "line_items" => [
@@ -148,7 +136,7 @@ $order = array (
           "quantity" => 5
       ]
     ]
-);
+];
 
 $shopify->Order->post($order);
 ```
@@ -159,19 +147,19 @@ $shopify->Order->post($order);
 - Update an order (PUT Request)
 
 ```php
-$updateInfo = array (
+$updateInfo = [
     "fulfillment_status" => "fulfilled",
-);
+];
 
-$shopify->Order($orderID)->put($updateInfo);
+$shopify->Order($orderId)->put($updateInfo);
 ```
 
 - Remove a Webhook (DELETE request)
 
 ```php
-$webHookID = 453487303;
+$webHookId = 453487303;
 
-$shopify->Webhook($webHookID)->delete());
+$shopify->Webhook($webHookId)->delete());
 ```
 
 
@@ -181,14 +169,14 @@ $shopify->Webhook($webHookID)->delete());
 - For example, get the images of a product (GET request)
 
 ```php
-$productID = 23564666666;
-$productImages = $shopify->Product($productID)->Image->get();
+$productId = 23564666666;
+$productImages = $shopify->Product($productId)->Image->get();
 ```
 
 - Add a new address for a customer (POST Request)
 
 ```php
-$address = array(
+$address = [
     "address1" => "129 Oak St",
     "city" => "Ottawa",
     "province" => "ON",
@@ -197,41 +185,41 @@ $address = array(
     "last_name" => "Lastnameson",
     "first_name" => "Mother",
     "country" => "CA",
-);
+];
 
-$customerID = 4425749127;
+$customerId = 4425749127;
 
-$shopify->Customer($customerID)->Address->post($address);
+$shopify->Customer($customerId)->Address->post($address);
 ```
 
 - Create a fulfillment event (POST request)
 
 ```php
-$fulfillmentEvent = array(
+$fulfillmentEvent = [
     "status" => "in_transit"
-);
+];
 
-$shopify->Order($orderID)->Fulfillment($fulfillmentID)->Event->post($fulfillmentEvent);
+$shopify->Order($orderId)->Fulfillment($fulfillmentId)->Event->post($fulfillmentEvent);
 ```
 
 - Update a Blog article (PUT request)
 
 ```php
-$blogID = 23564666666;
-$articleID = 125336666;
-$updateArtilceInfo = array(
+$blogId = 23564666666;
+$articleId = 125336666;
+$updateArticleInfo = [
     "title" => "My new Title",
     "author" => "Your name",
     "tags" => "Tags, Will Be, Updated",
     "body_html" => "<p>Look, I can even update through a web service.<\/p>",
-);
-$shopify->Blog($blogID)->Article($articleID)->put($updateArtilceInfo);
+];
+$shopify->Blog($blogId)->Article($articleId)->put($updateArticleInfo);
 ```
 
 - Delete any specific article from a specific blog (DELETE request)
 
 ```php
-$blogArticle = $shopify->Blog($blogID)->Article($articleID)->delete();
+$blogArticle = $shopify->Blog($blogId)->Article($articleId)->delete();
 ```
 
 ### GraphQL <sup>*v1.1*</sup>
@@ -258,7 +246,6 @@ $data = $shopify->GraphQL->post($graphQL);
 
 ##### GraphQL Builder
 This SDK only accepts a GraphQL string as input. You can build your GraphQL from [Shopify GraphQL Builder](https://help.shopify.com/en/api/graphql-admin-api/graphiql-builder)
-
 
 ### Resource Mapping
 Some resources are available directly, some resources are only available through parent resources and a few resources can be accessed both ways. It is recommended that you see the details in the related Shopify API Reference page about each resource. Each resource name here is linked to related Shopify API Reference page.
@@ -345,7 +332,7 @@ $productCount = $shopify->Product->count();
 
 - Make an address default for the customer.
 ```php
-$shopify->Customer($customerID)->Address($addressID)->makeDefault();
+$shopify->Customer($customerId)->Address($addressId)->makeDefault();
 ```
 
 - Search for customers with keyword "Bob" living in country "United States".

@@ -62,7 +62,7 @@ class HttpRequestJson
      * @param string $url
      * @param array $httpHeaders
      *
-     * @return string
+     * @return array
      */
     public static function get($url, $httpHeaders = array())
     {
@@ -80,7 +80,7 @@ class HttpRequestJson
      * @param array $dataArray
      * @param array $httpHeaders
      *
-     * @return string
+     * @return array
      */
     public static function post($url, $dataArray, $httpHeaders = array())
     {
@@ -98,7 +98,7 @@ class HttpRequestJson
      * @param array $dataArray
      * @param array $httpHeaders
      *
-     * @return string
+     * @return array
      */
     public static function put($url, $dataArray, $httpHeaders = array())
     {
@@ -115,7 +115,7 @@ class HttpRequestJson
      * @param string $url
      * @param array $httpHeaders
      *
-     * @return string
+     * @return array
      */
     public static function delete($url, $httpHeaders = array())
     {

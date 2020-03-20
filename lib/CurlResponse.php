@@ -27,7 +27,8 @@ class CurlResponse
             foreach (\explode("\r\n", $headers) as $header) {
                 $pair = \explode(': ', $header, 2);
                 if (isset($pair[1])) {
-                    $this->headers[$pair[0]] = $pair[1];
+                    $headerKey = strtolower($pair[0]);
+                    $this->headers[$headerKey] = $pair[1];
                 }
             }
         } else {

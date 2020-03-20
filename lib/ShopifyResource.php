@@ -12,6 +12,7 @@ namespace PHPShopify;
 use PHPShopify\Exception\ApiException;
 use PHPShopify\Exception\SdkException;
 use PHPShopify\Exception\CurlException;
+use Psr\Http\Message\ResponseInterface;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,13 @@ abstract class ShopifyResource
      * @var array
      */
     protected $httpHeaders = array();
+
+    /**
+     * HTTP response headers of last executed request
+     *
+     * @var array
+     */
+    public static $lastHttpResponseHeaders = array();
 
     /**
      * The base URL of the API Resource (excluding the '.json' extension).
@@ -113,6 +121,21 @@ abstract class ShopifyResource
      *
      * @throws SdkException if Either AccessToken or ApiKey+Password Combination is not found in configuration
      */
+
+    /**
+     * Response Header Link, used for pagination
+     * @see: https://help.shopify.com/en/api/guides/paginated-rest-results?utm_source=exacttarget&utm_medium=email&utm_campaign=api_deprecation_notice_1908
+     * @var string $nextLink
+     */
+    private $nextLink = null;
+
+    /**
+     * Response Header Link, used for pagination
+     * @see: https://help.shopify.com/en/api/guides/paginated-rest-results?utm_source=exacttarget&utm_medium=email&utm_campaign=api_deprecation_notice_1908
+     * @var string $prevLink
+     */
+    private $prevLink = null;
+
     public function __construct($id = null, $parentResourceUrl = '')
     {
         $this->id = $id;
@@ -302,6 +325,9 @@ abstract class ShopifyResource
      *
      * @uses HttpRequestJson::get() to send the HTTP request
      *
+     * @throws ApiException if the response has an error specified
+     * @throws CurlException if response received with unexpected HTTP code.
+     *
      * @return array
      */
     public function get($urlParams = array(), $url = null, $dataKey = null)
@@ -320,6 +346,10 @@ abstract class ShopifyResource
      * Get count for the number of resources available
      *
      * @param array $urlParams Check Shopify API reference of the specific resource for the list of URL parameters
+     *
+     * @throws SdkException
+     * @throws ApiException if the response has an error specified
+     * @throws CurlException if response received with unexpected HTTP code.
      *
      * @return integer
      */
@@ -340,6 +370,8 @@ abstract class ShopifyResource
      * @param mixed $query
      *
      * @throws SdkException if search is not enabled for the resouce
+     * @throws ApiException if the response has an error specified
+     * @throws CurlException if response received with unexpected HTTP code.
      *
      * @return array
      */
@@ -365,6 +397,9 @@ abstract class ShopifyResource
      *
      * @uses HttpRequestJson::post() to send the HTTP request
      *
+     * @throws ApiException if the response has an error specified
+     * @throws CurlException if response received with unexpected HTTP code.
+     *
      * @return array
      */
     public function post($dataArray, $url = null, $wrapData = true)
@@ -387,6 +422,9 @@ abstract class ShopifyResource
      *
      * @uses HttpRequestJson::put() to send the HTTP request
      *
+     * @throws ApiException if the response has an error specified
+     * @throws CurlException if response received with unexpected HTTP code.
+     *
      * @return array
      */
     public function put($dataArray, $url = null, $wrapData = true)
@@ -408,6 +446,9 @@ abstract class ShopifyResource
      * @param string $url
      *
      * @uses HttpRequestJson::delete() to send the HTTP request
+     *
+     * @throws ApiException if the response has an error specified
+     * @throws CurlException if response received with unexpected HTTP code.
      *
      * @return array an empty array will be returned if the request is successfully completed
      */
@@ -477,6 +518,8 @@ abstract class ShopifyResource
      */
     public function processResponse($responseArray, $dataKey = null)
     {
+        self::$lastHttpResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
+
         if ($responseArray === null) {
             //Something went wrong, Checking HTTP Codes
             $httpOK = 200; //Request Successful, OK.
@@ -490,10 +533,13 @@ abstract class ShopifyResource
             }
         }
 
+        $lastResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
+        $this->getLinks($lastResponseHeaders);
+
         if (isset($responseArray['errors'])) {
             $message = $this->castString($responseArray['errors']);
 
-            throw new ApiException($message);
+            throw new ApiException($message, CurlRequest::$lastHttpCode);
         }
 
         if ($dataKey && isset($responseArray[$dataKey])) {
@@ -501,5 +547,65 @@ abstract class ShopifyResource
         } else {
             return $responseArray;
         }
+    }
+
+    public function getLinks($responseHeaders){
+        $this->nextLink = $this->getLink($responseHeaders,'next');
+        $this->prevLink = $this->getLink($responseHeaders,'previous');
+    }
+
+    public function getLink($responseHeaders, $type='next'){
+
+        if(array_key_exists('x-shopify-api-version', $responseHeaders)
+            && $responseHeaders['x-shopify-api-version'] < '2019-07'){
+            return null;
+        }
+
+        if(!empty($responseHeaders['link'])) {
+            if (stristr($responseHeaders['link'], '; rel="'.$type.'"') > -1) {
+                $headerLinks = explode(',', $responseHeaders['link']);
+                foreach ($headerLinks as $headerLink) {
+                    if (stristr($headerLink, '; rel="'.$type.'"') === -1) {
+                        continue;
+                    }
+
+                    $pattern = '#<(.*?)>; rel="'.$type.'"#m';
+                    preg_match($pattern, $headerLink, $linkResponseHeaders);
+                    if ($linkResponseHeaders) {
+                        return $linkResponseHeaders[1];
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function getPrevLink(){
+        return $this->prevLink;
+    }
+
+    public function getNextLink(){
+        return $this->nextLink;
+    }
+
+    public function getUrlParams($url) {
+        if ($url) {
+            $parts = parse_url($url);
+            return $parts['query'];
+        }
+        return '';
+    }
+
+    public function getNextPageParams(){
+        $nextPageParams = [];
+        parse_str($this->getUrlParams($this->getNextLink()), $nextPageParams);
+        return $nextPageParams;
+    }
+
+    public function getPrevPageParams(){
+        $nextPageParams = [];
+        parse_str($this->getUrlParams($this->getPrevLink()), $nextPageParams);
+        return $nextPageParams;
     }
 }

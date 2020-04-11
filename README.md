@@ -456,10 +456,10 @@ The custom methods are specific to some resources which may not be available for
 ## Reference
 - [Shopify API Reference](https://help.shopify.com/api/reference/)
 
-## Donation
-If this project help you reduce time to develop, you can donate any amount, which will help us to devote more hours to this project and ensure more frequent updates.
+## Paid Support
+You can hire the author of this SDK for setting up your project with PHPShopify SDK. 
 
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ME9N6M2B87XT4&currency_code=USD&source=url) 
+[Hire at Upwork](https://www.upwork.com/fl/tareqmahmood?s=1110580755107926016)
 
 ## Backers
 

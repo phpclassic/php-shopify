@@ -544,9 +544,9 @@ abstract class ShopifyResource
         }
 
         if ($dataKey && isset($responseArray[$dataKey])) {
-            return $responseArray[$dataKey];
+            return json_decode($responseArray[$dataKey]);
         } else {
-            return $responseArray;
+            return json_decode($responseArray);
         }
     }
 

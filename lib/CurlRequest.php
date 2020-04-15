@@ -28,6 +28,12 @@ class CurlRequest
      */
     public static $lastHttpCode;
 
+    /**
+     * HTTP response headers of last executed request
+     *
+     * @var array
+     */
+    public static $lastHttpResponseHeaders = array();
 
     /**
      * Initialize the curl resource
@@ -170,8 +176,9 @@ class CurlRequest
         // close curl resource to free up system resources
         curl_close($ch);
 
-        return $response;
+        self::$lastHttpResponseHeaders = $response->getHeaders();
 
+        return $response->getBody();
     }
 
 }

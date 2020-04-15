@@ -516,11 +516,12 @@ abstract class ShopifyResource
      *
      * @return array
      */
-    public function processResponse($responseArray, $dataKey = null)
+    public function processResponse($response, $dataKey = null)
     {
+
         self::$lastHttpResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
 
-        if ($responseArray === null) {
+        if ($response === null) {
             //Something went wrong, Checking HTTP Codes
             $httpOK = 200; //Request Successful, OK.
             $httpCreated = 201; //Create Successful.
@@ -534,7 +535,10 @@ abstract class ShopifyResource
             }
         }
 
+        $responseArray = json_decode($response, true);
+
         $lastResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
+
         $this->getLinks($lastResponseHeaders);
 
         if (isset($responseArray['errors'])) {
@@ -544,9 +548,9 @@ abstract class ShopifyResource
         }
 
         if ($dataKey && isset($responseArray[$dataKey])) {
-            return json_decode($responseArray[$dataKey]);
+            return $responseArray[$dataKey];
         } else {
-            return json_decode($responseArray);
+            return $responseArray;
         }
     }
 

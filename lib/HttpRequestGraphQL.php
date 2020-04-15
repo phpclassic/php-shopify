@@ -44,14 +44,14 @@ class HttpRequestGraphQL extends HttpRequestJson
             throw new SdkException("The GraphQL Admin API requires an access token for making authenticated requests!");
         }
 
-        self::$httpHeaders = $httpHeaders;
-
         if (is_array($variables)) {
             self::$postDataGraphQL = json_encode(['query' => $data, 'variables' => $variables]);
             self::$httpHeaders['Content-type'] = 'application/json';
         } else {
             self::$httpHeaders['Content-type'] = 'application/graphql';
         }
+        self::$httpHeaders['Content-type'] = 'application/graphql';
+
     }
 
     /**

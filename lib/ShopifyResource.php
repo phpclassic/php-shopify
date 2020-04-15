@@ -10,11 +10,7 @@ namespace PHPShopify;
 use PHPShopify\Exception\ApiException;
 use PHPShopify\Exception\SdkException;
 use PHPShopify\Exception\CurlException;
-<<<<<<< HEAD
-=======
-use Psr\Http\Message\ResponseInterface;
 
->>>>>>> a8ab4fda3087c48d3c8b6c17cdd7da0a2ed91108
 /*
 |--------------------------------------------------------------------------
 | Shopify API SDK Base Class
@@ -459,12 +455,9 @@ abstract class ShopifyResource
      */
     public function processResponse($response, $dataKey = null)
     {
-<<<<<<< HEAD
-        $responseArray = json_decode($response->getBody(), true);
-=======
-        self::$lastHttpResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
 
->>>>>>> a8ab4fda3087c48d3c8b6c17cdd7da0a2ed91108
+        $responseArray = json_decode($response->getBody(), true);
+
         if ($responseArray === null) {
             //Something went wrong, Checking HTTP Codes
             $httpOK = 200; //Request Successful, OK.

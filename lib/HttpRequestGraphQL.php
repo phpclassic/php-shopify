@@ -46,12 +46,16 @@ class HttpRequestGraphQL extends HttpRequestJson
 
         if (is_array($variables)) {
             self::$postDataGraphQL = json_encode(['query' => $data, 'variables' => $variables]);
-            self::$httpHeaders['Content-type'] = 'application/json';
+            $httpHeaders['Content-type'] = 'application/json';
         } else {
-            self::$httpHeaders['Content-type'] = 'application/graphql';
+            $httpHeaders['Content-type'] = 'application/graphql';
         }
-        self::$httpHeaders['Content-type'] = 'application/graphql';
 
+        $httpHeaders['Content-type'] = 'application/graphql';
+
+        $httpHeaders['X-Shopify-Access-Token'] = $httpHeaders['X-Shopify-Access-Token'];
+
+        self::$httpHeaders = $httpHeaders;
     }
 
     /**
@@ -66,6 +70,8 @@ class HttpRequestGraphQL extends HttpRequestJson
      */
     public static function post($url, $data, $httpHeaders = array(), $variables = null)
     {
+        $domain = explode('/admin/api', $url)[0];
+        $url    = "{$domain}/admin/api/graphql.json";
         self::prepareRequest($httpHeaders, $data, $variables);
 
         $response = CurlRequest::post($url, self::$postDataGraphQL, self::$httpHeaders);

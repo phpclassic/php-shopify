@@ -255,6 +255,36 @@ Query;
 
 $data = $shopify->GraphQL->post($graphQL);
 ```
+##### Variables
+If you want to use [GraphQL variables](https://shopify.dev/concepts/graphql/variables), you need to put the variables in an array and give it as the 4th argument of the `post()` method. The 2nd and 3rd arguments don't have any use in GraphQL, but are there to keep similarity with other requests, you can just keep those as `null`. Here is an example: 
+
+```php
+$graphQL = <<<Query
+mutation ($input: CustomerInput!) {
+  customerCreate(input: $input)
+  {
+    customer {
+      id
+      displayName
+    }
+    userErrors {
+      field
+      message
+    }
+  }
+}
+Query;
+
+$variables = [
+  "input" => [
+    "firstName" => "Greg",
+    "lastName" => "Variables",
+    "email" => "gregvariables@teleworm.us"
+  ]
+]
+$shopify->GraphQL->post($graphQL, null, null, $variables);
+```
+
 
 ##### GraphQL Builder
 This SDK only accepts a GraphQL string as input. You can build your GraphQL from [Shopify GraphQL Builder](https://help.shopify.com/en/api/graphql-admin-api/graphiql-builder)

@@ -171,7 +171,7 @@ $shopify->Order($orderID)->put($updateInfo);
 ```php
 $webHookID = 453487303;
 
-$shopify->Webhook($webHookID)->delete());
+$shopify->Webhook($webHookID)->delete();
 ```
 
 

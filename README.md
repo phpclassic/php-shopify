@@ -1,6 +1,6 @@
 # PHP Shopify SDK
 
-[![Build Status](https://travis-ci.org/phpclassic/php-shopify.svg?branch=master)](https://travis-ci.org/phpclassic/php-shopify) [![Monthly Downloads](https://poser.pugx.org/phpclassic/php-shopify/d/monthly)](https://packagist.org/packages/phpclassic/php-shopify) [![Total Downloads](https://poser.pugx.org/phpclassic/php-shopify/downloads)](https://packagist.org/packages/phpclassic/php-shopify) [![Latest Stable Version](https://poser.pugx.org/phpclassic/php-shopify/v/stable)](https://packagist.org/packages/phpclassic/php-shopify) [![Latest Unstable Version](https://poser.pugx.org/phpclassic/php-shopify/v/unstable)](https://packagist.org/packages/phpclassic/php-shopify) [![License](https://poser.pugx.org/phpclassic/php-shopify/license)](https://packagist.org/packages/phpclassic/php-shopify) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ME9N6M2B87XT4&currency_code=USD&source=url)
+[![Build Status](https://travis-ci.org/phpclassic/php-shopify.svg?branch=master)](https://travis-ci.org/phpclassic/php-shopify) [![Monthly Downloads](https://poser.pugx.org/phpclassic/php-shopify/d/monthly)](https://packagist.org/packages/phpclassic/php-shopify) [![Total Downloads](https://poser.pugx.org/phpclassic/php-shopify/downloads)](https://packagist.org/packages/phpclassic/php-shopify) [![Latest Stable Version](https://poser.pugx.org/phpclassic/php-shopify/v/stable)](https://packagist.org/packages/phpclassic/php-shopify) [![Latest Unstable Version](https://poser.pugx.org/phpclassic/php-shopify/v/unstable)](https://packagist.org/packages/phpclassic/php-shopify) [![License](https://poser.pugx.org/phpclassic/php-shopify/license)](https://packagist.org/packages/phpclassic/php-shopify) [![Hire](https://img.shields.io/badge/Hire-Upwork-green.svg)](https://www.upwork.com/fl/tareqmahmood?s=1110580755107926016)
 
 PHPShopify is a simple SDK implementation of Shopify API. It helps accessing the API in an object oriented way. 
 
@@ -171,7 +171,7 @@ $shopify->Order($orderID)->put($updateInfo);
 ```php
 $webHookID = 453487303;
 
-$shopify->Webhook($webHookID)->delete());
+$shopify->Webhook($webHookID)->delete();
 ```
 
 
@@ -255,6 +255,36 @@ Query;
 
 $data = $shopify->GraphQL->post($graphQL);
 ```
+##### Variables
+If you want to use [GraphQL variables](https://shopify.dev/concepts/graphql/variables), you need to put the variables in an array and give it as the 4th argument of the `post()` method. The 2nd and 3rd arguments don't have any use in GraphQL, but are there to keep similarity with other requests, you can just keep those as `null`. Here is an example: 
+
+```php
+$graphQL = <<<Query
+mutation ($input: CustomerInput!) {
+  customerCreate(input: $input)
+  {
+    customer {
+      id
+      displayName
+    }
+    userErrors {
+      field
+      message
+    }
+  }
+}
+Query;
+
+$variables = [
+  "input" => [
+    "firstName" => "Greg",
+    "lastName" => "Variables",
+    "email" => "gregvariables@teleworm.us"
+  ]
+]
+$shopify->GraphQL->post($graphQL, null, null, $variables);
+```
+
 
 ##### GraphQL Builder
 This SDK only accepts a GraphQL string as input. You can build your GraphQL from [Shopify GraphQL Builder](https://help.shopify.com/en/api/graphql-admin-api/graphiql-builder)
@@ -456,10 +486,10 @@ The custom methods are specific to some resources which may not be available for
 ## Reference
 - [Shopify API Reference](https://help.shopify.com/api/reference/)
 
-## Donation
-If this project help you reduce time to develop, you can donate any amount, which will help us to devote more hours to this project and ensure more frequent updates.
+## Paid Support
+You can hire the author of this SDK for setting up your project with PHPShopify SDK. 
 
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ME9N6M2B87XT4&currency_code=USD&source=url) 
+[Hire at Upwork](https://www.upwork.com/fl/tareqmahmood?s=1110580755107926016)
 
 ## Backers
 

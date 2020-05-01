@@ -524,11 +524,12 @@ abstract class ShopifyResource
             //Something went wrong, Checking HTTP Codes
             $httpOK = 200; //Request Successful, OK.
             $httpCreated = 201; //Create Successful.
+            $httpDeleted = 204; //Delete Successful
 
             //should be null if any other library used for http calls
             $httpCode = CurlRequest::$lastHttpCode;
 
-            if ($httpCode != null && $httpCode != $httpOK && $httpCode != $httpCreated) {
+            if ($httpCode != null && $httpCode != $httpOK && $httpCode != $httpCreated && $httpCode != $httpDeleted) {
                 throw new Exception\CurlException("Request failed with HTTP Code $httpCode.");
             }
         }

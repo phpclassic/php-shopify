@@ -530,7 +530,7 @@ abstract class ShopifyResource
             $httpCode = CurlRequest::$lastHttpCode;
 
             if ($httpCode != null && $httpCode != $httpOK && $httpCode != $httpCreated && $httpCode != $httpDeleted) {
-                throw new Exception\CurlException("Request failed with HTTP Code $httpCode.");
+                throw new Exception\CurlException("Request failed with HTTP Code $httpCode.", $httpCode);
             }
         }
 

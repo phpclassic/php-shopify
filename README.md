@@ -359,6 +359,8 @@ Some resources are available directly, some resources are only available through
 - [Shop](https://help.shopify.com/api/reference/shop) _(read only)_
 - [SmartCollection](https://help.shopify.com/api/reference/smartcollection)
 - SmartCollection -> [Event](https://help.shopify.com/api/reference/event/)
+- [ShopifyPayment](https://shopify.dev/docs/admin-api/rest/reference/shopify_payments/)
+- ShopifyPayment -> [Dispute](https://shopify.dev/docs/admin-api/rest/reference/shopify_payments/dispute/) _(read only)_
 - [Theme](https://help.shopify.com/api/reference/theme)
 - Theme -> [Asset](https://help.shopify.com/api/reference/asset/)
 - [User](https://help.shopify.com/api/reference/user) _(read only, Shopify Plus Only)_

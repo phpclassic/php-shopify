@@ -104,6 +104,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read ShippingZone $ShippingZone
  * @property-read Shop $Shop
  * @property-read SmartCollection $SmartCollection
+ * @property-read ShopifyPayment $ShopifyPayment
  * @property-read Theme $Theme
  * @property-read User $User
  * @property-read Webhook $Webhook
@@ -196,6 +197,7 @@ class ShopifySDK
         'ShippingZone',
         'Shop',
         'SmartCollection',
+        'ShopifyPayment',
         'Theme',
         'User',
         'Webhook',

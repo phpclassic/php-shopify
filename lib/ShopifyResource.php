@@ -149,6 +149,12 @@ abstract class ShopifyResource
         } elseif (!isset($config['ApiKey']) || !isset($config['Password'])) {
             throw new SdkException("Either AccessToken or ApiKey+Password Combination (in case of private API) is required to access the resources. Please check SDK configuration!");
         }
+
+        if (isset($config['ShopifyApiFeatures'])) {
+            foreach($config['ShopifyApiFeatures'] as $apiFeature) {
+                $this->httpHeaders['X-Shopify-Api-Features'] = $apiFeature;
+            }
+        }
     }
 
     /**

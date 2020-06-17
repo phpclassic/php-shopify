@@ -485,6 +485,15 @@ The custom methods are specific to some resources which may not be available for
     - [current()](https://help.shopify.com/api/reference/user#current)
     Get the current logged-in user
 
+### Shopify API features headers
+To send `X-Shopify-Api-Features` headers while using the SDK, you can use the following:
+
+```
+$config['ShopifyApiFeatures'] = ['include-presentment-prices'];
+$shopify = new PHPShopify\ShopifySDK($config);
+```
+
+
 ## Reference
 - [Shopify API Reference](https://help.shopify.com/api/reference/)
 

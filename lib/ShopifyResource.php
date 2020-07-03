@@ -548,7 +548,7 @@ abstract class ShopifyResource
 
         $this->getLinks($lastResponseHeaders);
 
-        $this->getDiscountLocation($lastResponseHeaders);
+        $this->getLocationHeader($lastResponseHeaders);
 
         if (isset($responseArray['errors'])) {
             $message = $this->castString($responseArray['errors']);
@@ -568,7 +568,7 @@ abstract class ShopifyResource
         $this->prevLink = $this->getLink($responseHeaders,'previous');
     }
 
-    public function getDiscountLocation($responseHeaders) {
+    public function getLocationHeader($responseHeaders) {
 
       if(!empty($responseHeaders['location'])) {
           $this->discountLocation = $responseHeaders['location'];
@@ -609,6 +609,10 @@ abstract class ShopifyResource
 
     public function getNextLink(){
         return $this->nextLink;
+    }
+
+    public function getDiscountLocation(){
+        return $this->discountLocation;
     }
 
     public function getUrlParams($url) {

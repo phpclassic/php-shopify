@@ -136,6 +136,13 @@ abstract class ShopifyResource
      */
     private $prevLink = null;
 
+    /**
+     * Response Header Location, used for discount code lookup
+     * @see: https://shopify.dev/docs/admin-api/rest/reference/discounts/discountcode?api[version]=2020-04#lookup-2020-04
+     * @var string $discountLocation
+     */
+    private $discountLocation = null;
+
     public function __construct($id = null, $parentResourceUrl = '')
     {
         $this->id = $id;
@@ -541,6 +548,8 @@ abstract class ShopifyResource
 
         $this->getLinks($lastResponseHeaders);
 
+        $this->getDiscountLocation($lastResponseHeaders);
+
         if (isset($responseArray['errors'])) {
             $message = $this->castString($responseArray['errors']);
 
@@ -554,9 +563,17 @@ abstract class ShopifyResource
         }
     }
 
-    public function getLinks($responseHeaders){
+    public function getLinks($responseHeaders) {
         $this->nextLink = $this->getLink($responseHeaders,'next');
         $this->prevLink = $this->getLink($responseHeaders,'previous');
+    }
+
+    public function getDiscountLocation($responseHeaders) {
+
+      if(!empty($responseHeaders['location'])) {
+          $this->discountLocation = $responseHeaders['location'];
+      }
+
     }
 
     public function getLink($responseHeaders, $type='next'){

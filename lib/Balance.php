@@ -1,30 +1,32 @@
 <?php
-/**
- * Created by PhpStorm.
- * @author Victor Kislichenko <v.kislichenko@gmail.com>
- * Created at 01/06/2020 16:45 AM UTC+03:00
- *
- * @see https://shopify.dev/docs/admin-api/rest/reference/shopify_payments Shopify API Reference for ShopifyPayment
- */
 
 namespace PHPShopify;
-
 
 /**
  * --------------------------------------------------------------------------
  * ShopifyPayment -> Child Resources
  * --------------------------------------------------------------------------
- * @property-read ShopifyResource $Dispute
  *
- * @method ShopifyResource Dispute(integer $id = null)
  *
  */
-class ShopifyPayment extends ShopifyResource
+class Balance extends ShopifyResource
 {
     /**
      * @inheritDoc
      */
-    public $resourceKey = 'shopify_payment';
+    protected $resourceKey = 'balance';
+
+    /**
+     * Get the pluralized version of the resource key
+     *
+     * Normally its the same as $resourceKey appended with 's', when it's different, the specific resource class will override this function
+     *
+     * @return string
+     */
+    protected function pluralizeKey()
+    {
+        return $this->resourceKey;
+    }
 
     /**
      * If the resource is read only. (No POST / PUT / DELETE actions)
@@ -37,8 +39,6 @@ class ShopifyPayment extends ShopifyResource
      * @inheritDoc
      */
     protected $childResource = array(
-        'Balance',
-        'Dispute',
-        'Payouts',
+        'Transactions'
     );
 }

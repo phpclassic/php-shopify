@@ -18,6 +18,15 @@ namespace PHPShopify;
  *
  * @method ShopifyResource Dispute(integer $id = null)
  *
+ * @property-read ShopifyResource $Balance
+ *
+ * @method ShopifyResource Balance(integer $id = null)
+ *
+ * @property-read ShopifyResource $Payouts
+ *
+ * @method ShopifyResource Payouts(integer $id = null)
+ *
+
  */
 class ShopifyPayment extends ShopifyResource
 {

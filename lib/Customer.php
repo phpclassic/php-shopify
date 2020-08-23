@@ -22,7 +22,7 @@ namespace PHPShopify;
  * --------------------------------------------------------------------------
  * Customer -> Custom actions
  * --------------------------------------------------------------------------
- * @method array search()      Search for customers matching supplied query
+ * @method array search(string $query = '')      Search for customers matching supplied query
  */
 class Customer extends ShopifyResource
 {

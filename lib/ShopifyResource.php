@@ -540,6 +540,11 @@ abstract class ShopifyResource
         if (isset($responseArray['errors'])) {
             $message = $this->castString($responseArray['errors']);
 
+            //check account already enabled or not
+            if($message=='account already enabled'){
+                return array('account_activation_url'=>false);
+            }
+            
             throw new ApiException($message, CurlRequest::$lastHttpCode);
         }
 

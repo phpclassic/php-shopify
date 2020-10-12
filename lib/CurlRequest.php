@@ -166,7 +166,13 @@ class CurlRequest
                 throw new ResourceRateLimitException($response->getBody());
             }
 
-            usleep(500000);
+            $retryAfter = $response->getHeader('Retry-After');
+
+            if ($retryAfter === null) {
+                break;
+            }
+
+            sleep((float)$retryAfter);
         }
 
         if (curl_errno($ch)) {

@@ -53,6 +53,7 @@ class CurlResponse
      */
     public function getHeader($key)
     {
+        $key = strtolower($key);
         return isset($this->headers[$key]) ? $this->headers[$key] : null;
     }
 

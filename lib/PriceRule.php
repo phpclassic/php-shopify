@@ -17,6 +17,7 @@ namespace PHPShopify;
  * @property-read ShopifyResource $DiscountCode
  *
  * @method ShopifyResource DiscountCode(integer $id = null)
+ * @method ShopifyResource Batch()
  *
  */
 class PriceRule extends ShopifyResource
@@ -30,6 +31,7 @@ class PriceRule extends ShopifyResource
      * @inheritDoc
      */
     protected $childResource = array(
-        'DiscountCode'
+        'DiscountCode',
+        'Batch',
     );
 }

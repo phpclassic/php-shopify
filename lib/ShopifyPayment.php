@@ -18,6 +18,15 @@ namespace PHPShopify;
  *
  * @method ShopifyResource Dispute(integer $id = null)
  *
+ * @property-read ShopifyResource $Balance
+ *
+ * @method ShopifyResource Balance(integer $id = null)
+ *
+ * @property-read ShopifyResource $Payouts
+ *
+ * @method ShopifyResource Payouts(integer $id = null)
+ *
+
  */
 class ShopifyPayment extends ShopifyResource
 {
@@ -27,9 +36,18 @@ class ShopifyPayment extends ShopifyResource
     public $resourceKey = 'shopify_payment';
 
     /**
+     * If the resource is read only. (No POST / PUT / DELETE actions)
+     *
+     * @var boolean
+     */
+    public $readOnly = true;
+
+    /**
      * @inheritDoc
      */
     protected $childResource = array(
-        'Dispute'
+        'Balance',
+        'Dispute',
+        'Payouts',
     );
 }

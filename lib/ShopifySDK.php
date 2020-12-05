@@ -146,6 +146,7 @@ use PHPShopify\Exception\SdkException;
  * @method ScriptTag ScriptTag(integer $id = null)
  * @method ShippingZone ShippingZone(integer $id = null)
  * @method Shop Shop(integer $id = null)
+ * @method ShopifyPayment ShopifyPayment()
  * @method SmartCollection SmartCollection(integer $id = null)
  * @method Theme Theme(int $id = null)
  * @method User User(integer $id = null)
@@ -235,16 +236,20 @@ class ShopifySDK
     protected $childResources = array(
         'Article'           => 'Blog',
         'Asset'             => 'Theme',
+        'Balance'           => 'ShopifyPayment',
         'CustomerAddress'   => 'Customer',
+        'Dispute'           => 'ShopifyPayment',
         'Fulfillment'       => 'Order',
         'FulfillmentEvent'  => 'Fulfillment',
         'OrderRisk'         => 'Order',
+        'Payouts'           => 'ShopifyPayment',
         'ProductImage'      => 'Product',
         'ProductVariant'    => 'Product',
         'DiscountCode'      => 'PriceRule',
         'Province'          => 'Country',
         'Refund'            => 'Order',
         'Transaction'       => 'Order',
+        'Transactions'      => 'Balance',
         'UsageCharge'       => 'RecurringApplicationCharge',
     );
 

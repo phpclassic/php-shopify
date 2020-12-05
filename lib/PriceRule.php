@@ -32,4 +32,8 @@ class PriceRule extends ShopifyResource
     protected $childResource = array(
         'DiscountCode'
     );
+
+    protected $customPostActions = array(
+        'batch'
+    );
 }

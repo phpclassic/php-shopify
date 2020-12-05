@@ -171,7 +171,7 @@ class ShopifySDK
      *
      * @var string[]
      */
-    protected $resources = array(
+    protected static $resources = array(
         'AbandonedCheckout',
         'AccessScope',
         'ApiDeprecations',
@@ -225,12 +225,12 @@ class ShopifySDK
     /**
      * @var float microtime of last api call
      */
-    public static $microtimeOfLastApiCall;
+    public $microtimeOfLastApiCall;
 
     /**
      * @var float Minimum gap in seconds to maintain between 2 api calls
      */
-    public static $timeAllowedForEachApiCall = .5;
+    public $timeAllowedForEachApiCall = .5;
 
     /**
      * @var string Default Shopify API version
@@ -242,15 +242,14 @@ class ShopifySDK
      *
      * @var array
      */
-    public static $config = array(
-    );
+    protected $config = array();
 
     /**
      * List of resources which are only available through a parent resource
      *
      * @var array Array key is the child resource name and array value is the parent resource name
      */
-    protected $childResources = array(
+    protected static $childResources = array(
         'Article'           => 'Blog',
         'Asset'             => 'Theme',
         'Balance'           => 'ShopifyPayment',
@@ -279,9 +278,23 @@ class ShopifySDK
      */
     public function __construct($config = array())
     {
-        if(!empty($config)) {
-            ShopifySDK::config($config);
+        $this->config = self::buildConfig($config);
+
+        if (isset($this->config['AllowedTimePerCall'])) {
+            $this->timeAllowedForEachApiCall = $this->config['AllowedTimePerCall'];
         }
+
+        if (isset($config['Curl']) && is_array($config['Curl'])) {
+            CurlRequest::config($config['Curl']);
+        }
+    }
+
+    /**
+     * @return array Config
+     */
+    public function getConfig()
+    {
+        return $this->config;
     }
 
     /**
@@ -312,9 +325,9 @@ class ShopifySDK
      */
     public function __call($resourceName, $arguments)
     {
-        if (!in_array($resourceName, $this->resources)) {
+        if (!in_array($resourceName, self::$resources)) {
             if (isset($this->childResources[$resourceName])) {
-                $message = "$resourceName is a child resource of " . $this->childResources[$resourceName] . ". Cannot be accessed directly.";
+                $message = "$resourceName is a child resource of " . self::$childResources[$resourceName] . ". Cannot be accessed directly.";
             } else {
                 $message = "Invalid resource name $resourceName. Pls check the API Reference to get the appropriate resource name.";
             }
@@ -327,73 +340,55 @@ class ShopifySDK
         $resourceID = !empty($arguments) ? $arguments[0] : null;
 
         //Initiate the resource object
-        $resource = new $resourceClassName($resourceID);
+        return new $resourceClassName($this->config, $resourceID);
+    }
 
-        return $resource;
+    /**
+     * Return new SDK Client
+     * @deprecated use: new ShopifySDK($config)
+     * @param array $config
+     */
+    public static function config($config)
+    {
+        return new self($config);
     }
 
     /**
      * Configure the SDK client
      *
      * @param array $config
-     *
-     * @return ShopifySDK
      */
-    public static function config($config)
+    public static function buildConfig($config)
     {
         /**
          * Reset config to it's initial values
          */
-        self::$config = array(
-            'ApiVersion' => self::$defaultApiVersion
+        $config = array_merge(
+            array('ApiVersion' => self::$defaultApiVersion),
+            $config
         );
-
-        foreach ($config as $key => $value) {
-            self::$config[$key] = $value;
-        }
 
         //Re-set the admin url if shop url is changed
         if(isset($config['ShopUrl'])) {
-            self::setAdminUrl();
+            $shopUrl = $config['ShopUrl'];
+
+            //Remove https:// and trailing slash (if provided)
+            $shopUrl = preg_replace('#^https?://|/$#', '', $shopUrl);
+            $apiVersion = $config['ApiVersion'];
+
+            if(isset($config['ApiKey']) && isset($config['Password'])) {
+                $apiKey = $config['ApiKey'];
+                $apiPassword = $config['Password'];
+                $adminUrl = "https://$apiKey:$apiPassword@$shopUrl/admin/";
+            } else {
+                $adminUrl = "https://$shopUrl/admin/";
+            }
+
+            $config['AdminUrl'] = $adminUrl;
+            $config['ApiUrl'] = $adminUrl . "api/$apiVersion/";
         }
 
-        //If want to keep more wait time than .5 seconds for each call
-        if (isset($config['AllowedTimePerCall'])) {
-            static::$timeAllowedForEachApiCall = $config['AllowedTimePerCall'];
-        }
-
-        if (isset($config['Curl']) && is_array($config['Curl'])) {
-            CurlRequest::config($config['Curl']);
-        }
-
-        return new ShopifySDK;
-    }
-
-    /**
-     * Set the admin url, based on the configured shop url
-     *
-     * @return string
-     */
-    public static function setAdminUrl()
-    {
-        $shopUrl = self::$config['ShopUrl'];
-
-        //Remove https:// and trailing slash (if provided)
-        $shopUrl = preg_replace('#^https?://|/$#', '', $shopUrl);
-        $apiVersion = self::$config['ApiVersion'];
-
-        if(isset(self::$config['ApiKey']) && isset(self::$config['Password'])) {
-            $apiKey = self::$config['ApiKey'];
-            $apiPassword = self::$config['Password'];
-            $adminUrl = "https://$apiKey:$apiPassword@$shopUrl/admin/";
-        } else {
-            $adminUrl = "https://$shopUrl/admin/";
-        }
-
-        self::$config['AdminUrl'] = $adminUrl;
-        self::$config['ApiUrl'] = $adminUrl . "api/$apiVersion/";
-
-        return $adminUrl;
+        return $config;
     }
 
     /**
@@ -401,8 +396,8 @@ class ShopifySDK
      *
      * @return string
      */
-    public static function getAdminUrl() {
-        return self::$config['AdminUrl'];
+    public function getAdminUrl() {
+        return $this->config['AdminUrl'];
     }
 
     /**
@@ -410,8 +405,8 @@ class ShopifySDK
      *
      * @return string
      */
-    public static function getApiUrl() {
-        return self::$config['ApiUrl'];
+    public function getApiUrl() {
+        return $this->config['ApiUrl'];
     }
 
     /**
@@ -421,19 +416,19 @@ class ShopifySDK
      *
      * @param bool $firstCallWait Whether to maintain the wait time even if it is the first API call
      */
-    public static function checkApiCallLimit($firstCallWait = false)
+    public function checkApiCallLimit($firstCallWait = false)
     {
         $timeToWait = 0;
-        if (static::$microtimeOfLastApiCall == null) {
+        if ($this->microtimeOfLastApiCall == null) {
             if ($firstCallWait) {
-                $timeToWait = static::$timeAllowedForEachApiCall;
+                $timeToWait = $this->timeAllowedForEachApiCall;
             }
         } else {
             $now = microtime(true);
-            $timeSinceLastCall = $now - static::$microtimeOfLastApiCall;
+            $timeSinceLastCall = $now - $this->microtimeOfLastApiCall;
             //Ensure 2 API calls per second
-            if($timeSinceLastCall < static::$timeAllowedForEachApiCall) {
-                $timeToWait = static::$timeAllowedForEachApiCall - $timeSinceLastCall;
+            if($timeSinceLastCall < $this->timeAllowedForEachApiCall) {
+                $timeToWait = $this->timeAllowedForEachApiCall - $timeSinceLastCall;
             }
         }
 
@@ -444,6 +439,6 @@ class ShopifySDK
             usleep($microSecondsToWait);
         }
 
-        static::$microtimeOfLastApiCall = microtime(true);
+        $this->microtimeOfLastApiCall = microtime(true);
     }
 }

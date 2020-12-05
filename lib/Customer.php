@@ -60,4 +60,21 @@ class Customer extends ShopifyResource
 
         return $this->post($dataArray, $url, false);
     }
+
+    /**
+     * Create account_activation_link for customer.
+     *
+     * @param array $customer_id
+     *
+     * @return array
+     */
+    public function account_activation_url($customer_id = 0)
+    {
+        if (!(int)$customer_id > 0) {
+            return false;
+        }
+
+        $url = $this->generateUrl(array(), $customer_id.'/account_activation_url');
+        return $this->post(array(), $url, false);
+    }
 }

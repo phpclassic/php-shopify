@@ -105,6 +105,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read Shop $Shop
  * @property-read SmartCollection $SmartCollection
  * @property-read ShopifyPayment $ShopifyPayment
+ * @property-read TenderTransaction $TenderTransaction
  * @property-read Theme $Theme
  * @property-read User $User
  * @property-read Webhook $Webhook
@@ -148,6 +149,7 @@ use PHPShopify\Exception\SdkException;
  * @method Shop Shop(integer $id = null)
  * @method ShopifyPayment ShopifyPayment()
  * @method SmartCollection SmartCollection(integer $id = null)
+ * @method TenderTransaction TenderTransaction()
  * @method Theme Theme(int $id = null)
  * @method User User(integer $id = null)
  * @method Webhook Webhook(integer $id = null)
@@ -199,6 +201,7 @@ class ShopifySDK
         'Shop',
         'SmartCollection',
         'ShopifyPayment',
+        'TenderTransaction',
         'Theme',
         'User',
         'Webhook',

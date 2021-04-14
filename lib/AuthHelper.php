@@ -171,7 +171,7 @@ class AuthHelper
             $response = HttpRequestJson::post($config['AdminUrl'] . 'oauth/access_token', $data);
 
             if (CurlRequest::$lastHttpCode >= 400) {
-                throw new SdkException('The shop is invalid or the authorization code has already been used.');
+                throw new SdkException("The shop is invalid or the authorization code has already been used.");
             }
 
             return isset($response['access_token']) ? $response['access_token'] : null;

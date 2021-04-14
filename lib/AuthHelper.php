@@ -170,6 +170,10 @@ class AuthHelper
 
             $response = HttpRequestJson::post($config['AdminUrl'] . 'oauth/access_token', $data);
 
+            if (CurlRequest::$lastHttpCode >= 400) {
+                throw new SdkException("Invalid request. The shop domain is incorrect or the authorization code has already been used.");
+            }
+
             return isset($response['access_token']) ? $response['access_token'] : null;
         } else {
             throw new SdkException("This request is not initiated from a valid shopify shop!");

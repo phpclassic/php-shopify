@@ -67,6 +67,7 @@ namespace PHPShopify;
 use PHPShopify\Exception\SdkException;
 
 /**
+ * @property-read ApplicationCredit $applicationCredit
  * @property-read AbandonedCheckout $AbandonedCheckout
  * @property-read Blog $Blog
  * @property-read CarrierService $CarrierService
@@ -81,6 +82,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read Discount $Discount
  * @property-read DiscountCode $DiscountCode
  * @property-read DraftOrder $DraftOrder
+ * @property-read Checkout $Checkout
  * @property-read PriceRule $PriceRule
  * @property-read Event $Event
  * @property-read FulfillmentService $FulfillmentService
@@ -95,6 +97,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read Policy $Policy
  * @property-read Product $Product
  * @property-read ProductListing $ProductListing
+ * @property-read CollectionListing $CollectionListing
  * @property-read ProductVariant $ProductVariant
  * @property-read RecurringApplicationCharge $RecurringApplicationCharge
  * @property-read Redirect $Redirect
@@ -107,6 +110,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read Webhook $Webhook
  * @property-read GraphQL $GraphQL
  *
+ * @method ApplicationCredit ApplicationCredit(integer $id = null)
  * @method AbandonedCheckout AbandonedCheckout(integer $id = null)
  * @method Blog Blog(integer $id = null)
  * @method CarrierService CarrierService(integer $id = null)
@@ -131,11 +135,13 @@ use PHPShopify\Exception\SdkException;
  * @method Metafield Metafield(integer $id = null)
  * @method Multipass Multipass(integer $id = null)
  * @method Order Order(integer $id = null)
+ * @method Checkout Checkout(integer $id = null)
  * @method Page Page(integer $id = null)
  * @method Policy Policy(integer $id = null)
  * @method Product Product(integer $id = null)
  * @method ProductListing ProductListing(integer $id = null)
  * @method ProductVariant ProductVariant(integer $id = null)
+ * @method CollectionListing CollectionListing(integer $id = null)
  * @method RecurringApplicationCharge RecurringApplicationCharge(integer $id = null)
  * @method Redirect Redirect(integer $id = null)
  * @method ScriptTag ScriptTag(integer $id = null)
@@ -156,6 +162,7 @@ class ShopifySDK
      */
     protected $resources = array(
         'AbandonedCheckout',
+        'ApplicationCredit',
         'ApplicationCharge',
         'Blog',
         'CarrierService',
@@ -179,11 +186,13 @@ class ShopifySDK
         'Metafield',
         'Multipass',
         'Order',
+        'Checkout',
         'Page',
         'Policy',
         'Product',
         'ProductListing',
         'ProductVariant',
+        'CollectionListing',
         'PriceRule',
         'RecurringApplicationCharge',
         'Redirect',
@@ -239,6 +248,7 @@ class ShopifySDK
         'Province'          => 'Country',
         'Refund'            => 'Order',
         'Transaction'       => 'Order',
+        'ShippingRate'      => 'Checkout',
         'UsageCharge'       => 'RecurringApplicationCharge',
     );
 

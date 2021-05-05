@@ -136,6 +136,13 @@ abstract class ShopifyResource
      */
     private $prevLink = null;
 
+    /**
+     * Response Header Location, used for discount code lookup
+     * @see: https://shopify.dev/docs/admin-api/rest/reference/discounts/discountcode?api[version]=2020-04#lookup-2020-04
+     * @var string $discountLocation
+     */
+    private $discountLocation = null;
+
     public function __construct($id = null, $parentResourceUrl = '')
     {
         $this->id = $id;
@@ -313,7 +320,7 @@ abstract class ShopifyResource
      */
     public function generateUrl($urlParams = array(), $customAction = null)
     {
-        return $this->resourceUrl . ($customAction ? "/$customAction" : '') . '.json' . (!empty($urlParams) ? '?' . http_build_query($urlParams) : '');
+        return $this->resourceUrl . ($customAction ? "/$customAction" : '') . '.json' . (!empty($urlParams) ? '?' . preg_replace('/\%5B\d+\%5D/', '%5B%5D', http_build_query($urlParams)) : '');
     }
 
     /**
@@ -516,11 +523,12 @@ abstract class ShopifyResource
      *
      * @return array
      */
-    public function processResponse($responseArray, $dataKey = null)
+    public function processResponse($response, $dataKey = null)
     {
+
         self::$lastHttpResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
 
-        if ($responseArray === null) {
+        if ($response === null) {
             //Something went wrong, Checking HTTP Codes
             $httpOK = 200; //Request Successful, OK.
             $httpCreated = 201; //Create Successful.
@@ -534,8 +542,13 @@ abstract class ShopifyResource
             }
         }
 
+        $responseArray = json_decode($response, true);
+
         $lastResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
+
         $this->getLinks($lastResponseHeaders);
+
+        $this->getLocationHeader($lastResponseHeaders);
 
         if (isset($responseArray['errors'])) {
             $message = $this->castString($responseArray['errors']);
@@ -550,9 +563,17 @@ abstract class ShopifyResource
         }
     }
 
-    public function getLinks($responseHeaders){
+    public function getLinks($responseHeaders) {
         $this->nextLink = $this->getLink($responseHeaders,'next');
         $this->prevLink = $this->getLink($responseHeaders,'previous');
+    }
+
+    public function getLocationHeader($responseHeaders) {
+
+      if(!empty($responseHeaders['location'])) {
+          $this->discountLocation = $responseHeaders['location'];
+      }
+
     }
 
     public function getLink($responseHeaders, $type='next'){
@@ -588,6 +609,10 @@ abstract class ShopifyResource
 
     public function getNextLink(){
         return $this->nextLink;
+    }
+
+    public function getDiscountLocation(){
+        return $this->discountLocation;
     }
 
     public function getUrlParams($url) {

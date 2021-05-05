@@ -320,7 +320,7 @@ abstract class ShopifyResource
      */
     public function generateUrl($urlParams = array(), $customAction = null)
     {
-        return $this->resourceUrl . ($customAction ? "/$customAction" : '') . '.json' . (!empty($urlParams) ? '?' . http_build_query($urlParams) : '');
+        return $this->resourceUrl . ($customAction ? "/$customAction" : '') . '.json' . (!empty($urlParams) ? '?' . preg_replace('/\%5B\d+\%5D/', '%5B%5D', http_build_query($urlParams)) : '');
     }
 
     /**

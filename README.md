@@ -302,7 +302,8 @@ Some resources are available directly, some resources are only available through
 - Blog -> Article -> [Metafield](https://help.shopify.com/api/reference/metafield)
 - Blog -> [Event](https://help.shopify.com/api/reference/event/)
 - Blog -> [Metafield](https://help.shopify.com/api/reference/metafield)
-- [CarrierService](https://help.shopify.com/api/reference/carrierservice/)
+- [CarrierService](https://help.shopify.com/api/reference/carrierservice/)-
+- [Cart](https://shopify.dev/docs/themes/ajax-api/reference/cart) (read only)
 - [Collect](https://help.shopify.com/api/reference/collect/)
 - [Comment](https://help.shopify.com/api/reference/comment/)
 - Comment -> [Event](https://help.shopify.com/api/reference/event/)

@@ -71,6 +71,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read ApplicationCharge $ApplicationCharge
  * @property-read Blog $Blog
  * @property-read CarrierService $CarrierService
+ * @property-read Cart $Cart
  * @property-read Collect $Collect
  * @property-read Collection $Collection
  * @property-read Comment $Comment
@@ -115,6 +116,7 @@ use PHPShopify\Exception\SdkException;
  * @method ApplicationCharge ApplicationCharge(integer $id = null)
  * @method Blog Blog(integer $id = null)
  * @method CarrierService CarrierService(integer $id = null)
+ * @method Cart Cart(string $cart_token = null)
  * @method Collect Collect(integer $id = null)
  * @method Collection Collection(integer $id = null)
  * @method Comment Comment(integer $id = null)
@@ -167,6 +169,7 @@ class ShopifySDK
         'ApplicationCharge',
         'Blog',
         'CarrierService',
+        'Cart',
         'Collect',
         'Collection',
         'Comment',

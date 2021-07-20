@@ -136,6 +136,14 @@ abstract class ShopifyResource
      */
     private $prevLink = null;
 
+    /**
+     * The number of max request retry if a curl http error occured before throw and exception
+     *
+     * @var integer
+     */
+    public $maxRequestRetry = 0;
+
+
     public function __construct($id = null, $parentResourceUrl = '')
     {
         $this->id = $id;
@@ -154,6 +162,10 @@ abstract class ShopifyResource
             foreach($config['ShopifyApiFeatures'] as $apiFeature) {
                 $this->httpHeaders['X-Shopify-Api-Features'] = $apiFeature;
             }
+        }
+
+        if (isset($config['MaxRequestRetry'])) {
+            $this->maxRequestRetry = $config['MaxRequestRetry'];
         }
     }
 
@@ -340,7 +352,18 @@ abstract class ShopifyResource
     {
         if (!$url) $url  = $this->generateUrl($urlParams);
 
-        $response = HttpRequestJson::get($url, $this->httpHeaders);
+        $n = 0;
+        while(true) {
+            try {
+                $response = HttpRequestJson::get($url, $this->httpHeaders);
+                $this->checkResponse($response);
+                break;
+            } catch(\Exception $e) {
+                if (!$this->shouldRetry($response, $e, $n++)) {
+                    throw $e;
+                }
+            }
+        }
 
         if (!$dataKey) $dataKey = $this->id ? $this->resourceKey : $this->pluralizeKey();
 
@@ -414,7 +437,18 @@ abstract class ShopifyResource
 
         if ($wrapData && !empty($dataArray)) $dataArray = $this->wrapData($dataArray);
 
-        $response = HttpRequestJson::post($url, $dataArray, $this->httpHeaders);
+        $n = 0;
+        while(true) {
+            try {
+                $response = HttpRequestJson::post($url, $dataArray, $this->httpHeaders);
+                $this->checkResponse($response);
+                break;
+            } catch(\Exception $e) {
+                if (!$this->shouldRetry($response, $e, $n++)) {
+                    throw $e;
+                }
+            }
+        }
 
         return $this->processResponse($response, $this->resourceKey);
     }
@@ -440,7 +474,18 @@ abstract class ShopifyResource
 
         if ($wrapData && !empty($dataArray)) $dataArray = $this->wrapData($dataArray);
 
-        $response = HttpRequestJson::put($url, $dataArray, $this->httpHeaders);
+        $n = 0;
+        while(true) {
+            try {
+                $response = HttpRequestJson::put($url, $dataArray, $this->httpHeaders);
+                $this->checkResponse($response);
+                break;
+            } catch(\Exception $e) {
+                if (!$this->shouldRetry($response, $e, $n++)) {
+                    throw $e;
+                }
+            }
+        }
 
         return $this->processResponse($response, $this->resourceKey);
     }
@@ -462,7 +507,18 @@ abstract class ShopifyResource
     {
         if (!$url) $url = $this->generateUrl($urlParams);
 
-        $response = HttpRequestJson::delete($url, $this->httpHeaders);
+        $n = 0;
+        while(true) {
+            try {
+                $response = HttpRequestJson::delete($url, $this->httpHeaders);
+                $this->checkResponse($response);
+                break;
+            } catch(\Exception $e) {
+                if (!$this->shouldRetry($response, $e, $n++)) {
+                    throw $e;
+                }
+            }
+        }
 
         return $this->processResponse($response);
     }
@@ -512,17 +568,38 @@ abstract class ShopifyResource
     }
 
     /**
+     * Evaluate if send again a request
+     *
+     * @param array $responseArray Request response in array format
+     * @param exception $error the request error occured
+     * @param integer $retry the current number of retry
+     *
+     * @return bool
+     */
+    public function shouldRetry($response, $error, $retry) {
+        if ($retry > $this->maxRequestRetry) {
+            return false;
+        }
+
+        $config = ShopifySDK::$config;
+
+        if (isset($config['RequestRetryCallback'])) {
+           $config['RequestRetryCallback']($response, $error, $retry);
+        }
+
+        return true;
+    }
+
+    /**
      * Process the request response
      *
      * @param array $responseArray Request response in array format
-     * @param string $dataKey Keyname to fetch data from response array
      *
-     * @throws ApiException if the response has an error specified
      * @throws CurlException if response received with unexpected HTTP code.
      *
      * @return array
      */
-    public function processResponse($responseArray, $dataKey = null)
+    public function checkResponse($responseArray)
     {
         self::$lastHttpResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
 
@@ -544,6 +621,21 @@ abstract class ShopifyResource
                 throw new Exception\CurlException("Request failed with HTTP Code $httpCode.", $httpCode);
             }
         }
+    }
+
+    /**
+     * Process the request response
+     *
+     * @param array $responseArray Request response in array format
+     * @param string $dataKey Keyname to fetch data from response array
+     *
+     * @throws ApiException if the response has an error specified
+     *
+     * @return array
+     */
+    public function processResponse($responseArray, $dataKey = null)
+    {
+        self::$lastHttpResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
 
         $lastResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
         $this->getLinks($lastResponseHeaders);
@@ -555,7 +647,7 @@ abstract class ShopifyResource
             if($message=='account already enabled'){
                 return array('account_activation_url'=>false);
             }
-            
+
             throw new ApiException($message, CurlRequest::$lastHttpCode);
         }
 

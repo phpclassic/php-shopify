@@ -57,6 +57,10 @@ class CurlRequest
         curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLOPT_USERAGENT, 'PHPClassic/PHPShopify');
 
+        //Set timeouts
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+
         $headers = array();
         foreach ($httpHeaders as $key => $value) {
             $headers[] = "$key: $value";

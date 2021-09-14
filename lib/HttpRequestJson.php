@@ -19,7 +19,6 @@ namespace PHPShopify;
  */
 class HttpRequestJson
 {
-
     /**
      * HTTP request headers
      *
@@ -32,7 +31,7 @@ class HttpRequestJson
      *
      * @var string
      */
-    private static $postDataJSON;
+    protected static $postDataJSON;
 
 
     /**
@@ -68,9 +67,7 @@ class HttpRequestJson
     {
         self::prepareRequest($httpHeaders);
 
-        $response = CurlRequest::get($url, self::$httpHeaders);
-
-        return self::processResponse($response);
+        return self::processRequest('GET', $url);
     }
 
     /**
@@ -86,9 +83,7 @@ class HttpRequestJson
     {
         self::prepareRequest($httpHeaders, $dataArray);
 
-        $response = CurlRequest::post($url, self::$postDataJSON, self::$httpHeaders);
-
-        return self::processResponse($response);
+        return self::processRequest('POST', $url);
     }
 
     /**
@@ -104,9 +99,7 @@ class HttpRequestJson
     {
         self::prepareRequest($httpHeaders, $dataArray);
 
-        $response = CurlRequest::put($url, self::$postDataJSON, self::$httpHeaders);
-
-        return self::processResponse($response);
+        return self::processRequest('PUT', $url);
     }
 
     /**
@@ -121,9 +114,68 @@ class HttpRequestJson
     {
         self::prepareRequest($httpHeaders);
 
-        $response = CurlRequest::delete($url, self::$httpHeaders);
+        return self::processRequest('DELETE', $url);
+    }
 
-        return self::processResponse($response);
+    /**
+     * Process a curl request and return decoded JSON response
+     *
+     * @param string $method Request http method ('GET', 'POST', 'PUT' or 'DELETE')
+     * @param string $url Request URL
+     *
+     * @throws CurlException if response received with unexpected HTTP code.
+     *
+     * @return array
+     */
+    public static function processRequest($method, $url) {
+        $retry = 0;
+        $raw = null;
+
+        while(true) {
+            try {
+                switch($method) {
+                    case 'GET':
+                        $raw = CurlRequest::get($url, self::$httpHeaders);
+                        break;
+                    case 'POST':
+                        $raw = CurlRequest::post($url, self::$postDataJSON, self::$httpHeaders);
+                        break;
+                    case 'PUT':
+                        $raw = CurlRequest::put($url, self::$postDataJSON, self::$httpHeaders);
+                        break;
+                    case 'DELETE':
+                        $raw = CurlRequest::delete($url, self::$httpHeaders);
+                        break;
+                    default:
+                        throw new \Exception("unexpected request method '$method'");
+                }
+
+                return self::processResponse($raw);
+            } catch(\Exception $e) {
+                if (!self::shouldRetry($raw, $e, $retry++)) {
+                    throw $e;
+                }
+            }
+        }
+    }
+
+    /**
+     * Evaluate if send again a request
+     *
+     * @param string $response Raw request response
+     * @param exception $error the request error occured
+     * @param integer $retry the current number of retry
+     *
+     * @return bool
+     */
+    public static function shouldRetry($response, $error, $retry) {
+        $config = ShopifySDK::$config;
+
+        if (isset($config['RequestRetryCallback'])) {
+           return $config['RequestRetryCallback']($response, $error, $retry);
+        }
+
+        return false;
     }
 
     /**
@@ -135,8 +187,29 @@ class HttpRequestJson
      */
     protected static function processResponse($response)
     {
+        $responseArray = json_decode($response, true);
 
-        return json_decode($response, true);
+        if ($responseArray === null) {
+            //Something went wrong, Checking HTTP Codes
+            $httpOK = 200; //Request Successful, OK.
+            $httpCreated = 201; //Create Successful.
+            $httpDeleted = 204; //Delete Successful
+            $httpOther = 303; //See other (headers).
+
+            $lastHttpResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
+
+            //should be null if any other library used for http calls
+            $httpCode = CurlRequest::$lastHttpCode;
+
+            if ($httpCode == $httpOther && array_key_exists('location', $lastHttpResponseHeaders)) {
+                return ['location' => $lastHttpResponseHeaders['location']];
+            }
+
+            if ($httpCode != null && $httpCode != $httpOK && $httpCode != $httpCreated && $httpCode != $httpDeleted) {
+                throw new Exception\CurlException("Request failed with HTTP Code $httpCode.", $httpCode);
+            }
+        }
+
+        return $responseArray;
     }
-
 }

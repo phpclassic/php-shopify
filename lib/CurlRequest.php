@@ -36,6 +36,13 @@ class CurlRequest
     public static $lastHttpResponseHeaders = array();
 
     /**
+     * Curl additional configuration
+     *
+     * @var array
+     */
+    protected static $config = array();
+
+    /**
      * Initialize the curl resource
      *
      * @param string $url
@@ -56,6 +63,10 @@ class CurlRequest
 
         curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLOPT_USERAGENT, 'PHPClassic/PHPShopify');
+
+        foreach (self::$config as $option => $value) {
+            curl_setopt($ch, $option, $value);
+        }
 
         $headers = array();
         foreach ($httpHeaders as $key => $value) {
@@ -137,6 +148,16 @@ class CurlRequest
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
 
         return self::processRequest($ch);
+    }
+
+    /**
+     * Set curl additional configuration
+     *
+     * @param array $config
+     */
+    public static function config($config = array())
+    {
+        self::$config = $config;
     }
 
     /**

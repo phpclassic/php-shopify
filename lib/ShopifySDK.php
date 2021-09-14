@@ -351,6 +351,10 @@ class ShopifySDK
             static::$timeAllowedForEachApiCall = $config['AllowedTimePerCall'];
         }
 
+        if (isset($config['Curl']) && is_array($config['Curl'])) {
+            CurlRequest::config($config['Curl']);
+        }
+
         return new ShopifySDK;
     }
 

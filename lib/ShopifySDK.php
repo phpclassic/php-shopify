@@ -130,6 +130,7 @@ use PHPShopify\Exception\SdkException;
  * @method DiscountCode DiscountCode(integer $id = null)
  * @method Event Event(integer $id = null)
  * @method FulfillmentService FulfillmentService(integer $id = null)
+ * @method FulfillmentOrder FulfillmentOrder(integer $id = null)
  * @method GiftCard GiftCard(integer $id = null)
  * @method InventoryItem InventoryItem(integer $id = null)
  * @method InventoryLevel InventoryLevel(integer $id = null)
@@ -183,6 +184,7 @@ class ShopifySDK
         'DraftOrder',
         'Event',
         'FulfillmentService',
+        'FulfillmentOrder',
         'GiftCard',
         'InventoryItem',
         'InventoryLevel',

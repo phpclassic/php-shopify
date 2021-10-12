@@ -23,7 +23,8 @@ namespace PHPShopify;
  * @method array close()       Close a fulfillment order
  * @method array move()			Move a fulfilment order to a new location
  * @method array reschedule()	Reschedule fulfill_at_time of a scheduled fulfillment order
- *
+ * @method array hold(array $data)  Hold a fulfillment order
+ * @method array release_hold()     Release hold on a fulfillment order
  */
 class FulfillmentOrder extends ShopifyResource
 {
@@ -41,6 +42,8 @@ class FulfillmentOrder extends ShopifyResource
         'open',
         'cancel',
 		'move',
-		'reschedule'
+		'reschedule',
+        'hold',
+        'release_hold'
     );
 }

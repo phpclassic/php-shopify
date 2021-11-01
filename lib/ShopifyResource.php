@@ -137,6 +137,11 @@ abstract class ShopifyResource
     private $prevLink = null;
 
     /**
+     * HTTP code used to check if we need to poll or not
+     */
+    public $httpCode = null;
+
+    /**
      * Response Header Location, used for discount code lookup
      * @see: https://shopify.dev/docs/admin-api/rest/reference/discounts/discountcode?api[version]=2020-04#lookup-2020-04
      * @var string $discountLocation
@@ -536,10 +541,14 @@ abstract class ShopifyResource
 
             //should be null if any other library used for http calls
             $httpCode = CurlRequest::$lastHttpCode;
+            $this->httpCode = $httpCode;
 
             if ($httpCode != null && $httpCode != $httpOK && $httpCode != $httpCreated && $httpCode != $httpDeleted) {
                 throw new Exception\CurlException("Request failed with HTTP Code $httpCode.");
             }
+        } else {
+          $httpCode = CurlRequest::$lastHttpCode;
+          $this->httpCode = $httpCode;
         }
 
         $responseArray = json_decode($response, true);

@@ -68,6 +68,7 @@ use PHPShopify\Exception\SdkException;
 
 /**
  * @property-read AbandonedCheckout $AbandonedCheckout
+ * @property-read AccessScope $AccessScope
  * @property-read ApplicationCharge $ApplicationCharge
  * @property-read Blog $Blog
  * @property-read CarrierService $CarrierService
@@ -113,6 +114,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read GraphQL $GraphQL
  *
  * @method AbandonedCheckout AbandonedCheckout(integer $id = null)
+ * @method AccessScope AccessScope()
  * @method ApplicationCharge ApplicationCharge(integer $id = null)
  * @method Blog Blog(integer $id = null)
  * @method CarrierService CarrierService(integer $id = null)
@@ -166,6 +168,7 @@ class ShopifySDK
      */
     protected $resources = array(
         'AbandonedCheckout',
+        'AccessScope',
         'ApplicationCharge',
         'Blog',
         'CarrierService',

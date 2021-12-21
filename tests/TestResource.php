@@ -23,6 +23,7 @@ class TestResource extends \PHPUnit_Framework_TestCase
             'ShopUrl' => getenv('SHOPIFY_SHOP_URL'), //Your shop URL
             'ApiKey' => getenv('SHOPIFY_API_KEY'), //Your Private API Key
             'Password' => getenv('SHOPIFY_API_PASSWORD'), //Your Private API Password
+            'AccessToken' => getenv('SHOPIFY_API_PASSWORD'), //Your Access Token(Private API Password)
         );
 
         self::$shopify = ShopifySDK::config($config);

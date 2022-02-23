@@ -40,6 +40,7 @@ $config = array(
     'ShopUrl' => 'yourshop.myshopify.com',
     'ApiKey' => '***YOUR-PRIVATE-API-KEY***',
     'Password' => '***YOUR-PRIVATE-API-PASSWORD***',
+    'AccessToken' => '***YOUR-PRIVATE-API-PASSWORD***', // optional but needed if you want to use graphql
 );
 
 PHPShopify\ShopifySDK::config($config);

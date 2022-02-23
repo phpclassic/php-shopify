@@ -33,20 +33,20 @@ PHPShopify\ShopifySDK::config($config);
 You can use PHPShopify in a pretty simple object oriented way. 
 
 #### Configure ShopifySDK
-If you are using your own private API, provide the ApiKey and Password. 
+If you are using your own private API (except GraphQL), provide the ApiKey and Password. 
 
 ```php
 $config = array(
     'ShopUrl' => 'yourshop.myshopify.com',
     'ApiKey' => '***YOUR-PRIVATE-API-KEY***',
     'Password' => '***YOUR-PRIVATE-API-PASSWORD***',
-    'AccessToken' => '***YOUR-PRIVATE-API-PASSWORD***', // optional but needed if you want to use graphql
 );
 
 PHPShopify\ShopifySDK::config($config);
 ```
 
-For Third party apps, use the permanent access token.
+For Third party apps, use the permanent access token. 
+> For GraphQL, AccessToken is required. If you are using private API for GraphQL, use your password as AccessToken here.
 
 ```php
 $config = array(

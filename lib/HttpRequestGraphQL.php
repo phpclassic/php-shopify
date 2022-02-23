@@ -68,8 +68,8 @@ class HttpRequestGraphQL extends HttpRequestJson
     {
         self::prepareRequest($httpHeaders, $data, $variables);
 
-        $response = CurlRequest::post($url, self::$postDataGraphQL, self::$httpHeaders);
+        self::$postDataJSON = self::$postDataGraphQL;
 
-        return self::processResponse($response);
+        return self::processRequest('POST', $url);
     }
 }

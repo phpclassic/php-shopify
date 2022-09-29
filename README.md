@@ -56,6 +56,17 @@ $config = array(
 
 PHPShopify\ShopifySDK::config($config);
 ```
+You can use specific Shopify API Version by adding in the config array
+
+```php
+$config = array(
+    'ShopUrl' => 'yourshop.myshopify.com',
+    'AccessToken' => '***ACCESS-TOKEN-FOR-THIRD-PARTY-APP***',
+    'ApiVersion' => '2022-07',
+);
+
+PHPShopify\ShopifySDK::config($config);
+```
 ##### How to get the permanent access token for a shop?
 There is a AuthHelper class to help you getting the permanent access token from the shop using oAuth. 
 

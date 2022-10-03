@@ -8,8 +8,10 @@ namespace PHPShopify;
  * --------------------------------------------------------------------------
  *
  * @property-read Product $Product
+ * @property-read Metafield $Metafield
  *
  * @method Product Product(integer $id = null)
+ * @method Metafield Metafield(integer $id = null)
  *
  * @see https://shopify.dev/docs/admin-api/rest/reference/products/collection
  *
@@ -31,5 +33,6 @@ class Collection extends ShopifyResource
      */
     protected $childResource = array(
         'Product',
+        'Metafield',
     );
 }

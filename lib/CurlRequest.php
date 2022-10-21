@@ -181,12 +181,15 @@ class CurlRequest
                 break;
             }
 
-            $limitHeader = explode('/', $response->getHeader('X-Shopify-Shop-Api-Call-Limit'), 2);
+            $apiCallLimit = $response->getHeader('X-Shopify-Shop-Api-Call-Limit');
 
-            if (isset($limitHeader[1]) && $limitHeader[0] < $limitHeader[1]) {
-                throw new ResourceRateLimitException($response->getBody());
+            if (!empty($apiCallLimit)) {
+                $limitHeader = explode('/', $apiCallLimit, 2);
+                if (isset($limitHeader[1]) && $limitHeader[0] < $limitHeader[1]) {
+                    throw new ResourceRateLimitException($response->getBody());
+                }
             }
-
+            
             $retryAfter = $response->getHeader('Retry-After');
 
             if ($retryAfter === null) {

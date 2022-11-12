@@ -215,7 +215,7 @@ class CurlRequest
         self::$lastHttpResponseHeaders = $response->getHeaders();
 
         // call the user callback with the response
-        self::callCurlCallback($response);
+        self::callCurlCallback($response, $ch);
 
         return $response->getBody();
     }
@@ -237,10 +237,10 @@ class CurlRequest
      * @param  CurlResponse $response
      * @return CurlResponse
      */
-    protected static function callCurlCallback($response)
+    protected static function callCurlCallback($response, $ch)
     {
         if (self::$curlCallback) {
-            return call_user_func(self::$curlCallback, $response);
+            return call_user_func(self::$curlCallback, $response, $ch);
         }
     }
 }

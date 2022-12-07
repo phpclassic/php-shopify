@@ -526,7 +526,7 @@ abstract class ShopifyResource
     /**
      * Process the request response
      *
-     * @param array $responseArray Request response in array format
+     * @param array $response Request response in array format
      * @param string $dataKey Keyname to fetch data from response array
      *
      * @throws ApiException if the response has an error specified
@@ -545,8 +545,8 @@ abstract class ShopifyResource
 
         $this->getLocationHeader($lastResponseHeaders);
 
-        if (isset($responseArray['errors'])) {
-            $message = $this->castString($responseArray['errors']);
+        if (isset($response['errors'])) {
+            $message = $this->castString($response['errors']);
 
             //check account already enabled or not
             if($message=='account already enabled'){
@@ -556,10 +556,10 @@ abstract class ShopifyResource
             throw new ApiException($message, CurlRequest::$lastHttpCode);
         }
 
-        if ($dataKey && isset($responseArray[$dataKey])) {
-            return $responseArray[$dataKey];
+        if ($dataKey && isset($response[$dataKey])) {
+            return $response[$dataKey];
         } else {
-            return $responseArray;
+            return $response;
         }
     }
 

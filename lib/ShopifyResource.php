@@ -161,6 +161,12 @@ abstract class ShopifyResource
         } elseif (!isset($config['ApiKey']) || !isset($config['Password'])) {
             throw new SdkException("Either AccessToken or ApiKey+Password Combination (in case of private API) is required to access the resources. Please check SDK configuration!");
         }
+
+        if (isset($config['ShopifyApiFeatures'])) {
+            foreach($config['ShopifyApiFeatures'] as $apiFeature) {
+                $this->httpHeaders['X-Shopify-Api-Features'] = $apiFeature;
+            }
+        }
     }
 
     /**
@@ -533,26 +539,6 @@ abstract class ShopifyResource
 
         self::$lastHttpResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
 
-        if ($response === null) {
-            //Something went wrong, Checking HTTP Codes
-            $httpOK = 200; //Request Successful, OK.
-            $httpCreated = 201; //Create Successful.
-            $httpDeleted = 204; //Delete Successful
-
-            //should be null if any other library used for http calls
-            $httpCode = CurlRequest::$lastHttpCode;
-            $this->httpCode = $httpCode;
-
-            if ($httpCode != null && $httpCode != $httpOK && $httpCode != $httpCreated && $httpCode != $httpDeleted) {
-                throw new Exception\CurlException("Request failed with HTTP Code $httpCode.");
-            }
-        } else {
-          $httpCode = CurlRequest::$lastHttpCode;
-          $this->httpCode = $httpCode;
-        }
-
-        $responseArray = json_decode($response, true);
-
         $lastResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
 
         $this->getLinks($lastResponseHeaders);
@@ -561,6 +547,11 @@ abstract class ShopifyResource
 
         if (isset($responseArray['errors'])) {
             $message = $this->castString($responseArray['errors']);
+
+            //check account already enabled or not
+            if($message=='account already enabled'){
+                return array('account_activation_url'=>false);
+            }
 
             throw new ApiException($message, CurlRequest::$lastHttpCode);
         }

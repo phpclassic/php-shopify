@@ -29,7 +29,10 @@ class AuthHelper
             $protocol = 'http';
         }
 
-        return "$protocol://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $url = $protocol . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $url = false !== ($qsPos = strpos($url, '?')) ? substr($url, 0, $qsPos) : $url; // remove query params
+
+        return $url;
     }
 
     /**
@@ -170,15 +173,11 @@ class AuthHelper
 
             $response = HttpRequestJson::post($config['AdminUrl'] . 'oauth/access_token', $data);
 
-            if (!is_string($response) && is_object($response)) {
-              $body     = json_decode($response->getBody(), true);
-            } else if (is_string($response)) {
-              $body     = json_decode($response, true);
+            if (CurlRequest::$lastHttpCode >= 400) {
+                throw new SdkException("The shop is invalid or the authorization code has already been used.");
             }
 
-
-            return isset($body['access_token']) ? $body['access_token'] : null;
-
+            return isset($response['access_token']) ? $response['access_token'] : null;
         } else {
             throw new SdkException("This request is not initiated from a valid shopify shop!");
         }

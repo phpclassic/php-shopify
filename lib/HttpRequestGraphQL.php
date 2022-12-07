@@ -70,12 +70,11 @@ class HttpRequestGraphQL extends HttpRequestJson
      */
     public static function post($url, $data, $httpHeaders = array(), $variables = null)
     {
-        $domain = explode('/admin/api', $url)[0];
-        $url    = "{$domain}/admin/api/graphql.json";
+
         self::prepareRequest($httpHeaders, $data, $variables);
 
-        $response = CurlRequest::post($url, self::$postDataGraphQL, self::$httpHeaders);
+        self::$postDataJSON = self::$postDataGraphQL;
 
-        return self::processResponse($response);
+        return self::processRequest('POST', $url);
     }
 }

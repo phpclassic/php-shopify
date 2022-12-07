@@ -22,7 +22,7 @@ namespace PHPShopify;
  * --------------------------------------------------------------------------
  * Customer -> Custom actions
  * --------------------------------------------------------------------------
- * @method array search()      Search for customers matching supplied query
+ * @method array search(string $query = '')      Search for customers matching supplied query
  */
 class Customer extends ShopifyResource
 {
@@ -59,5 +59,22 @@ class Customer extends ShopifyResource
         $dataArray = $this->wrapData($customer_invite, 'customer_invite');
 
         return $this->post($dataArray, $url, false);
+    }
+
+    /**
+     * Create account_activation_link for customer.
+     *
+     * @param array $customer_id
+     *
+     * @return array
+     */
+    public function account_activation_url($customer_id = 0)
+    {
+        if (!(int)$customer_id > 0) {
+            return false;
+        }
+
+        $url = $this->generateUrl(array(), $customer_id.'/account_activation_url');
+        return $this->post(array(), $url, false);
     }
 }

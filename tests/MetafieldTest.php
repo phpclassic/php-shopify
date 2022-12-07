@@ -17,7 +17,7 @@ class MetafieldTest extends TestSimpleResource
         "namespace" => "inventory",
         "key" => "warehouse",
         "value" => 25,
-        "value_type" => "integer",
+        "type" => "integer",
     );
 
     /**
@@ -25,6 +25,6 @@ class MetafieldTest extends TestSimpleResource
      */
     public $putArray = array(
         "value" => "something new",
-        "value_type" => "string",
+        "type" => "string",
     );
 }

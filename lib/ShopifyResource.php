@@ -545,6 +545,9 @@ abstract class ShopifyResource
 
         $this->getLocationHeader($lastResponseHeaders);
 
+        $httpCode = CurlRequest::$lastHttpCode;
+        $this->httpCode = $httpCode;
+
         if (isset($response['errors'])) {
             $message = $this->castString($response['errors']);
 
@@ -553,7 +556,7 @@ abstract class ShopifyResource
                 return array('account_activation_url'=>false);
             }
 
-            throw new ApiException($message, CurlRequest::$lastHttpCode);
+            throw new ApiException($message, CurlRequest::$httpCode);
         }
 
         if ($dataKey && isset($response[$dataKey])) {

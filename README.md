@@ -321,6 +321,7 @@ Some resources are available directly, some resources are only available through
 > Use the resources only by listed resource map. Trying to get a resource directly which is only available through parent resource may end up with errors.
 
 - [AbandonedCheckout](https://help.shopify.com/api/reference/abandoned_checkouts)
+- [ApiDeprecations](https://shopify.dev/api/admin-rest/2022-04/resources/deprecated-api-calls#get-deprecated-api-calls)
 - [ApplicationCharge](https://help.shopify.com/api/reference/applicationcharge)
 - [Blog](https://help.shopify.com/api/reference/blog/)
 - Blog -> [Article](https://help.shopify.com/api/reference/article/)

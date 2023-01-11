@@ -350,6 +350,10 @@ Some resources are available directly, some resources are only available through
 - [DiscountCode](https://help.shopify.com/en/api/reference/discounts/discountcode)
 - [Event](https://help.shopify.com/api/reference/event/)
 - [FulfillmentService](https://help.shopify.com/api/reference/fulfillmentservice)
+- [Fulfillment](https://shopify.dev/api/admin-rest/2023-01/resources/fulfillment)
+- [FulfillmentOrder](https://shopify.dev/api/admin-rest/2023-01/resources/fulfillmentorder)
+- FulfillmentOrder -> [FulfillmentRequest](https://shopify.dev/api/admin-rest/2023-01/resources/fulfillmentrequest)
+- FulfillmentOrder -> [Fulfillment](https://shopify.dev/api/admin-rest/2023-01/resources/fulfillment)
 - [GiftCard](https://help.shopify.com/api/reference/gift_card) _(Shopify Plus Only)_
 - [InventoryItem](https://help.shopify.com/api/reference/inventoryitem)
 - [InventoryLevel](https://help.shopify.com/api/reference/inventorylevel)
@@ -358,8 +362,7 @@ Some resources are available directly, some resources are only available through
 - [Metafield](https://help.shopify.com/api/reference/metafield)
 - [Multipass](https://help.shopify.com/api/reference/multipass) _(Shopify Plus Only, API not available yet)_
 - [Order](https://help.shopify.com/api/reference/order)
-- Order -> [Fulfillment](https://help.shopify.com/api/reference/fulfillment)
-- Order -> Fulfillment -> [Event](https://help.shopify.com/api/reference/fulfillmentevent)
+- Order -> [FulfillmentOrder](https://shopify.dev/api/admin-rest/2023-01/resources/fulfillmentorder)
 - Order -> [Risk](https://help.shopify.com/api/reference/order_risks)
 - Order -> [Refund](https://help.shopify.com/api/reference/refund)
 - Order -> [Transaction](https://help.shopify.com/api/reference/transaction)

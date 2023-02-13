@@ -515,6 +515,26 @@ The custom methods are specific to some resources which may not be available for
 - User ->
     - [current()](https://help.shopify.com/api/reference/user#current)
     Get the current logged-in user
+    
+### FulfillmentRequest Resource - including actions
+- Mapped FulfillmentOrder->FulfillmentRequest
+- Mapped Order(id)->FulfillmentOrder
+
+```
+// Requesting the FulfilmentOrder for a given order
+$fo = $client->Order("1234567890")->FulfillmentOrder()->get();
+
+// Creating a FulfilmentRequest
+// Follow instructions to get partial fulfilments
+$fr = $client->FulfillmentOrder('0987654321')->FulfillmentRequest->post([]);
+
+// Accepting \ Rejecting a FulfilmentRequest
+$fr = $client->FulfillmentOrder('0987654321')->FulfillmentRequest->accept();
+$fr = $client->FulfillmentOrder('0987654321')->FulfillmentRequest->reject();
+
+// Communicating fulfillment
+$client->Fulfillment->post($body)
+```
 
 ### Shopify API features headers
 To send `X-Shopify-Api-Features` headers while using the SDK, you can use the following:

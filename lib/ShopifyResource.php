@@ -136,6 +136,18 @@ abstract class ShopifyResource
      */
     private $prevLink = null;
 
+    /**
+     * HTTP code used to check if we need to poll or not
+     */
+    public $httpCode = null;
+
+    /**
+     * Response Header Location, used for discount code lookup
+     * @see: https://shopify.dev/docs/admin-api/rest/reference/discounts/discountcode?api[version]=2020-04#lookup-2020-04
+     * @var string $discountLocation
+     */
+    private $discountLocation = null;
+
     public function __construct($id = null, $parentResourceUrl = '')
     {
         $this->id = $id;
@@ -319,7 +331,7 @@ abstract class ShopifyResource
      */
     public function generateUrl($urlParams = array(), $customAction = null)
     {
-        return $this->resourceUrl . ($customAction ? "/$customAction" : '') . '.json' . (!empty($urlParams) ? '?' . http_build_query($urlParams) : '');
+        return $this->resourceUrl . ($customAction ? "/$customAction" : '') . '.json' . (!empty($urlParams) ? '?' . preg_replace('/\%5B\d+\%5D/', '%5B%5D', http_build_query($urlParams)) : '');
     }
 
     /**
@@ -514,7 +526,7 @@ abstract class ShopifyResource
     /**
      * Process the request response
      *
-     * @param array $responseArray Request response in array format
+     * @param array $response Request response in array format
      * @param string $dataKey Keyname to fetch data from response array
      *
      * @throws ApiException if the response has an error specified
@@ -522,34 +534,46 @@ abstract class ShopifyResource
      *
      * @return array
      */
-    public function processResponse($responseArray, $dataKey = null)
+    public function processResponse($response, $dataKey = null)
     {
+
         self::$lastHttpResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
 
         $lastResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
+
         $this->getLinks($lastResponseHeaders);
 
-        if (isset($responseArray['errors'])) {
-            $message = $this->castString($responseArray['errors']);
+        $this->getLocationHeader($lastResponseHeaders);
+
+        if (isset($response['errors'])) {
+            $message = $this->castString($response['errors']);
 
             //check account already enabled or not
             if($message=='account already enabled'){
                 return array('account_activation_url'=>false);
             }
-            
+
             throw new ApiException($message, CurlRequest::$lastHttpCode);
         }
 
-        if ($dataKey && isset($responseArray[$dataKey])) {
-            return $responseArray[$dataKey];
+        if ($dataKey && isset($response[$dataKey])) {
+            return $response[$dataKey];
         } else {
-            return $responseArray;
+            return $response;
         }
     }
 
-    public function getLinks($responseHeaders){
+    public function getLinks($responseHeaders) {
         $this->nextLink = $this->getLink($responseHeaders,'next');
         $this->prevLink = $this->getLink($responseHeaders,'previous');
+    }
+
+    public function getLocationHeader($responseHeaders) {
+
+      if(!empty($responseHeaders['location'])) {
+          $this->discountLocation = $responseHeaders['location'];
+      }
+
     }
 
     public function getLink($responseHeaders, $type='next'){
@@ -585,6 +609,10 @@ abstract class ShopifyResource
 
     public function getNextLink(){
         return $this->nextLink;
+    }
+
+    public function getDiscountLocation(){
+        return $this->discountLocation;
     }
 
     public function getUrlParams($url) {

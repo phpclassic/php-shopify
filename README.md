@@ -323,6 +323,7 @@ Some resources are available directly, some resources are only available through
 - [AbandonedCheckout](https://help.shopify.com/api/reference/abandoned_checkouts)
 - [ApiDeprecations](https://shopify.dev/api/admin-rest/2022-04/resources/deprecated-api-calls#get-deprecated-api-calls)
 - [ApplicationCharge](https://help.shopify.com/api/reference/applicationcharge)
+- [AssignedFulfillmentOrder](https://shopify.dev/docs/api/admin-rest/2023-04/resources/assignedfulfillmentorder)
 - [Blog](https://help.shopify.com/api/reference/blog/)
 - Blog -> [Article](https://help.shopify.com/api/reference/article/)
 - Blog -> Article -> [Event](https://help.shopify.com/api/reference/event/)
@@ -520,9 +521,12 @@ The custom methods are specific to some resources which may not be available for
 - Mapped FulfillmentOrder->FulfillmentRequest
 - Mapped Order(id)->FulfillmentOrder
 
-```
+```php
 // Requesting the FulfilmentOrder for a given order
 $fo = $client->Order("1234567890")->FulfillmentOrder()->get();
+
+// Requesting assigned fulfillment orders (with status fulfillment_requested)
+$shopify->AssignedFulfillmentOrder()->get(["assignment_status" => "fulfillment_requested"]);
 
 // Creating a FulfilmentRequest
 // Follow instructions to get partial fulfilments

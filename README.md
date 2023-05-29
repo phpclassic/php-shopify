@@ -526,7 +526,7 @@ The custom methods are specific to some resources which may not be available for
 $fo = $client->Order("1234567890")->FulfillmentOrder()->get();
 
 // Requesting assigned fulfillment orders (with status fulfillment_requested)
-$shopify->AssignedFulfillmentOrder()->get(["assignment_status" => "fulfillment_requested"]);
+$fo = $client->AssignedFulfillmentOrder()->get(["assignment_status" => "fulfillment_requested"]);
 
 // Creating a FulfilmentRequest
 // Follow instructions to get partial fulfilments

@@ -68,6 +68,7 @@ use PHPShopify\Exception\SdkException;
 
 /**
  * @property-read AbandonedCheckout $AbandonedCheckout
+ * @property-read AssignedFulfillmentOrder $AssignedFulfillmentOrder
  * @property-read AccessScope $AccessScope
  * @property-read ApiDeprecations $ApiDeprecations
  * @property-read ApplicationCharge $ApplicationCharge
@@ -116,6 +117,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read GraphQL $GraphQL
  *
  * @method AbandonedCheckout AbandonedCheckout(integer $id = null)
+ * @method AssignedFulfillmentOrder AssignedFulfillmentOrder(string $assignment_status = null, array $location_ids = null)
  * @method AccessScope AccessScope()
  * @method ApiDeprecations ApiDeprecations()
  * @method ApplicationCharge ApplicationCharge(integer $id = null)
@@ -173,6 +175,7 @@ class ShopifySDK
      */
     protected $resources = array(
         'AbandonedCheckout',
+		'AssignedFulfillmentOrder',
         'AccessScope',
         'ApiDeprecations',
         'ApplicationCharge',

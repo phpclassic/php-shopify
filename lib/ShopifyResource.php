@@ -64,6 +64,13 @@ abstract class ShopifyResource
      */
     protected $childResource = array();
 
+	/**
+     * If the dataKey is different from the resourceKey (base key name used in API results)
+     *
+     * @var boolean
+     */
+    protected $dataKey = null;
+
     /**
      * If search is enabled for the resource
      *
@@ -309,6 +316,21 @@ abstract class ShopifyResource
         return $this->pluralizeKey();
     }
 
+	/**
+	 * Get the working dataKey for the resource (if any)
+	 * 
+	 * For situations where the resource returns results using a different keyname.
+	 * (e.g. AssignedFulfillmentOrder responds using 'fulfillment_orders')
+	 */
+	protected function getDataKey(string $dataKey = null)
+	{
+		// Passthrough
+		if ($dataKey) return $dataKey;
+
+		// Return the dataKey if set
+		return $this->dataKey ?: ($this->id ? $this->resourceKey : $this->pluralizeKey());
+	}
+
     /**
      * Generate the custom url for api request based on the params and custom action (if any)
      *
@@ -342,10 +364,7 @@ abstract class ShopifyResource
 
         $response = HttpRequestJson::get($url, $this->httpHeaders);
 
-        if (!$dataKey) $dataKey = $this->id ? $this->resourceKey : $this->pluralizeKey();
-
-        return $this->processResponse($response, $dataKey);
-
+        return $this->processResponse($response, $this->getDataKey($dataKey));
     }
 
     /**
@@ -539,6 +558,8 @@ abstract class ShopifyResource
             
             throw new ApiException($message, CurlRequest::$lastHttpCode);
         }
+
+		$dataKey = $this->getDataKey($dataKey);
 
         if ($dataKey && isset($responseArray[$dataKey])) {
             return $responseArray[$dataKey];

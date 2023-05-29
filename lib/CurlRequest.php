@@ -36,6 +36,13 @@ class CurlRequest
     public static $lastHttpResponseHeaders = array();
 
     /**
+     * Total time spent in sleep during multiple requests (in seconds)
+     *
+     * @var int
+     */
+    public static $totalRetrySleepTime = 0;
+
+    /**
      * Curl additional configuration
      *
      * @var array
@@ -196,6 +203,7 @@ class CurlRequest
                 break;
             }
 
+            self::$totalRetrySleepTime += (float)$retryAfter;
             sleep((float)$retryAfter);
         }
 
@@ -210,5 +218,4 @@ class CurlRequest
 
         return $response->getBody();
     }
-
 }

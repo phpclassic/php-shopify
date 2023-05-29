@@ -323,7 +323,7 @@ Some resources are available directly, some resources are only available through
 - [AbandonedCheckout](https://help.shopify.com/api/reference/abandoned_checkouts)
 - [ApiDeprecations](https://shopify.dev/api/admin-rest/2022-04/resources/deprecated-api-calls#get-deprecated-api-calls)
 - [ApplicationCharge](https://help.shopify.com/api/reference/applicationcharge)
-- [AssignedFulfillmentOrder](https://shopify.dev/docs/api/admin-rest/2023-04/resources/assignedfulfillmentorder#get-assigned-fulfillment-orders)
+- [AssignedFulfillmentOrder](https://shopify.dev/docs/api/admin-rest/2023-04/resources/assignedfulfillmentorder)
 - [Blog](https://help.shopify.com/api/reference/blog/)
 - Blog -> [Article](https://help.shopify.com/api/reference/article/)
 - Blog -> Article -> [Event](https://help.shopify.com/api/reference/event/)

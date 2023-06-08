@@ -545,6 +545,8 @@ abstract class ShopifyResource
 
         $this->getLocationHeader($lastResponseHeaders);
 
+        $this->httpCode = CurlRequest::$lastHttpCode;
+
         if (isset($response['errors'])) {
             $message = $this->castString($response['errors']);
 

@@ -357,6 +357,7 @@ Some resources are available directly, some resources are only available through
 - FulfillmentOrder -> [FulfillmentRequest](https://shopify.dev/api/admin-rest/2023-01/resources/fulfillmentrequest)
 - FulfillmentOrder -> [Fulfillment](https://shopify.dev/api/admin-rest/2023-01/resources/fulfillment)
 - [GiftCard](https://help.shopify.com/api/reference/gift_card) _(Shopify Plus Only)_
+- [GiftCardAdjustment](https://shopify.dev/docs/api/admin-rest/2023-01/resources/gift-card-adjustment) _(Shopify Plus Only)_
 - [InventoryItem](https://help.shopify.com/api/reference/inventoryitem)
 - [InventoryLevel](https://help.shopify.com/api/reference/inventorylevel)
 - [Location](https://help.shopify.com/api/reference/location/) _(read only)_

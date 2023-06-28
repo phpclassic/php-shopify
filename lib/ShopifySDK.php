@@ -90,6 +90,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read Fulfillment $Fulfillment
  * @property-read FulfillmentService $FulfillmentService
  * @property-read GiftCard $GiftCard
+ * @property-read GiftCardAdjustment $GiftCardAdjustment
  * @property-read InventoryItem $InventoryItem
  * @property-read InventoryLevel $InventoryLevel
  * @property-read Location $Location
@@ -140,6 +141,7 @@ use PHPShopify\Exception\SdkException;
  * @method FulfillmentService FulfillmentService(integer $id = null)
  * @method FulfillmentOrder FulfillmentOrder(integer $id = null)
  * @method GiftCard GiftCard(integer $id = null)
+ * @method GiftCardAdjustment GiftCardAdjustment(integer $id = null)
  * @method InventoryItem InventoryItem(integer $id = null)
  * @method InventoryLevel InventoryLevel(integer $id = null)
  * @method Location Location(integer $id = null)
@@ -261,6 +263,7 @@ class ShopifySDK
         'Dispute'           => 'ShopifyPayment',
         'Fulfillment'       => 'Order',
         'FulfillmentEvent'  => 'Fulfillment',
+        'GiftCardAdjustment'=> 'GiftCard',
         'OrderRisk'         => 'Order',
         'Payouts'           => 'ShopifyPayment',
         'ProductImage'      => 'Product',

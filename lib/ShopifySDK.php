@@ -68,7 +68,9 @@ use PHPShopify\Exception\SdkException;
 
 /**
  * @property-read AbandonedCheckout $AbandonedCheckout
+ * @property-read AssignedFulfillmentOrder $AssignedFulfillmentOrder
  * @property-read AccessScope $AccessScope
+ * @property-read ApiDeprecations $ApiDeprecations
  * @property-read ApplicationCharge $ApplicationCharge
  * @property-read Blog $Blog
  * @property-read CarrierService $CarrierService
@@ -88,6 +90,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read Fulfillment $Fulfillment
  * @property-read FulfillmentService $FulfillmentService
  * @property-read GiftCard $GiftCard
+ * @property-read GiftCardAdjustment $GiftCardAdjustment
  * @property-read InventoryItem $InventoryItem
  * @property-read InventoryLevel $InventoryLevel
  * @property-read Location $Location
@@ -115,7 +118,9 @@ use PHPShopify\Exception\SdkException;
  * @property-read GraphQL $GraphQL
  *
  * @method AbandonedCheckout AbandonedCheckout(integer $id = null)
+ * @method AssignedFulfillmentOrder AssignedFulfillmentOrder(string $assignment_status = null, array $location_ids = null)
  * @method AccessScope AccessScope()
+ * @method ApiDeprecations ApiDeprecations()
  * @method ApplicationCharge ApplicationCharge(integer $id = null)
  * @method Blog Blog(integer $id = null)
  * @method CarrierService CarrierService(integer $id = null)
@@ -136,6 +141,7 @@ use PHPShopify\Exception\SdkException;
  * @method FulfillmentService FulfillmentService(integer $id = null)
  * @method FulfillmentOrder FulfillmentOrder(integer $id = null)
  * @method GiftCard GiftCard(integer $id = null)
+ * @method GiftCardAdjustment GiftCardAdjustment(integer $id = null)
  * @method InventoryItem InventoryItem(integer $id = null)
  * @method InventoryLevel InventoryLevel(integer $id = null)
  * @method Location Location(integer $id = null)
@@ -171,7 +177,9 @@ class ShopifySDK
      */
     protected $resources = array(
         'AbandonedCheckout',
+		'AssignedFulfillmentOrder',
         'AccessScope',
+        'ApiDeprecations',
         'ApplicationCharge',
         'Blog',
         'CarrierService',
@@ -232,7 +240,7 @@ class ShopifySDK
     /**
      * @var string Default Shopify API version
      */
-    public static $defaultApiVersion = '2022-07';
+    public static $defaultApiVersion = '2023-04';
 
     /**
      * Shop / API configurations
@@ -255,6 +263,7 @@ class ShopifySDK
         'Dispute'           => 'ShopifyPayment',
         'Fulfillment'       => 'Order',
         'FulfillmentEvent'  => 'Fulfillment',
+        'GiftCardAdjustment'=> 'GiftCard',
         'OrderRisk'         => 'Order',
         'Payouts'           => 'ShopifyPayment',
         'ProductImage'      => 'Product',

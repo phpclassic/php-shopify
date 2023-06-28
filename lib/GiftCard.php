@@ -45,4 +45,11 @@ class GiftCard extends ShopifyResource
 
         return $this->post($dataArray, $url);
     }
+
+    /**
+     * @inheritDoc
+     */
+    protected $childResource = array(
+        'GiftCardAdjustment' => 'Adjustment'
+    );
 }

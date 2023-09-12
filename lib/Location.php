@@ -11,7 +11,7 @@ namespace PHPShopify;
 
 /**
  * --------------------------------------------------------------------------
- * Inventory -> Child Resources
+ * Location -> Child Resources
  * --------------------------------------------------------------------------
  * @property-read Metafield $Metafield
  *

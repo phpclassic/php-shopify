@@ -9,6 +9,14 @@
 
 namespace PHPShopify;
 
+/**
+ * --------------------------------------------------------------------------
+ * Location -> Child Resources
+ * --------------------------------------------------------------------------
+ * @property-read Metafield $Metafield
+ *
+ * @method Metafield Metafield(integer $id = null)
+ */
 
 class Location extends ShopifyResource
 {
@@ -32,5 +40,6 @@ class Location extends ShopifyResource
      */
     protected $childResource = array(
         'InventoryLevel',
+        'Metafield',
     );
 }

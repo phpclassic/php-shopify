@@ -68,10 +68,10 @@ use PHPShopify\Exception\SdkException;
 
 /**
  * @property-read AbandonedCheckout $AbandonedCheckout
- * @property-read AssignedFulfillmentOrder $AssignedFulfillmentOrder
  * @property-read AccessScope $AccessScope
  * @property-read ApiDeprecations $ApiDeprecations
  * @property-read ApplicationCharge $ApplicationCharge
+ * @property-read AssignedFulfillmentOrder $AssignedFulfillmentOrder
  * @property-read Blog $Blog
  * @property-read CarrierService $CarrierService
  * @property-read Cart $Cart
@@ -88,6 +88,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read DraftOrder $DraftOrder
  * @property-read Event $Event
  * @property-read Fulfillment $Fulfillment
+ * @property-read FulfillmentOrder $FulfillmentOrder
  * @property-read FulfillmentService $FulfillmentService
  * @property-read GiftCard $GiftCard
  * @property-read GiftCardAdjustment $GiftCardAdjustment
@@ -99,18 +100,18 @@ use PHPShopify\Exception\SdkException;
  * @property-read Order $Order
  * @property-read Page $Page
  * @property-read Policy $Policy
+ * @property-read PriceRule $PriceRule
  * @property-read Product $Product
  * @property-read ProductListing $ProductListing
  * @property-read ProductVariant $ProductVariant
- * @property-read PriceRule $PriceRule
  * @property-read RecurringApplicationCharge $RecurringApplicationCharge
  * @property-read Redirect $Redirect
  * @property-read Report $Report
  * @property-read ScriptTag $ScriptTag
  * @property-read ShippingZone $ShippingZone
  * @property-read Shop $Shop
- * @property-read SmartCollection $SmartCollection
  * @property-read ShopifyPayment $ShopifyPayment
+ * @property-read SmartCollection $SmartCollection
  * @property-read TenderTransaction $TenderTransaction
  * @property-read Theme $Theme
  * @property-read User $User

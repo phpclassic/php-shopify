@@ -555,11 +555,12 @@ Sometimes you will want to log all of your requests, you can setup a global logg
 
 ```
 // set the logging callback
-\PHPShopify\CurlRequest::setCurlCallback(function(CurlResponse $response){
+\PHPShopify\CurlRequest::setCurlCallback(function(CurlResponse $response, CurlHandle $handle){
 
     Log::info('Shopify API Response', [
         'body' => $response->getBody(),
         'headers' => $response->getHeaders(),
+        'elapsed_time' => curl_getinfo($handle, CURLINFO_TOTAL_TIME),
     ]);
 
 });

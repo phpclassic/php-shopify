@@ -422,6 +422,28 @@ class ShopifySDK
     }
 
     /**
+     * Returns the appropriate URL for the host that should load the embedded app.
+     *
+     * @param string $host The host value received from Shopify
+     *
+     * @return string
+     */
+    public static function getEmbeddedAppUrl($host)
+    {
+        if (empty($host)) {
+            throw new SdkException("Host value cannot be empty");
+        }
+
+        $decodedHost = base64_decode($host, true);
+        if (!$decodedHost) {
+            throw new SdkException("Host was not a valid base64 string");
+        }
+
+        $apiKey = self::$config['ApiKey'];
+        return "https://$decodedHost/apps/$apiKey";
+    }
+
+    /**
      * Maintain maximum 2 calls per second to the API
      *
      * @see https://help.shopify.com/api/guides/api-call-limit

@@ -11,6 +11,7 @@ namespace PHPShopify;
  * --------------------------------------------------------------------------
  * FulfillmentOrder -> Child Resources
  * --------------------------------------------------------------------------
+ * @property-read CancellationRequest $CancellationRequest
  * @property-read FulfillmentRequest $FulfillmentRequest
  * @property-read Fulfillment $Fulfillment
  *
@@ -36,6 +37,7 @@ class FulfillmentOrder extends ShopifyResource
      * @inheritDoc
      */
     protected $childResource = array (
+	'CancellationRequest',
         'FulfillmentRequest',
         'Fulfillment'
     );

@@ -330,7 +330,7 @@ $shopify = \PHPShopify\ShopifySDK::config([
 ]);
 
 $query = <<<GQL
-$query = <<<GQL
+    // retrieve the french canadian translations for a product
     query getProductById(\$id: ID!) @inContext(country: CA, language: FR) {
         product(id: \$id) {
             id
@@ -346,7 +346,6 @@ $query = <<<GQL
             }
         }
     }
-GQL;
 GQL;
 
 // use the storefront() method

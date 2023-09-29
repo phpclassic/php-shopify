@@ -330,18 +330,23 @@ $shopify = \PHPShopify\ShopifySDK::config([
 ]);
 
 $query = <<<GQL
-query Products {
-    products(first: 10) {
-        edges {
-            node {
-                createdAt
-                handle
+$query = <<<GQL
+    query getProductById(\$id: ID!) @inContext(country: CA, language: FR) {
+        product(id: \$id) {
+            id
+            title
+            handle
+            productType
+            tags
+            descriptionHtml
+            options {
                 id
-                title
+                name
+                values
             }
         }
     }
-}
+GQL;
 GQL;
 
 // use the storefront() method

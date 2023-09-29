@@ -348,8 +348,12 @@ $query = <<<GQL
     }
 GQL;
 
+$variables = [
+    'id' => $productId
+];
+
 // use the storefront() method
-$products = $shopify->GraphQL->storefront($query);
+$data = $shopify->GraphQL->storefront($query, null null, $variables);
 ```
 
 The `storefront` method uses the same arguments as the `post` method, so you can use variables as well. 

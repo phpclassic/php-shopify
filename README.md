@@ -348,8 +348,9 @@ $query = <<<GQL
     }
 GQL;
 
+// product global id - 'gid://shopify/Product/123456789'
 $variables = [
-    'id' => $productId
+    'id' => $productGID
 ];
 
 // use the storefront() method

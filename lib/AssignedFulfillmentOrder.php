@@ -13,4 +13,9 @@ class AssignedFulfillmentOrder extends ShopifyResource
      * @inheritDoc
      */
     protected $resourceKey = 'assigned_fulfillment_order';
+
+	/**
+	 * @inheritDoc
+	 */
+	protected $dataKey = 'fulfillment_orders';
 }

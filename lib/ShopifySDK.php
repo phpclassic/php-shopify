@@ -210,6 +210,7 @@ class ShopifySDK
         'Page',
         'Policy',
         'Product',
+        'ProductImage',
         'ProductListing',
         'ProductVariant',
         'PriceRule',

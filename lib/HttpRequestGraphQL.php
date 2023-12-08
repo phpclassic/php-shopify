@@ -51,8 +51,6 @@ class HttpRequestGraphQL extends HttpRequestJson
             $httpHeaders['Content-type'] = 'application/graphql';
         }
 
-        $httpHeaders['Content-type'] = 'application/graphql';
-
         $httpHeaders['X-Shopify-Access-Token'] = $httpHeaders['X-Shopify-Access-Token'];
 
         self::$httpHeaders = $httpHeaders;

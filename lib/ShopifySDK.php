@@ -177,6 +177,7 @@ class ShopifySDK
      */
     protected $resources = array(
         'AbandonedCheckout',
+        'Adjustment',
         'ApplicationCredit',
         'AccessScope',
         'ApplicationCharge',
@@ -261,6 +262,7 @@ class ShopifySDK
         'Asset'             => 'Theme',
         'Balance'           => 'ShopifyPayment',
         'CustomerAddress'   => 'Customer',
+        'GiftCardAdjustment'=> 'GiftCard',
         'Dispute'           => 'ShopifyPayment',
         'Fulfillment'       => 'Order',
         'FulfillmentEvent'  => 'Fulfillment',

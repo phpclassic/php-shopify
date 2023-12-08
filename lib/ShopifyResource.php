@@ -556,7 +556,7 @@ abstract class ShopifyResource
                 return array('account_activation_url'=>false);
             }
 
-            throw new ApiException($message, CurlRequest::$httpCode);
+            throw new ApiException($message, $httpCode);
         }
 
         if ($dataKey && isset($response[$dataKey])) {

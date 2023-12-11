@@ -36,6 +36,13 @@ class CurlRequest
     public static $lastHttpResponseHeaders = array();
 
     /**
+     * Curl additional configuration
+     *
+     * @var array
+     */
+    protected static $config = array();
+
+    /**
      * Initialize the curl resource
      *
      * @param string $url
@@ -56,6 +63,10 @@ class CurlRequest
 
         curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLOPT_USERAGENT, 'PHPClassic/PHPShopify');
+
+        foreach (self::$config as $option => $value) {
+            curl_setopt($ch, $option, $value);
+        }
 
         $headers = array();
         foreach ($httpHeaders as $key => $value) {
@@ -140,6 +151,16 @@ class CurlRequest
     }
 
     /**
+     * Set curl additional configuration
+     *
+     * @param array $config
+     */
+    public static function config($config = array())
+    {
+        self::$config = $config;
+    }
+
+    /**
      * Execute a request, release the resource and return output
      *
      * @param resource $ch
@@ -160,13 +181,22 @@ class CurlRequest
                 break;
             }
 
-            $limitHeader = explode('/', $response->getHeader('X-Shopify-Shop-Api-Call-Limit'), 2);
+            $apiCallLimit = $response->getHeader('X-Shopify-Shop-Api-Call-Limit');
 
-            if (isset($limitHeader[1]) && $limitHeader[0] < $limitHeader[1]) {
-                throw new ResourceRateLimitException($response->getBody());
+            if (!empty($apiCallLimit)) {
+                $limitHeader = explode('/', $apiCallLimit, 2);
+                if (isset($limitHeader[1]) && $limitHeader[0] < $limitHeader[1]) {
+                    throw new ResourceRateLimitException($response->getBody());
+                }
+            }
+            
+            $retryAfter = $response->getHeader('Retry-After');
+
+            if ($retryAfter === null) {
+                break;
             }
 
-            usleep(500000);
+            sleep((float)$retryAfter);
         }
 
         if (curl_errno($ch)) {

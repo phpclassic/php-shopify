@@ -14,12 +14,26 @@ composer require phpclassic/php-shopify
 PHPShopify uses curl extension for handling http calls. So you need to have the curl extension installed and enabled with PHP.
 >However if you prefer to use any other available package library for handling HTTP calls, you can easily do so by modifying 1 line in each of the `get()`, `post()`, `put()`, `delete()` methods in `PHPShopify\HttpRequestJson` class.
 
+You can pass additional curl configuration to `ShopifySDK`
+```php
+$config = array(
+    'ShopUrl' => 'yourshop.myshopify.com',
+    'ApiKey' => '***YOUR-PRIVATE-API-KEY***',
+    'Password' => '***YOUR-PRIVATE-API-PASSWORD***',   
+    'Curl' => array(
+        CURLOPT_TIMEOUT => 10,
+        CURLOPT_FOLLOWLOCATION => true
+    )
+);
+
+PHPShopify\ShopifySDK::config($config);
+```
 ## Usage
 
 You can use PHPShopify in a pretty simple object oriented way. 
 
 #### Configure ShopifySDK
-If you are using your own private API, provide the ApiKey and Password. 
+If you are using your own private API (except GraphQL), provide the ApiKey and Password. 
 
 ```php
 $config = array(
@@ -31,12 +45,24 @@ $config = array(
 PHPShopify\ShopifySDK::config($config);
 ```
 
-For Third party apps, use the permanent access token.
+For Third party apps, use the permanent access token. 
+> For GraphQL, AccessToken is required. If you are using private API for GraphQL, use your password as AccessToken here.
 
 ```php
 $config = array(
     'ShopUrl' => 'yourshop.myshopify.com',
     'AccessToken' => '***ACCESS-TOKEN-FOR-THIRD-PARTY-APP***',
+);
+
+PHPShopify\ShopifySDK::config($config);
+```
+You can use specific Shopify API Version by adding in the config array
+
+```php
+$config = array(
+    'ShopUrl' => 'yourshop.myshopify.com',
+    'AccessToken' => '***ACCESS-TOKEN-FOR-THIRD-PARTY-APP***',
+    'ApiVersion' => '2022-07',
 );
 
 PHPShopify\ShopifySDK::config($config);
@@ -171,7 +197,7 @@ $shopify->Order($orderID)->put($updateInfo);
 ```php
 $webHookID = 453487303;
 
-$shopify->Webhook($webHookID)->delete());
+$shopify->Webhook($webHookID)->delete();
 ```
 
 
@@ -302,7 +328,8 @@ Some resources are available directly, some resources are only available through
 - Blog -> Article -> [Metafield](https://help.shopify.com/api/reference/metafield)
 - Blog -> [Event](https://help.shopify.com/api/reference/event/)
 - Blog -> [Metafield](https://help.shopify.com/api/reference/metafield)
-- [CarrierService](https://help.shopify.com/api/reference/carrierservice/)
+- [CarrierService](https://help.shopify.com/api/reference/carrierservice/)-
+- [Cart](https://shopify.dev/docs/themes/ajax-api/reference/cart) (read only)
 - [Collect](https://help.shopify.com/api/reference/collect/)
 - [Comment](https://help.shopify.com/api/reference/comment/)
 - Comment -> [Event](https://help.shopify.com/api/reference/event/)
@@ -359,6 +386,8 @@ Some resources are available directly, some resources are only available through
 - [Shop](https://help.shopify.com/api/reference/shop) _(read only)_
 - [SmartCollection](https://help.shopify.com/api/reference/smartcollection)
 - SmartCollection -> [Event](https://help.shopify.com/api/reference/event/)
+- [ShopifyPayment](https://shopify.dev/docs/admin-api/rest/reference/shopify_payments/)
+- ShopifyPayment -> [Dispute](https://shopify.dev/docs/admin-api/rest/reference/shopify_payments/dispute/) _(read only)_
 - [Theme](https://help.shopify.com/api/reference/theme)
 - Theme -> [Asset](https://help.shopify.com/api/reference/asset/)
 - [User](https://help.shopify.com/api/reference/user) _(read only, Shopify Plus Only)_
@@ -482,6 +511,15 @@ The custom methods are specific to some resources which may not be available for
 - User ->
     - [current()](https://help.shopify.com/api/reference/user#current)
     Get the current logged-in user
+
+### Shopify API features headers
+To send `X-Shopify-Api-Features` headers while using the SDK, you can use the following:
+
+```
+$config['ShopifyApiFeatures'] = ['include-presentment-prices'];
+$shopify = new PHPShopify\ShopifySDK($config);
+```
+
 
 ## Reference
 - [Shopify API Reference](https://help.shopify.com/api/reference/)

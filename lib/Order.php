@@ -49,6 +49,7 @@ class Order extends ShopifyResource
      */
     protected $childResource = array (
         'Fulfillment',
+		'FulfillmentOrder',
         'OrderRisk' => 'Risk',
         'Refund',
         'Transaction',

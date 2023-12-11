@@ -22,7 +22,7 @@ class CountryTest extends TestSimpleResource
      * @inheritDoc
      */
     public $putArray = array(
-        "tax" => 0.01,
+        "tax" => 0.15,
     );
 
     /**

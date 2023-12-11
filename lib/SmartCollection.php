@@ -15,8 +15,10 @@ namespace PHPShopify;
  * SmartCollection -> Child Resources
  * --------------------------------------------------------------------------
  * @property-read Event $Event
+ * @property-read Metafield $Metafield
  *
  * @method Event Event(integer $id = null)
+ * @method Metafield Metafield(integer $id = null)
  *
  * --------------------------------------------------------------------------
  * SmartCollection -> Custom actions

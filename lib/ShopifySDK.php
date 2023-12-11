@@ -67,9 +67,13 @@ namespace PHPShopify;
 use PHPShopify\Exception\SdkException;
 
 /**
+ * @property-read ApplicationCredit $applicationCredit
  * @property-read AbandonedCheckout $AbandonedCheckout
+ * @property-read AccessScope $AccessScope
+ * @property-read ApplicationCharge $ApplicationCharge
  * @property-read Blog $Blog
  * @property-read CarrierService $CarrierService
+ * @property-read Cart $Cart
  * @property-read Collect $Collect
  * @property-read Collection $Collection
  * @property-read Comment $Comment
@@ -81,8 +85,9 @@ use PHPShopify\Exception\SdkException;
  * @property-read Discount $Discount
  * @property-read DiscountCode $DiscountCode
  * @property-read DraftOrder $DraftOrder
- * @property-read PriceRule $PriceRule
+ * @property-read Checkout $Checkout
  * @property-read Event $Event
+ * @property-read Fulfillment $Fulfillment
  * @property-read FulfillmentService $FulfillmentService
  * @property-read GiftCard $GiftCard
  * @property-read InventoryItem $InventoryItem
@@ -95,21 +100,30 @@ use PHPShopify\Exception\SdkException;
  * @property-read Policy $Policy
  * @property-read Product $Product
  * @property-read ProductListing $ProductListing
+ * @property-read CollectionListing $CollectionListing
  * @property-read ProductVariant $ProductVariant
+ * @property-read PriceRule $PriceRule
  * @property-read RecurringApplicationCharge $RecurringApplicationCharge
  * @property-read Redirect $Redirect
+ * @property-read Report $Report
  * @property-read ScriptTag $ScriptTag
  * @property-read ShippingZone $ShippingZone
  * @property-read Shop $Shop
  * @property-read SmartCollection $SmartCollection
+ * @property-read ShopifyPayment $ShopifyPayment
+ * @property-read TenderTransaction $TenderTransaction
  * @property-read Theme $Theme
  * @property-read User $User
  * @property-read Webhook $Webhook
  * @property-read GraphQL $GraphQL
  *
+ * @method ApplicationCredit ApplicationCredit(integer $id = null)
  * @method AbandonedCheckout AbandonedCheckout(integer $id = null)
+ * @method AccessScope AccessScope()
+ * @method ApplicationCharge ApplicationCharge(integer $id = null)
  * @method Blog Blog(integer $id = null)
  * @method CarrierService CarrierService(integer $id = null)
+ * @method Cart Cart(string $cart_token = null)
  * @method Collect Collect(integer $id = null)
  * @method Collection Collection(integer $id = null)
  * @method Comment Comment(integer $id = null)
@@ -121,9 +135,10 @@ use PHPShopify\Exception\SdkException;
  * @method Discount Discount(integer $id = null)
  * @method DraftOrder DraftOrder(integer $id = null)
  * @method DiscountCode DiscountCode(integer $id = null)
- * @method PriceRule PriceRule(integer $id = null)
  * @method Event Event(integer $id = null)
+ * @method Fulfillment Fulfillment(integer $id = null)
  * @method FulfillmentService FulfillmentService(integer $id = null)
+ * @method FulfillmentOrder FulfillmentOrder(integer $id = null)
  * @method GiftCard GiftCard(integer $id = null)
  * @method InventoryItem InventoryItem(integer $id = null)
  * @method InventoryLevel InventoryLevel(integer $id = null)
@@ -131,17 +146,23 @@ use PHPShopify\Exception\SdkException;
  * @method Metafield Metafield(integer $id = null)
  * @method Multipass Multipass(integer $id = null)
  * @method Order Order(integer $id = null)
+ * @method Checkout Checkout(integer $id = null)
  * @method Page Page(integer $id = null)
  * @method Policy Policy(integer $id = null)
  * @method Product Product(integer $id = null)
  * @method ProductListing ProductListing(integer $id = null)
  * @method ProductVariant ProductVariant(integer $id = null)
+ * @method CollectionListing CollectionListing(integer $id = null)
+ * @method PriceRule PriceRule(integer $id = null)
  * @method RecurringApplicationCharge RecurringApplicationCharge(integer $id = null)
  * @method Redirect Redirect(integer $id = null)
+ * @method Report Report(integer $id = null)
  * @method ScriptTag ScriptTag(integer $id = null)
  * @method ShippingZone ShippingZone(integer $id = null)
  * @method Shop Shop(integer $id = null)
+ * @method ShopifyPayment ShopifyPayment()
  * @method SmartCollection SmartCollection(integer $id = null)
+ * @method TenderTransaction TenderTransaction()
  * @method Theme Theme(int $id = null)
  * @method User User(integer $id = null)
  * @method Webhook Webhook(integer $id = null)
@@ -156,9 +177,13 @@ class ShopifySDK
      */
     protected $resources = array(
         'AbandonedCheckout',
+        'Adjustment',
+        'ApplicationCredit',
+        'AccessScope',
         'ApplicationCharge',
         'Blog',
         'CarrierService',
+        'Cart',
         'Collect',
         'Collection',
         'Comment',
@@ -171,7 +196,9 @@ class ShopifySDK
         'DiscountCode',
         'DraftOrder',
         'Event',
+        'Fulfillment',
         'FulfillmentService',
+        'FulfillmentOrder',
         'GiftCard',
         'InventoryItem',
         'InventoryLevel',
@@ -179,11 +206,13 @@ class ShopifySDK
         'Metafield',
         'Multipass',
         'Order',
+        'Checkout',
         'Page',
         'Policy',
         'Product',
         'ProductListing',
         'ProductVariant',
+        'CollectionListing',
         'PriceRule',
         'RecurringApplicationCharge',
         'Redirect',
@@ -192,6 +221,8 @@ class ShopifySDK
         'ShippingZone',
         'Shop',
         'SmartCollection',
+        'ShopifyPayment',
+        'TenderTransaction',
         'Theme',
         'User',
         'Webhook',
@@ -211,7 +242,7 @@ class ShopifySDK
     /**
      * @var string Default Shopify API version
      */
-    public static $defaultApiVersion = '2020-01';
+    public static $defaultApiVersion = '2022-07';
 
     /**
      * Shop / API configurations
@@ -229,16 +260,22 @@ class ShopifySDK
     protected $childResources = array(
         'Article'           => 'Blog',
         'Asset'             => 'Theme',
+        'Balance'           => 'ShopifyPayment',
         'CustomerAddress'   => 'Customer',
+        'GiftCardAdjustment'=> 'GiftCard',
+        'Dispute'           => 'ShopifyPayment',
         'Fulfillment'       => 'Order',
         'FulfillmentEvent'  => 'Fulfillment',
         'OrderRisk'         => 'Order',
+        'Payouts'           => 'ShopifyPayment',
         'ProductImage'      => 'Product',
         'ProductVariant'    => 'Product',
         'DiscountCode'      => 'PriceRule',
         'Province'          => 'Country',
         'Refund'            => 'Order',
         'Transaction'       => 'Order',
+        'ShippingRate'      => 'Checkout',
+        'Transactions'      => 'Balance',
         'UsageCharge'       => 'RecurringApplicationCharge',
     );
 
@@ -332,6 +369,10 @@ class ShopifySDK
         //If want to keep more wait time than .5 seconds for each call
         if (isset($config['AllowedTimePerCall'])) {
             static::$timeAllowedForEachApiCall = $config['AllowedTimePerCall'];
+        }
+
+        if (isset($config['Curl']) && is_array($config['Curl'])) {
+            CurlRequest::config($config['Curl']);
         }
 
         return new ShopifySDK;

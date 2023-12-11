@@ -44,14 +44,16 @@ class HttpRequestGraphQL extends HttpRequestJson
             throw new SdkException("The GraphQL Admin API requires an access token for making authenticated requests!");
         }
 
-        self::$httpHeaders = $httpHeaders;
-
         if (is_array($variables)) {
             self::$postDataGraphQL = json_encode(['query' => $data, 'variables' => $variables]);
-            self::$httpHeaders['Content-type'] = 'application/json';
+            $httpHeaders['Content-type'] = 'application/json';
         } else {
-            self::$httpHeaders['Content-type'] = 'application/graphql';
+            $httpHeaders['Content-type'] = 'application/graphql';
         }
+
+        $httpHeaders['X-Shopify-Access-Token'] = $httpHeaders['X-Shopify-Access-Token'];
+
+        self::$httpHeaders = $httpHeaders;
     }
 
     /**
@@ -66,10 +68,11 @@ class HttpRequestGraphQL extends HttpRequestJson
      */
     public static function post($url, $data, $httpHeaders = array(), $variables = null)
     {
+
         self::prepareRequest($httpHeaders, $data, $variables);
 
-        $response = CurlRequest::post($url, self::$postDataGraphQL, self::$httpHeaders);
+        self::$postDataJSON = self::$postDataGraphQL;
 
-        return self::processResponse($response);
+        return self::processRequest('POST', $url);
     }
 }

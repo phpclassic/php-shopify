@@ -241,7 +241,7 @@ class ShopifySDK
     /**
      * @var string Default Shopify API version
      */
-    public static $defaultApiVersion = '2024-07';
+    public static $defaultApiVersion = '2024-10';
 
     /**
      * Shop / API configurations

@@ -135,12 +135,15 @@ abstract class ShopifyResource
      * @var string $prevLink
      */
     private $prevLink = null;
+    private $config;
 
-    public function __construct($id = null, $parentResourceUrl = '')
+    public function __construct($config, $id = null, $parentResourceUrl = null)
     {
-        $this->id = $id;
+        $this->config = $config;
 
-        $config = ShopifySDK::$config;
+        $parentResourceUrl = $parentResourceUrl ?: '';
+
+        $this->id = $id;
 
         $this->resourceUrl = ($parentResourceUrl ? $parentResourceUrl . '/' :  $config['ApiUrl']) . $this->getResourcePath() . ($this->id ? '/' . $this->id : '');
 
@@ -210,7 +213,7 @@ abstract class ShopifyResource
             $resourceID = !empty($arguments) ? $arguments[0] : null;
 
 
-            $api = new $childClass($resourceID, $this->resourceUrl);
+            $api = new $childClass($this->config, $resourceID, $this->resourceUrl);
 
             return $api;
         } else {

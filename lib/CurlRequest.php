@@ -50,6 +50,12 @@ class CurlRequest
     protected static $config = array();
 
     /**
+     * User callback to get the response
+     * @closure
+     */
+    protected static $curlCallback;
+
+    /**
      * Initialize the curl resource
      *
      * @param string $url
@@ -216,6 +222,33 @@ class CurlRequest
 
         self::$lastHttpResponseHeaders = $response->getHeaders();
 
+        // call the user callback with the response
+        self::callCurlCallback($response, $ch);
+
         return $response->getBody();
+    }
+
+    /**
+     * set the user callback to be called after the curl request
+     *
+     * @param  closure $userCallback
+     * @return void
+     */
+    public static function setCurlCallback($curlCallback)
+    {
+        self::$curlCallback = $curlCallback;
+    }
+
+    /**
+     * call the user callback and pass the response
+     *
+     * @param  CurlResponse $response
+     * @return CurlResponse
+     */
+    protected static function callCurlCallback($response, $ch)
+    {
+        if (self::$curlCallback) {
+            return call_user_func(self::$curlCallback, $response, $ch);
+        }
     }
 }

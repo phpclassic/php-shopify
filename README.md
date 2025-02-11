@@ -550,6 +550,22 @@ $config['ShopifyApiFeatures'] = ['include-presentment-prices'];
 $shopify = new PHPShopify\ShopifySDK($config);
 ```
 
+### ShopifySDK Request callback
+
+Sometimes you will want to log all of your requests, you can setup a global logging callback, that will be triggered after the curl request has been made.
+
+```
+// set the logging callback
+\PHPShopify\CurlRequest::setCurlCallback(function(CurlResponse $response, CurlHandle $handle){
+
+    Log::info('Shopify API Response', [
+        'body' => $response->getBody(),
+        'headers' => $response->getHeaders(),
+        'elapsed_time' => curl_getinfo($handle, CURLINFO_TOTAL_TIME),
+    ]);
+
+});
+
 
 ## Reference
 - [Shopify API Reference](https://help.shopify.com/api/reference/)

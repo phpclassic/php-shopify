@@ -311,9 +311,53 @@ $variables = [
 $shopify->GraphQL->post($graphQL, null, null, $variables);
 ```
 
-
 ##### GraphQL Builder
 This SDK only accepts a GraphQL string as input. You can build your GraphQL from [Shopify GraphQL Builder](https://help.shopify.com/en/api/graphql-admin-api/graphiql-builder)
+
+### Storefront GraphQL 
+The [Storefront GraphQL API](https://shopify.dev/docs/api/storefront) allows you to make authenticated requests to access data from a store's storefront. See [Storefront API Authentication](https://shopify.dev/docs/api/storefront#authentication) for more details.
+
+The Storefront GraphQL API uses an alternative url to make requests which follows the format: 
+`https://{shop}.myshopify.com/api/{version}/graphql.json`
+
+Example Usage: 
+```php
+$shopify = \PHPShopify\ShopifySDK::config([
+    'AccessToken' => 'SHOPIFY_ADMIN_TOKEN',
+    'ShopUrl' => 'my-store.myshopify.com',
+    // Required to make requests to the Storefront API
+    'StoreFrontAccessToken' => 'STOREFRONT_ACCESS_TOKEN' 
+]);
+
+$query = <<<GQL
+    // retrieve the french canadian translations for a product
+    query getProductById(\$id: ID!) @inContext(country: CA, language: FR) {
+        product(id: \$id) {
+            id
+            title
+            handle
+            productType
+            tags
+            descriptionHtml
+            options {
+                id
+                name
+                values
+            }
+        }
+    }
+GQL;
+
+// product global id - 'gid://shopify/Product/123456789'
+$variables = [
+    'id' => $productGID
+];
+
+// use the storefront() method
+$data = $shopify->GraphQL->storefront($query, null null, $variables);
+```
+
+The `storefront` method uses the same arguments as the `post` method, so you can use variables as well. 
 
 
 ### Resource Mapping

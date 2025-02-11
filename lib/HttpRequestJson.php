@@ -169,7 +169,7 @@ class HttpRequestJson
      * @return bool
      */
     public static function shouldRetry($response, $error, $retry) {
-        $config = ShopifySDK::$config;
+        $config = [];
 
         if (isset($config['RequestRetryCallback'])) {
            return $config['RequestRetryCallback']($response, $error, $retry);

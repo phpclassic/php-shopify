@@ -373,6 +373,14 @@ class ShopifySDK
             CurlRequest::config($config['Curl']);
         }
 
+        if (isset($config['HttpClient'])) {
+            if (!$config['HttpClient'] instanceof HttpClient) {
+                throw new \Exception('HttpClient must be an instance of PHPShopify\HttpClient.');
+            }
+        } else {
+            self::$config['HttpClient'] = new CurlAdapter();
+        }
+
         return new ShopifySDK;
     }
 
@@ -474,5 +482,13 @@ class ShopifySDK
         }
 
         static::$microtimeOfLastApiCall = microtime(true);
+    }
+
+    /**
+     * @return HttpClient
+     */
+    public static function getClient()
+    {
+        return self::$config['HttpClient'];
     }
 }

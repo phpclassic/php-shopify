@@ -524,10 +524,11 @@ abstract class ShopifyResource
      */
     public function processResponse($responseArray, $dataKey = null)
     {
-        self::$lastHttpResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
+        $client = ShopifySDK::getClient();
 
-        $lastResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
-        $this->getLinks($lastResponseHeaders);
+        self::$lastHttpResponseHeaders = $client->getLastResponseHeaders();
+
+        $this->getLinks(self::$lastHttpResponseHeaders);
 
         if (isset($responseArray['errors'])) {
             $message = $this->castString($responseArray['errors']);
@@ -537,7 +538,7 @@ abstract class ShopifyResource
                 return array('account_activation_url'=>false);
             }
             
-            throw new ApiException($message, CurlRequest::$lastHttpCode);
+            throw new ApiException($message, $client->getLastResponseCode());
         }
 
         if ($dataKey && isset($responseArray[$dataKey])) {

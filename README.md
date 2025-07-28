@@ -11,8 +11,7 @@ composer require phpclassic/php-shopify
 ```
 
 ### Requirements
-PHPShopify uses curl extension for handling http calls. So you need to have the curl extension installed and enabled with PHP.
->However if you prefer to use any other available package library for handling HTTP calls, you can easily do so by modifying 1 line in each of the `get()`, `post()`, `put()`, `delete()` methods in `PHPShopify\HttpRequestJson` class.
+PHPShopify relies on the `cURL` extension to perform HTTP requests. Make sure the `cURL` extension is installed and enabled in your PHP environment. Alternatively, you can provide your own HTTP client by implementing the `PHPShopify\HttpClient` interface.
 
 You can pass additional curl configuration to `ShopifySDK`
 ```php
@@ -24,6 +23,19 @@ $config = array(
         CURLOPT_TIMEOUT => 10,
         CURLOPT_FOLLOWLOCATION => true
     )
+);
+
+PHPShopify\ShopifySDK::config($config);
+```
+## Guzzle or Custom HTTP Client
+If you prefer to use a different HTTP library, you can create a custom adapter by implementing the `PHPShopify\HttpClient` interface and passing it via the `HttpClient` configuration option.
+
+For example, using Guzzle is straightforward with the provided adapter:
+```php
+$client = new GuzzleHttp\Client();
+$config = array(
+    // ...  
+    'HttpClient' => new PHPShopify\GuzzleAdapter($client)
 );
 
 PHPShopify\ShopifySDK::config($config);

@@ -173,7 +173,7 @@ class AuthHelper
 
             $response = HttpRequestJson::post($config['AdminUrl'] . 'oauth/access_token', $data);
 
-            if (CurlRequest::$lastHttpCode >= 400) {
+            if (ShopifySDK::getClient()->getLastResponseCode() >= 400) {
                 throw new SdkException("The shop is invalid or the authorization code has already been used.");
             }
 

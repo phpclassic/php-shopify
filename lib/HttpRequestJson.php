@@ -27,6 +27,11 @@ class HttpRequestJson
     protected static $httpHeaders;
 
     /**
+     * @var array
+     */
+    protected static $postData = array();
+
+    /**
      * Prepared JSON string to be posted with request
      *
      * @var string
@@ -44,7 +49,7 @@ class HttpRequestJson
      */
     protected static function prepareRequest($httpHeaders = array(), $dataArray = array())
     {
-
+        self::$postData = $dataArray;
         self::$postDataJSON = json_encode($dataArray);
 
         self::$httpHeaders = $httpHeaders;
@@ -128,6 +133,7 @@ class HttpRequestJson
      * @return array
      */
     public static function processRequest($method, $url) {
+        $client = ShopifySDK::getClient();
         $retry = 0;
         $raw = null;
 
@@ -135,16 +141,16 @@ class HttpRequestJson
             try {
                 switch($method) {
                     case 'GET':
-                        $raw = CurlRequest::get($url, self::$httpHeaders);
+                        $raw = $client->get($url, self::$httpHeaders);
                         break;
                     case 'POST':
-                        $raw = CurlRequest::post($url, self::$postDataJSON, self::$httpHeaders);
+                        $raw = $client->post($url, self::$postData, self::$httpHeaders);
                         break;
                     case 'PUT':
-                        $raw = CurlRequest::put($url, self::$postDataJSON, self::$httpHeaders);
+                        $raw = $client->put($url, self::$postData, self::$httpHeaders);
                         break;
                     case 'DELETE':
-                        $raw = CurlRequest::delete($url, self::$httpHeaders);
+                        $raw = $client->delete($url, self::$httpHeaders);
                         break;
                     default:
                         throw new \Exception("unexpected request method '$method'");
@@ -187,6 +193,7 @@ class HttpRequestJson
      */
     protected static function processResponse($response)
     {
+        $client = ShopifySDK::getClient();
         $responseArray = json_decode($response, true);
 
         if ($responseArray === null) {
@@ -196,10 +203,8 @@ class HttpRequestJson
             $httpDeleted = 204; //Delete Successful
             $httpOther = 303; //See other (headers).
 
-            $lastHttpResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
-
-            //should be null if any other library used for http calls
-            $httpCode = CurlRequest::$lastHttpCode;
+            $lastHttpResponseHeaders = $client->getLastResponseHeaders();
+            $httpCode = $client->getLastResponseCode();
 
             if ($httpCode == $httpOther && array_key_exists('location', $lastHttpResponseHeaders)) {
                 return ['location' => $lastHttpResponseHeaders['location']];

@@ -106,7 +106,7 @@ class CurlRequest
      * Implement a POST request and return output
      *
      * @param string $url
-     * @param array $data
+     * @param string $data
      * @param array $httpHeaders
      *
      * @return string
@@ -125,7 +125,7 @@ class CurlRequest
      * Implement a PUT request and return output
      *
      * @param string $url
-     * @param array $data
+     * @param string $data
      * @param array $httpHeaders
      *
      * @return string

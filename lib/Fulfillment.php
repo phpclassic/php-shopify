@@ -24,6 +24,7 @@ namespace PHPShopify;
  * @method array complete()     Complete a fulfillment
  * @method array open()         Open a pending fulfillment
  * @method array cancel()       Cancel a fulfillment
+ * @method array update_tracking(array $data) Updates the tracking information for a fulfillment.
  *
  */
 class Fulfillment extends ShopifyResource
@@ -47,5 +48,6 @@ class Fulfillment extends ShopifyResource
         'complete',
         'open',
         'cancel',
+        'update_tracking',
     );
 }

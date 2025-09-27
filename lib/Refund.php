@@ -14,7 +14,7 @@ namespace PHPShopify;
  * --------------------------------------------------------------------------
  * Refund -> Custom actions
  * --------------------------------------------------------------------------
- * @method array calculate()      Calculate a Refund.
+ * @method array calculate(array $calculation = null)      Calculate a Refund.
  *
  */
 class Refund extends ShopifyResource

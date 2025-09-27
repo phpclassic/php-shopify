@@ -15,6 +15,7 @@ namespace PHPShopify;
  * --------------------------------------------------------------------------
  * Order -> Child Resources
  * --------------------------------------------------------------------------
+ * @property-read FulfillmentOrder $FulfillmentOrder
  * @property-read Fulfillment $Fulfillment
  * @property-read OrderRisk $Risk
  * @property-read Refund $Refund
@@ -49,6 +50,7 @@ class Order extends ShopifyResource
      */
     protected $childResource = array (
         'Fulfillment',
+		'FulfillmentOrder',
         'OrderRisk' => 'Risk',
         'Refund',
         'Transaction',

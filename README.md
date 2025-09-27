@@ -14,12 +14,26 @@ composer require phpclassic/php-shopify
 PHPShopify uses curl extension for handling http calls. So you need to have the curl extension installed and enabled with PHP.
 >However if you prefer to use any other available package library for handling HTTP calls, you can easily do so by modifying 1 line in each of the `get()`, `post()`, `put()`, `delete()` methods in `PHPShopify\HttpRequestJson` class.
 
+You can pass additional curl configuration to `ShopifySDK`
+```php
+$config = array(
+    'ShopUrl' => 'yourshop.myshopify.com',
+    'ApiKey' => '***YOUR-PRIVATE-API-KEY***',
+    'Password' => '***YOUR-PRIVATE-API-PASSWORD***',   
+    'Curl' => array(
+        CURLOPT_TIMEOUT => 10,
+        CURLOPT_FOLLOWLOCATION => true
+    )
+);
+
+PHPShopify\ShopifySDK::config($config);
+```
 ## Usage
 
 You can use PHPShopify in a pretty simple object oriented way. 
 
 #### Configure ShopifySDK
-If you are using your own private API, provide the ApiKey and Password. 
+If you are using your own private API (except GraphQL), provide the ApiKey and Password. 
 
 ```php
 $config = array(
@@ -31,12 +45,24 @@ $config = array(
 PHPShopify\ShopifySDK::config($config);
 ```
 
-For Third party apps, use the permanent access token.
+For Third party apps, use the permanent access token. 
+> For GraphQL, AccessToken is required. If you are using private API for GraphQL, use your password as AccessToken here.
 
 ```php
 $config = array(
     'ShopUrl' => 'yourshop.myshopify.com',
     'AccessToken' => '***ACCESS-TOKEN-FOR-THIRD-PARTY-APP***',
+);
+
+PHPShopify\ShopifySDK::config($config);
+```
+You can use specific Shopify API Version by adding in the config array
+
+```php
+$config = array(
+    'ShopUrl' => 'yourshop.myshopify.com',
+    'AccessToken' => '***ACCESS-TOKEN-FOR-THIRD-PARTY-APP***',
+    'ApiVersion' => '2022-07',
 );
 
 PHPShopify\ShopifySDK::config($config);
@@ -171,7 +197,7 @@ $shopify->Order($orderID)->put($updateInfo);
 ```php
 $webHookID = 453487303;
 
-$shopify->Webhook($webHookID)->delete());
+$shopify->Webhook($webHookID)->delete();
 ```
 
 
@@ -295,14 +321,17 @@ Some resources are available directly, some resources are only available through
 > Use the resources only by listed resource map. Trying to get a resource directly which is only available through parent resource may end up with errors.
 
 - [AbandonedCheckout](https://help.shopify.com/api/reference/abandoned_checkouts)
+- [ApiDeprecations](https://shopify.dev/api/admin-rest/2022-04/resources/deprecated-api-calls#get-deprecated-api-calls)
 - [ApplicationCharge](https://help.shopify.com/api/reference/applicationcharge)
+- [AssignedFulfillmentOrder](https://shopify.dev/docs/api/admin-rest/2023-04/resources/assignedfulfillmentorder)
 - [Blog](https://help.shopify.com/api/reference/blog/)
 - Blog -> [Article](https://help.shopify.com/api/reference/article/)
 - Blog -> Article -> [Event](https://help.shopify.com/api/reference/event/)
 - Blog -> Article -> [Metafield](https://help.shopify.com/api/reference/metafield)
 - Blog -> [Event](https://help.shopify.com/api/reference/event/)
 - Blog -> [Metafield](https://help.shopify.com/api/reference/metafield)
-- [CarrierService](https://help.shopify.com/api/reference/carrierservice/)
+- [CarrierService](https://help.shopify.com/api/reference/carrierservice/)-
+- [Cart](https://shopify.dev/docs/themes/ajax-api/reference/cart) (read only)
 - [Collect](https://help.shopify.com/api/reference/collect/)
 - [Comment](https://help.shopify.com/api/reference/comment/)
 - Comment -> [Event](https://help.shopify.com/api/reference/event/)
@@ -323,16 +352,21 @@ Some resources are available directly, some resources are only available through
 - [DiscountCode](https://help.shopify.com/en/api/reference/discounts/discountcode)
 - [Event](https://help.shopify.com/api/reference/event/)
 - [FulfillmentService](https://help.shopify.com/api/reference/fulfillmentservice)
+- [Fulfillment](https://shopify.dev/api/admin-rest/2023-01/resources/fulfillment)
+- [FulfillmentOrder](https://shopify.dev/api/admin-rest/2023-01/resources/fulfillmentorder)
+- FulfillmentOrder -> [FulfillmentRequest](https://shopify.dev/api/admin-rest/2023-01/resources/fulfillmentrequest)
+- FulfillmentOrder -> [Fulfillment](https://shopify.dev/api/admin-rest/2023-01/resources/fulfillment)
 - [GiftCard](https://help.shopify.com/api/reference/gift_card) _(Shopify Plus Only)_
+- GiftCard -> [Adjustment](https://shopify.dev/docs/api/admin-rest/2023-01/resources/gift-card-adjustment) _(Shopify Plus Only)_
 - [InventoryItem](https://help.shopify.com/api/reference/inventoryitem)
 - [InventoryLevel](https://help.shopify.com/api/reference/inventorylevel)
 - [Location](https://help.shopify.com/api/reference/location/) _(read only)_
 - Location -> [InventoryLevel](https://help.shopify.com/api/reference/inventorylevel)
+- Location -> [Metafield](https://help.shopify.com/api/reference/metafield)
 - [Metafield](https://help.shopify.com/api/reference/metafield)
 - [Multipass](https://help.shopify.com/api/reference/multipass) _(Shopify Plus Only, API not available yet)_
 - [Order](https://help.shopify.com/api/reference/order)
-- Order -> [Fulfillment](https://help.shopify.com/api/reference/fulfillment)
-- Order -> Fulfillment -> [Event](https://help.shopify.com/api/reference/fulfillmentevent)
+- Order -> [FulfillmentOrder](https://shopify.dev/api/admin-rest/2023-01/resources/fulfillmentorder)
 - Order -> [Risk](https://help.shopify.com/api/reference/order_risks)
 - Order -> [Refund](https://help.shopify.com/api/reference/refund)
 - Order -> [Transaction](https://help.shopify.com/api/reference/transaction)
@@ -359,6 +393,8 @@ Some resources are available directly, some resources are only available through
 - [Shop](https://help.shopify.com/api/reference/shop) _(read only)_
 - [SmartCollection](https://help.shopify.com/api/reference/smartcollection)
 - SmartCollection -> [Event](https://help.shopify.com/api/reference/event/)
+- [ShopifyPayment](https://shopify.dev/docs/admin-api/rest/reference/shopify_payments/)
+- ShopifyPayment -> [Dispute](https://shopify.dev/docs/admin-api/rest/reference/shopify_payments/dispute/) _(read only)_
 - [Theme](https://help.shopify.com/api/reference/theme)
 - Theme -> [Asset](https://help.shopify.com/api/reference/asset/)
 - [User](https://help.shopify.com/api/reference/user) _(read only, Shopify Plus Only)_
@@ -482,6 +518,38 @@ The custom methods are specific to some resources which may not be available for
 - User ->
     - [current()](https://help.shopify.com/api/reference/user#current)
     Get the current logged-in user
+    
+### FulfillmentRequest Resource - including actions
+- Mapped FulfillmentOrder->FulfillmentRequest
+- Mapped Order(id)->FulfillmentOrder
+
+```php
+// Requesting the FulfilmentOrder for a given order
+$fo = $client->Order("1234567890")->FulfillmentOrder()->get();
+
+// Requesting assigned fulfillment orders (with status fulfillment_requested)
+$shopify->AssignedFulfillmentOrder()->get(["assignment_status" => "fulfillment_requested"]);
+
+// Creating a FulfilmentRequest
+// Follow instructions to get partial fulfilments
+$fr = $client->FulfillmentOrder('0987654321')->FulfillmentRequest->post([]);
+
+// Accepting \ Rejecting a FulfilmentRequest
+$fr = $client->FulfillmentOrder('0987654321')->FulfillmentRequest->accept();
+$fr = $client->FulfillmentOrder('0987654321')->FulfillmentRequest->reject();
+
+// Communicating fulfillment
+$client->Fulfillment->post($body)
+```
+
+### Shopify API features headers
+To send `X-Shopify-Api-Features` headers while using the SDK, you can use the following:
+
+```
+$config['ShopifyApiFeatures'] = ['include-presentment-prices'];
+$shopify = new PHPShopify\ShopifySDK($config);
+```
+
 
 ## Reference
 - [Shopify API Reference](https://help.shopify.com/api/reference/)

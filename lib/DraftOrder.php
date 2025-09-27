@@ -13,6 +13,14 @@ namespace PHPShopify;
 
 /**
  * --------------------------------------------------------------------------
+ * DraftOrder -> Child Resources
+ * --------------------------------------------------------------------------
+ *
+ * @property-read Metafield $Metafield
+ *
+ * @method Metafield Metafield(integer $id = null)
+ *
+ * --------------------------------------------------------------------------
  * DraftOrder -> Custom actions
  * --------------------------------------------------------------------------
  * @method array send_invoice()     Send the invoice for a DraftOrder
@@ -38,5 +46,12 @@ class DraftOrder extends ShopifyResource
      */
     protected $customPutActions = array(
         'complete',
+    );
+
+    /**
+     * @inheritDoc
+     */
+    protected $childResource = array(
+        'Metafield',
     );
 }

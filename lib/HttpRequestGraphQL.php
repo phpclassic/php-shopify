@@ -54,6 +54,7 @@ class HttpRequestGraphQL extends HttpRequestJson
         }
 
         self::$httpHeaders['Content-Length'] = strlen(self::$postDataGraphQL);
+
     }
 
     /**
@@ -68,6 +69,7 @@ class HttpRequestGraphQL extends HttpRequestJson
      */
     public static function post($url, $data, $httpHeaders = array(), $variables = null)
     {
+
         self::prepareRequest($httpHeaders, $data, $variables);
 
         self::$postDataJSON = self::$postDataGraphQL;

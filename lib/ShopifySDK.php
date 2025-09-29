@@ -67,6 +67,7 @@ namespace PHPShopify;
 use PHPShopify\Exception\SdkException;
 
 /**
+ * @property-read ApplicationCredit $applicationCredit
  * @property-read AbandonedCheckout $AbandonedCheckout
  * @property-read AccessScope $AccessScope
  * @property-read ApiDeprecations $ApiDeprecations
@@ -86,6 +87,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read Discount $Discount
  * @property-read DiscountCode $DiscountCode
  * @property-read DraftOrder $DraftOrder
+ * @property-read Checkout $Checkout
  * @property-read Event $Event
  * @property-read Fulfillment $Fulfillment
  * @property-read FulfillmentOrder $FulfillmentOrder
@@ -103,6 +105,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read PriceRule $PriceRule
  * @property-read Product $Product
  * @property-read ProductListing $ProductListing
+ * @property-read CollectionListing $CollectionListing
  * @property-read ProductVariant $ProductVariant
  * @property-read RecurringApplicationCharge $RecurringApplicationCharge
  * @property-read Redirect $Redirect
@@ -118,6 +121,7 @@ use PHPShopify\Exception\SdkException;
  * @property-read Webhook $Webhook
  * @property-read GraphQL $GraphQL
  *
+ * @method ApplicationCredit ApplicationCredit(integer $id = null)
  * @method AbandonedCheckout AbandonedCheckout(integer $id = null)
  * @method AssignedFulfillmentOrder AssignedFulfillmentOrder(string $assignment_status = null, array $location_ids = null)
  * @method AccessScope AccessScope()
@@ -149,11 +153,13 @@ use PHPShopify\Exception\SdkException;
  * @method Metafield Metafield(integer $id = null)
  * @method Multipass Multipass(integer $id = null)
  * @method Order Order(integer $id = null)
+ * @method Checkout Checkout(integer $id = null)
  * @method Page Page(integer $id = null)
  * @method Policy Policy(integer $id = null)
  * @method Product Product(integer $id = null)
  * @method ProductListing ProductListing(integer $id = null)
  * @method ProductVariant ProductVariant(integer $id = null)
+ * @method CollectionListing CollectionListing(integer $id = null)
  * @method PriceRule PriceRule(integer $id = null)
  * @method RecurringApplicationCharge RecurringApplicationCharge(integer $id = null)
  * @method Redirect Redirect(integer $id = null)
@@ -178,6 +184,8 @@ class ShopifySDK
      */
     protected $resources = array(
         'AbandonedCheckout',
+        'Adjustment',
+        'ApplicationCredit',
 		'AssignedFulfillmentOrder',
         'AccessScope',
         'ApiDeprecations',
@@ -207,11 +215,13 @@ class ShopifySDK
         'Metafield',
         'Multipass',
         'Order',
+        'Checkout',
         'Page',
         'Policy',
         'Product',
         'ProductListing',
         'ProductVariant',
+        'CollectionListing',
         'PriceRule',
         'RecurringApplicationCharge',
         'Redirect',
@@ -261,10 +271,10 @@ class ShopifySDK
         'Asset'             => 'Theme',
         'Balance'           => 'ShopifyPayment',
         'CustomerAddress'   => 'Customer',
+        'GiftCardAdjustment'=> 'GiftCard',
         'Dispute'           => 'ShopifyPayment',
         'Fulfillment'       => 'Order',
         'FulfillmentEvent'  => 'Fulfillment',
-        'GiftCardAdjustment'=> 'GiftCard',
         'OrderRisk'         => 'Order',
         'Payouts'           => 'ShopifyPayment',
         'ProductImage'      => 'Product',
@@ -273,6 +283,7 @@ class ShopifySDK
         'Province'          => 'Country',
         'Refund'            => 'Order',
         'Transaction'       => 'Order',
+        'ShippingRate'      => 'Checkout',
         'Transactions'      => 'Balance',
         'UsageCharge'       => 'RecurringApplicationCharge',
     );

@@ -28,7 +28,7 @@ class AuthHelper
         else {
             $protocol = 'http';
         }
-        
+
         $url = $protocol . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         $url = false !== ($qsPos = strpos($url, '?')) ? substr($url, 0, $qsPos) : $url; // remove query params
 

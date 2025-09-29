@@ -183,7 +183,7 @@ class HttpRequestJson
      *
      * @param string $response
      *
-     * @return array
+     * @return string
      */
     protected static function processResponse($response)
     {

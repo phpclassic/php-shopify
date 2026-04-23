@@ -7,6 +7,8 @@
 
 namespace PHPShopify;
 
+use PHPShopify\Exception\ApiException;
+
 /**
  * Class HttpRequestJson
  *
@@ -183,31 +185,34 @@ class HttpRequestJson
      *
      * @param string $response
      *
+     * @throws ApiException
+     *
      * @return array
      */
     protected static function processResponse($response)
     {
         $responseArray = json_decode($response, true);
 
-        if ($responseArray === null) {
-            //Something went wrong, Checking HTTP Codes
-            $httpOK = 200; //Request Successful, OK.
-            $httpCreated = 201; //Create Successful.
-            $httpDeleted = 204; //Delete Successful
-            $httpOther = 303; //See other (headers).
+        //Something went wrong, Checking HTTP Codes
+        $httpOK = 200; //Request Successful, OK.
+        $httpCreated = 201; //Create Successful.
+        $httpDeleted = 204; //Delete Successful
+        $httpOther = 303; //See other (headers).
 
-            $lastHttpResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
+        $lastHttpResponseHeaders = CurlRequest::$lastHttpResponseHeaders;
 
-            //should be null if any other library used for http calls
-            $httpCode = CurlRequest::$lastHttpCode;
+        //should be null if any other library used for http calls
+        $httpCode = CurlRequest::$lastHttpCode;
 
-            if ($httpCode == $httpOther && array_key_exists('location', $lastHttpResponseHeaders)) {
-                return ['location' => $lastHttpResponseHeaders['location']];
-            }
+        if ($httpCode == $httpOther && array_key_exists('location', $lastHttpResponseHeaders)) {
+            return ['location' => $lastHttpResponseHeaders['location']];
+        }
 
-            if ($httpCode != null && $httpCode != $httpOK && $httpCode != $httpCreated && $httpCode != $httpDeleted) {
-                throw new Exception\CurlException("Request failed with HTTP Code $httpCode.", $httpCode);
-            }
+        if (!in_array($httpCode, [null, $httpOK, $httpCreated, $httpDeleted]) || !empty($responseArray['error'])) {
+            $message = "Request failed"
+                . ($httpCode ? " with HTTP Code $httpCode" : "")
+                . (!empty($responseArray['error']) ? ': ' . $responseArray['error'] : '.');
+            throw new ApiException($message, $httpCode);
         }
 
         return $responseArray;

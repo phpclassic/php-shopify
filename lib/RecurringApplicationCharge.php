@@ -51,6 +51,68 @@ class RecurringApplicationCharge extends ShopifyResource
     );
 
     /*
+     * Create a recurring application charge
+     *
+     * @param array $data
+     *
+     * @return array
+     *
+     */
+    public function create($dataArray)
+    {
+        $dataArray = $this->wrapData($dataArray);
+
+        $url = $this->generateUrl($dataArray);
+
+        $response = $this->post(array(), $url);
+
+        return $response;
+    }
+
+    /**
+     * Get list of all charges
+     * 
+     * @return array
+     */
+    public function charges(){
+        $url = $this->generateUrl();
+
+        $response = $this->get(array(), $url);
+
+        return $response;
+    }
+
+    /**
+     * Get details of a single charge
+     * 
+     * @param $charge_id
+     * 
+     * @return array
+     */
+    public function charge( $charge_id ){
+        $url = $this->generateUrl(array(), $charge_id);
+
+        $response = $this->get(array(), $url);
+
+        return $response;
+    }
+
+    /**
+     * Cancel a recurring charge
+     * 
+     * @param $charge_id
+     * 
+     * @return array
+     */
+    public function cancel($charge_id){
+        $url = $this->generateUrl(array(), $charge_id);
+
+        $response = $this->delete(array(), $url);
+
+        return $response;
+    }
+
+    /*
      * Customize a recurring application charge
      *
      * @param array $data

@@ -211,8 +211,10 @@ class CurlRequest
             throw new Exception\CurlException(curl_errno($ch) . ' : ' . curl_error($ch));
         }
 
-        // close curl resource to free up system resources
-        curl_close($ch);
+        if (PHP_VERSION_ID < 80000) {
+            // close curl resource to free up system resources
+            curl_close($ch);
+        }
 
         self::$lastHttpResponseHeaders = $response->getHeaders();
 

@@ -208,10 +208,35 @@ class HttpRequestJson
             return ['location' => $lastHttpResponseHeaders['location']];
         }
 
-        if (!in_array($httpCode, [null, $httpOK, $httpCreated, $httpDeleted]) || !empty($responseArray['error'])) {
+        if (!in_array($httpCode, [null, $httpOK, $httpCreated, $httpDeleted]) || !empty($responseArray['error'])|| !empty($responseArray['errors'])) {
             $message = "Request failed"
                 . ($httpCode ? " with HTTP Code $httpCode" : "")
                 . (!empty($responseArray['error']) ? ': ' . $responseArray['error'] : '.');
+
+            if (!empty($responseArray['error'])) {
+                $message = "Request failed"
+                    . ($httpCode ? " with HTTP Code $httpCode" : "")
+                    . (!empty($responseArray['error']) ? ': ' . $responseArray['error'] : '.');
+            } elseif (!empty($responseArray['errors'])) {
+                $message = "Request failed"
+                    . ($httpCode ? " with HTTP Code $httpCode: " : ": ");
+
+                if (is_array($responseArray['errors'])) {
+                    $parts = [];
+
+                    foreach ($responseArray['errors'] as $field => $messages) {
+                        if (is_array($messages)) {
+                            $parts[] = $field . ' - ' . implode(', ', $messages);
+                        } else {
+                            $parts[] = $field . ' - ' . $messages;
+                        }
+                    }
+
+                    $message .= implode('; ', $parts);
+                } else {
+                    $message .= $responseArray['errors'];
+                }
+            }
             throw new ApiException($message, $httpCode);
         }
 

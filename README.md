@@ -42,7 +42,7 @@ $config = array(
     'Password' => '***YOUR-PRIVATE-API-PASSWORD***',
 );
 
-PHPShopify\ShopifySDK::config($config);
+$shopifySdk = new PHPShopify\ShopifySDK($config);
 ```
 
 For Third party apps, use the permanent access token. 
@@ -54,7 +54,7 @@ $config = array(
     'AccessToken' => '***ACCESS-TOKEN-FOR-THIRD-PARTY-APP***',
 );
 
-PHPShopify\ShopifySDK::config($config);
+$shopifySdk = new PHPShopify\ShopifySDK($config);
 ```
 You can use specific Shopify API Version by adding in the config array
 
@@ -79,7 +79,7 @@ $config = array(
     'SharedSecret' => '***YOUR-SHARED-SECRET***',
 );
 
-PHPShopify\ShopifySDK::config($config);
+$shopifySdk = new PHPShopify\ShopifySDK($config);
 ```
 
 2) Create the authentication request 
@@ -93,21 +93,21 @@ $scopes = 'read_products,write_products,read_script_tags,write_script_tags';
 //$scopes = array('read_products','write_products','read_script_tags', 'write_script_tags'); 
 $redirectUrl = 'https://yourappurl.com/your_redirect_url.php';
 
-\PHPShopify\AuthHelper::createAuthRequest($scopes, $redirectUrl);
+\PHPShopify\AuthHelper::createAuthRequest($shopifySdk, $scopes, $redirectUrl);
 ```
 
 > If you want the function to return the authentication url instead of auto-redirecting, you can set the argument `$return` (5th argument) to `true`.
 
 ```php
-\PHPShopify\AuthHelper::createAuthRequest($scopes, $redirectUrl, null, null, true);
+\PHPShopify\AuthHelper::createAuthRequest($shopifySdk, $scopes, $redirectUrl, null, null, true);
 ```
 
 3) Get the access token when redirected back to the `$redirectUrl` after app authorization. 
 
 ```php
 //your_redirect_url.php
-PHPShopify\ShopifySDK::config($config);
-$accessToken = \PHPShopify\AuthHelper::getAccessToken();
+$shopifySdk = PHPShopify\ShopifySDK($config);
+$accessToken = \PHPShopify\AuthHelper::getAccessToken($shopifySdk);
 //Now store it in database or somewhere else
 ```
 
@@ -115,8 +115,8 @@ $accessToken = \PHPShopify\AuthHelper::getAccessToken();
 
 ```php
 //your_authorize_and_redirect_url.php
-PHPShopify\ShopifySDK::config($config);
-$accessToken = \PHPShopify\AuthHelper::createAuthRequest($scopes);
+$shopifySdk = new PHPShopify\ShopifySDK($config);
+$accessToken = \PHPShopify\AuthHelper::createAuthRequest($shopifySdk, $scopes);
 //Now store it in database or somewhere else
 ```
 
